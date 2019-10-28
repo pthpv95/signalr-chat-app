@@ -11,4 +11,8 @@
     <Folder Include="SignalRChat\Hubs\" />
     <Folder Include="SignalRChat\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.0.0-rc1.final" />
+  </ItemGroup>
 </Project>
