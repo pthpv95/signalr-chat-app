@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using realtime_app.Db;
 using realtime_app.SignalRChat.Hubs;
 
@@ -30,9 +22,9 @@ namespace realtime_app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<RealtimeAwesomeDbContext>(
-                options => options.UseMySql("Server=localhost;Database=ef;User=root;Password=123456;"
+                options => options.UseMySql("Server=localhost;Database=chatnetcore;User=root;Password=123456;"
             ));
-            
+
             services.AddSignalR();
             services.AddControllers();
         }
