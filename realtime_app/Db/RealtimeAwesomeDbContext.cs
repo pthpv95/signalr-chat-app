@@ -14,7 +14,7 @@ namespace realtime_app.Db
         {
             MessageBuilder.Build(builder);
             UserBuilder.Build(builder);
-            UserMessageBuilder.Build(builder);
+            ConversationBuilder.Build(builder);
         }
     }
 }

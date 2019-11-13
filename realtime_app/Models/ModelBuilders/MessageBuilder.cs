@@ -7,8 +7,6 @@ namespace realtime_app.Models.ModelBuilders
         public static void Build(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<Message>().ToTable("Messages");
-            entity.HasMany(x => x.UserMessage)
-                .WithOne(x => x.Message);
         }
     }
 }

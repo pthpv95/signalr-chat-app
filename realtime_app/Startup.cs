@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using realtime_app.Db;
+using realtime_app.Services;
 using realtime_app.SignalRChat.Hubs;
 
 namespace realtime_app
@@ -27,6 +28,8 @@ namespace realtime_app
 
             services.AddSignalR();
             services.AddControllers();
+
+            services.AddScoped<IMessageService, MessageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

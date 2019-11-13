@@ -5,8 +5,17 @@ namespace realtime_app.Models
 {
     public class User : AggregateRootBase
     {
-        public string Name { get; set; }
+        public string FirstName { get; set; }
 
-        public ICollection<UserMessage> UserMessages { get; set; }     
+        public string LastName { get; set; }
+
+        public virtual Conversation Conversation { get; set; }
+
+        public User(string firstName, string lastName)
+        {
+            this.FirstName = firstName;
+            
+            this.LastName = lastName;
+        }
     }
 }
