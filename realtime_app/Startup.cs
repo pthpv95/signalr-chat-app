@@ -30,6 +30,20 @@ namespace realtime_app
             services.AddControllers();
 
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IUserService, UserService>();
+            
+            services.AddCors(options => options.AddPolicy("Cors", builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
+
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo{ Title = "Account Service API", Version = "v1" });   
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +59,15 @@ namespace realtime_app
 
             app.UseRouting();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account Service API V1");
+            });
+
             // app.UseAuthorization();
+            app.UseCors("Cors");
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

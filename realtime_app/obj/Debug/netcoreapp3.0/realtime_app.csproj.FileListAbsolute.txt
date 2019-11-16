@@ -26,3 +26,13 @@
 /Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/obj/Debug/netcoreapp3.0/realtime_app.dll
 /Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/obj/Debug/netcoreapp3.0/realtime_app.pdb
 /Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/obj/Debug/netcoreapp3.0/realtime_app.csprojAssemblyReference.cache
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Microsoft.AspNetCore.JsonPatch.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Microsoft.DotNet.PlatformAbstractions.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Microsoft.Extensions.DependencyModel.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Microsoft.OpenApi.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Newtonsoft.Json.Bson.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/bin/Debug/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/hienpham/Desktop/Projects/dotnet/realtime_app/realtime_app/obj/Debug/netcoreapp3.0/realtime_app.MvcApplicationPartsAssemblyInfo.cs

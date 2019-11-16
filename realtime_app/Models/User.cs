@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using realtime_app.Common;
 
@@ -9,13 +10,21 @@ namespace realtime_app.Models
 
         public string LastName { get; set; }
 
+        public string UserName { get; set; }
+
+        public string Email { get; set; }
+
         public virtual Conversation Conversation { get; set; }
 
-        public User(string firstName, string lastName)
+        public User(string firstName, string lastName, string userName)
         {
             this.FirstName = firstName;
             
             this.LastName = lastName;
+
+            this.UserName = userName;
+
+            this.Created = DateTime.Now;
         }
     }
 }
