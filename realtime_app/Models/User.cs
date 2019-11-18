@@ -18,13 +18,15 @@ namespace realtime_app.Models
 
         public virtual Conversation Conversation { get; set; }
 
-        public User(string firstName, string lastName, string userName)
+        public User(string firstName, string lastName, string userName, string password)
         {
             this.FirstName = firstName;
             
             this.LastName = lastName;
 
             this.UserName = userName;
+
+            this.Password = password;
 
             this.Created = DateTime.Now;
         }

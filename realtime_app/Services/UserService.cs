@@ -21,7 +21,7 @@ namespace realtime_app.Services
 
     public async Task<UserContract> RegisterUserAsync(RegiserUserContract contract)
     {
-       var user = new User(contract.FirstName, contract.LastName, contract.UserName);
+       var user = new User(contract.FirstName, contract.LastName, contract.UserName, contract.Password);
        await _context.Set<User>().AddAsync(user);
        await _context.SaveChangesAsync();
 

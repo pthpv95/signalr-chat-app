@@ -1,13 +1,11 @@
 namespace realtime_app.Contracts
 {
-    public class RegiserUserContract
+    public class ContactSuggestionsContract
     {
+        public int ContactId { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Password { get; set; }
     }
 }
