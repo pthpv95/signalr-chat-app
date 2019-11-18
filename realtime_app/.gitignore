@@ -37,4 +37,5 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
-Kaplan.Ontrack.AccountService.Test/coverage.opencover.xml
+bin
+obj

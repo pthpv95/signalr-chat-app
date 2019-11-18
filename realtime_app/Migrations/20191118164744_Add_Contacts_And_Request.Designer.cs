@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using realtime_app.Db;
 
 namespace realtime_app.Migrations
 {
     [DbContext(typeof(RealtimeAwesomeDbContext))]
-    partial class RealtimeAwesomeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191118164744_Add_Contacts_And_Request")]
+    partial class Add_Contacts_And_Request
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

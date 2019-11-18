@@ -2,46 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using realtime_app.Db;
 
 namespace realtime_app.Migrations
 {
     [DbContext(typeof(RealtimeAwesomeDbContext))]
-    partial class RealtimeAwesomeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191118164142_Add_Some_Tables")]
+    partial class Add_Some_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("realtime_app.Models.Contact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contacts");
-                });
 
             modelBuilder.Entity("realtime_app.Models.Conversation", b =>
                 {
@@ -64,33 +40,6 @@ namespace realtime_app.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("realtime_app.Models.FriendsRequest", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("RecieverId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequesterId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RecieverId");
-
-                    b.HasIndex("RequesterId");
-
-                    b.ToTable("FriendsRequests");
                 });
 
             modelBuilder.Entity("realtime_app.Models.Message", b =>
@@ -166,48 +115,6 @@ namespace realtime_app.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("realtime_app.Models.UserContact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ContactId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserContacts");
-                });
-
-            modelBuilder.Entity("realtime_app.Models.FriendsRequest", b =>
-                {
-                    b.HasOne("realtime_app.Models.User", "Reciever")
-                        .WithMany()
-                        .HasForeignKey("RecieverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("realtime_app.Models.User", "Requester")
-                        .WithMany()
-                        .HasForeignKey("RequesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("realtime_app.Models.Message", b =>
                 {
                     b.HasOne("realtime_app.Models.Conversation", "Conversation")
@@ -228,21 +135,6 @@ namespace realtime_app.Migrations
                     b.HasOne("realtime_app.Models.Conversation", "Conversation")
                         .WithMany("Users")
                         .HasForeignKey("ConversationId");
-                });
-
-            modelBuilder.Entity("realtime_app.Models.UserContact", b =>
-                {
-                    b.HasOne("realtime_app.Models.Contact", "Contact")
-                        .WithMany()
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("realtime_app.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

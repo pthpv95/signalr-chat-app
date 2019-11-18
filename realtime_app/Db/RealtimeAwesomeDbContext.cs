@@ -15,6 +15,10 @@ namespace realtime_app.Db
             MessageBuilder.Build(builder);
             UserBuilder.Build(builder);
             ConversationBuilder.Build(builder);
+            FriendsRequestBuilder.Build(builder);
+            MessageBuilder.Build(builder);
+            UserContactBuilder.Build(builder);
+            ContactBuilder.Build(builder);
         }
     }
 }
