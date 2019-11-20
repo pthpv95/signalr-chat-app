@@ -31,6 +31,7 @@ namespace realtime_app
 
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IContactService, ContactService>();
             
             services.AddCors(options => options.AddPolicy("Cors", builder =>
             {
