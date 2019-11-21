@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace realtime_app.Migrations
 {
-    public partial class Add_Contacts_And_Request : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,22 @@ namespace realtime_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    CreatorId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FriendsRequests",
                 columns: table => new
                 {
@@ -34,20 +50,66 @@ namespace realtime_app.Migrations
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: false),
                     RecieverId = table.Column<int>(nullable: false),
-                    RequesterId = table.Column<int>(nullable: false)
+                    RequesterId = table.Column<int>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FriendsRequests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
+                    ConversationId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FriendsRequests_Users_RecieverId",
-                        column: x => x.RecieverId,
-                        principalTable: "Users",
+                        name: "FK_Users_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: true),
+                    SenderId = table.Column<int>(nullable: false),
+                    ConversationId = table.Column<int>(nullable: false),
+                    AttachmentUrl = table.Column<string>(nullable: true),
+                    MessageType = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FriendsRequests_Users_RequesterId",
-                        column: x => x.RequesterId,
+                        name: "FK_Messages_Users_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -82,14 +144,14 @@ namespace realtime_app.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsRequests_RecieverId",
-                table: "FriendsRequests",
-                column: "RecieverId");
+                name: "IX_Messages_ConversationId",
+                table: "Messages",
+                column: "ConversationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendsRequests_RequesterId",
-                table: "FriendsRequests",
-                column: "RequesterId");
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserContacts_ContactId",
@@ -100,6 +162,11 @@ namespace realtime_app.Migrations
                 name: "IX_UserContacts_UserId",
                 table: "UserContacts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ConversationId",
+                table: "Users",
+                column: "ConversationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -108,10 +175,19 @@ namespace realtime_app.Migrations
                 name: "FriendsRequests");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
                 name: "UserContacts");
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Conversations");
         }
     }
 }

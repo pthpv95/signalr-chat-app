@@ -34,7 +34,7 @@ namespace realtime_app.Services
         userContact.ContactId = contact.Id;
         userContact.UserId = request.UserId;
 
-        friendRequest.Status = FriendsRequestStatus.ACCEPPTED;
+        friendRequest.Status = FriendsRequestEnum.ACCEPTED;
         await _context.Set<Contact>().AddAsync(contact);
         await _context.Set<UserContact>().AddAsync(userContact);
         await _context.SaveChangesAsync();
@@ -51,7 +51,7 @@ namespace realtime_app.Services
           .Where(u => !currentUserContactIds.Contains(u.Id) && u.Id != userId)
           .Select(x => new ContactSuggestionsContract
           {
-            ContactId = x.Id,
+            Id = x.Id,
             FirstName = x.FirstName,
             LastName = x.LastName
           }).ToList();
@@ -62,7 +62,6 @@ namespace realtime_app.Services
     public async Task RequestAddContact(RequestAddFriendContract contract)
     {
       var friendRequest = new FriendsRequest(contract.ReceiverId, contract.RequesterId);
-      friendRequest.Status = FriendsRequestStatus.PENDING;
 
       await _context.Set<FriendsRequest>().AddAsync(friendRequest);
       await _context.SaveChangesAsync();

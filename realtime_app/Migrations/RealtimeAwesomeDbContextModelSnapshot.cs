@@ -81,14 +81,13 @@ namespace realtime_app.Migrations
                     b.Property<int>("RequesterId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RecieverId");
-
-                    b.HasIndex("RequesterId");
 
                     b.ToTable("FriendsRequests");
                 });
@@ -191,21 +190,6 @@ namespace realtime_app.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserContacts");
-                });
-
-            modelBuilder.Entity("realtime_app.Models.FriendsRequest", b =>
-                {
-                    b.HasOne("realtime_app.Models.User", "Reciever")
-                        .WithMany()
-                        .HasForeignKey("RecieverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("realtime_app.Models.User", "Requester")
-                        .WithMany()
-                        .HasForeignKey("RequesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("realtime_app.Models.Message", b =>

@@ -17,7 +17,7 @@ namespace realtime_app.Controllers
         }
 
         [HttpGet]
-        [Route("{userId}")]
+        [Route("{userId}/contacts-suggestion")]
         public IActionResult GetSuggestedContacts([FromRoute] int userId)
         {
             return Ok(_contactService.GetContactSuggestions(userId));

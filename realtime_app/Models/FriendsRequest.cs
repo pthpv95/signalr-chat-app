@@ -1,3 +1,4 @@
+using System;
 using realtime_app.Common;
 
 namespace realtime_app.Models
@@ -11,22 +12,20 @@ namespace realtime_app.Models
         {
             this.RecieverId = receiverId;
             this.RequesterId = requesterId;
+            this.Created = DateTime.Now;
+            this.Status = FriendsRequestEnum.PENDING;
         }
 
         public int RecieverId { get; set; }
 
         public int RequesterId { get; set; }
 
-        public FriendsRequestStatus Status { get; set; }
-
-        public virtual User Requester { get; set; }
-
-        public virtual User Reciever { get; set; }
+        public FriendsRequestEnum Status { get; set; }
     }
 
-    public enum FriendsRequestStatus 
+    public enum FriendsRequestEnum
     {
         PENDING,
-        ACCEPPTED
+        ACCEPTED
     }
 }

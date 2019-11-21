@@ -27,7 +27,6 @@ namespace realtime_app
             ));
 
             services.AddSignalR();
-            services.AddControllers();
 
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
@@ -45,6 +44,10 @@ namespace realtime_app
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo{ Title = "Account Service API", Version = "v1" });   
             });
+
+            services.AddControllers()
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +61,6 @@ namespace realtime_app
             app.UseFileServer();
             app.UseHttpsRedirection();
 
-            app.UseRouting();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
