@@ -8,7 +8,7 @@ namespace realtime_app.Services
     {
          IList<ContactSuggestionsContract> GetContactSuggestions (int userId);
 
-         Task RequestAddContact(RequestAddFriendContract contract);
+         Task<string> RequestAddContact(RequestAddFriendContract contract);
 
          Task AcceptFriendRequest(AcceptFriendRequest request);
     }

@@ -46,9 +46,13 @@ namespace realtime_app.Services
       var currentUserContactIds = _context.Set<UserContact>()
           .Where(c => c.UserId == userId)
           .Select(x => x.ContactId);
+      
+      var requestedAddFriendUserIds = _context.Set<FriendsRequest>()
+          .Where(x => x.RequesterId == userId && x.Status == FriendsRequestEnum.PENDING)
+          .Select(x => x.RecieverId);
 
       var suggestedContacts = _context.Set<User>()
-          .Where(u => !currentUserContactIds.Contains(u.Id) && u.Id != userId)
+          .Where(u => !currentUserContactIds.Contains(u.Id) && u.Id != userId && !requestedAddFriendUserIds.Contains(u.Id))
           .Select(x => new ContactSuggestionsContract
           {
             Id = x.Id,
@@ -59,12 +63,14 @@ namespace realtime_app.Services
       return suggestedContacts;
     }
 
-    public async Task RequestAddContact(RequestAddFriendContract contract)
+    public async Task<string> RequestAddContact(RequestAddFriendContract contract)
     {
       var friendRequest = new FriendsRequest(contract.ReceiverId, contract.RequesterId);
 
       await _context.Set<FriendsRequest>().AddAsync(friendRequest);
       await _context.SaveChangesAsync();
+
+      return "Successful";
     }
   }
 }

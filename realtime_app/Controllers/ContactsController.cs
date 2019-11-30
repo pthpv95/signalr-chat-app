@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using realtime_app.Common;
 using realtime_app.Contracts;
 using realtime_app.Services;
 
@@ -20,13 +21,25 @@ namespace realtime_app.Controllers
         [Route("{userId}/contacts-suggestion")]
         public IActionResult GetSuggestedContacts([FromRoute] int userId)
         {
-            return Ok(_contactService.GetContactSuggestions(userId));
+            var response = new ResponseMessage
+            {
+                Data = _contactService.GetContactSuggestions(userId),
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult AddContact (RequestAddFriendContract request)
+        public async Task<IActionResult> AddContact (RequestAddFriendContract request)
         {
-            return Ok(_contactService.RequestAddContact(request));
+            var result = await _contactService.RequestAddContact(request);
+            var response = new ResponseMessage
+            {
+                Data = result,
+                IsSuccess = true
+            };
+
+            return Ok(response);
         }
 
         [HttpPost]

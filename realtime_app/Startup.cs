@@ -5,8 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using realtime_app.Db;
+using realtime_app.Models;
 using realtime_app.Services;
 using realtime_app.SignalRChat.Hubs;
+using Microsoft.AspNetCore.Identity;
+using realtime_app.IdentityServer;
+using Microsoft.OpenApi.Models;
 
 namespace realtime_app
 {
@@ -22,9 +26,40 @@ namespace realtime_app
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<RealtimeAwesomeDbContext>(
-                options => options.UseMySql("Server=localhost;Database=chatnetcore;User=root;Password=123456;"
+            services.AddDbContext<RealtimeAwesomeDbContext>(
+                options => options.UseSqlServer("Server=localhost;Database=chatnetcore;User=root;Password=123456;"
             ));
+
+            services.AddIdentity<AppUser, IdentityRole>()
+                    .AddEntityFrameworkStores<AppIdentityDbContext>()
+                    .AddDefaultTokenProviders();
+
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+            })
+                .AddInMemoryIdentityResources(IdentityServerConfig.Ids)
+                .AddInMemoryApiResources(IdentityServerConfig.Apis)
+                .AddInMemoryClients(IdentityServerConfig.Clients)
+                .AddDeveloperSigningCredential(); // not recommended for production - you need to store your key material somewhere secure
+
+            services.AddAuthentication()
+                .AddLocalApi("Bearer", option =>
+                {
+                    option.ExpectedScope = "api.chatapp";
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Bearer", policy =>
+                {
+                    policy.AddAuthenticationSchemes("Bearer");
+                    policy.RequireAuthenticatedUser();
+                });
+            });
 
             services.AddSignalR();
 
@@ -42,7 +77,7 @@ namespace realtime_app
 
             services.AddSwaggerGen(c => 
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo{ Title = "Account Service API", Version = "v1" });   
+                c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
             });
 
             services.AddControllers()
@@ -70,6 +105,10 @@ namespace realtime_app
 
             // app.UseAuthorization();
             app.UseCors("Cors");
+            app.UseRouting();
+
+            app.UseIdentityServer();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
