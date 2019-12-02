@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using realtime_app.Common;
 using realtime_app.Contracts;
 using realtime_app.Services;
+using realtime_app.SignalRChat.Hubs;
 
 namespace realtime_app.Controllers
 {
@@ -11,10 +13,12 @@ namespace realtime_app.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IContactService _contactService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ContactsController(IContactService contactService)
+        public ContactsController(IContactService contactService, IHubContext<NotificationHub> hubContext)
         {
             _contactService = contactService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -38,6 +42,8 @@ namespace realtime_app.Controllers
                 Data = result,
                 IsSuccess = true
             };
+
+            await _hubContext.Clients.All.SendAsync("reveiveContactRequest", "There's a friend request from " + request.RequesterId + " to " + request.ReceiverId);
 
             return Ok(response);
         }

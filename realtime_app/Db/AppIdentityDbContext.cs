@@ -18,7 +18,8 @@ namespace realtime_app.Db
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
 
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole { Name = Constants.Roles.User, NormalizedName = Constants.Roles.User.ToUpper() });
+            modelBuilder.Entity<AppUser>().ToTable("Users");
+            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
         }
     }
 }

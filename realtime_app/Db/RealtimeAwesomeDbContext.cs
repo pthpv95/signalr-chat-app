@@ -5,7 +5,7 @@ namespace realtime_app.Db
 {
     public class RealtimeAwesomeDbContext : DbContext
     {
-        public RealtimeAwesomeDbContext(DbContextOptions options) : base(options)
+        public RealtimeAwesomeDbContext(DbContextOptions<RealtimeAwesomeDbContext> options) : base(options)
         {
             
         }

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using realtime_app.Contracts;
 using realtime_app.Db;
 using realtime_app.Models;
-using System.Web.Helpers;
 
 namespace realtime_app.Services
 {
@@ -22,9 +21,7 @@ namespace realtime_app.Services
 
     public async Task<UserContract> RegisterUserAsync(RegiserUserContract contract)
     {
-      var hashPassword = Crypto.HashPassword(contract.Password);
-      
-      var user = new User(contract.FirstName, contract.LastName, contract.UserName, hashPassword);
+      var user = new User(contract.FirstName, contract.LastName, contract.UserName);
       await _context.Set<User>().AddAsync(user);
       await _context.SaveChangesAsync();
 

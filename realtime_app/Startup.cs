@@ -27,12 +27,25 @@ namespace realtime_app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<RealtimeAwesomeDbContext>(
-                options => options.UseSqlServer("Server=localhost;Database=chatnetcore;User=root;Password=123456;"
+                options => options.UseMySql("Server=localhost;Database=awesome.chat;User=root;Password=123456;"
+            ));
+
+            services.AddDbContext<AppIdentityDbContext>(
+                options => options.UseMySql("Server=localhost;Database=awesome.identity;User=root;Password=123456;"
             ));
 
             services.AddIdentity<AppUser, IdentityRole>()
                     .AddEntityFrameworkStores<AppIdentityDbContext>()
                     .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            });
 
             services.AddIdentityServer(options =>
             {
@@ -114,6 +127,7 @@ namespace realtime_app
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<NotificationHub>("/notification");
             });
         }
     }
