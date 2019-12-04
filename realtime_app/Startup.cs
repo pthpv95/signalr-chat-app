@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using realtime_app.Db;
 using realtime_app.Models;
 using realtime_app.Services;
-using realtime_app.SignalRChat.Hubs;
+using realtime_app.SignalR.Hubs;
 using Microsoft.AspNetCore.Identity;
 using realtime_app.IdentityServer;
 using Microsoft.OpenApi.Models;

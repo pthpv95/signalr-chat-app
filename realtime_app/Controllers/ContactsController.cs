@@ -1,10 +1,12 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Common;
 using realtime_app.Contracts;
 using realtime_app.Services;
-using realtime_app.SignalRChat.Hubs;
+using realtime_app.SignalR.Hubs;
 
 namespace realtime_app.Controllers
 {
@@ -43,7 +45,8 @@ namespace realtime_app.Controllers
                 IsSuccess = true
             };
 
-            await _hubContext.Clients.All.SendAsync("reveiveContactRequest", "There's a friend request from " + request.RequesterId + " to " + request.ReceiverId);
+            var connectionId = UserHandler.UserConnectionIds.First(x => Int32.Parse(x.UserId) == request.ReceiverId).ConnectionId;
+            await _hubContext.Clients.Client(connectionId).SendAsync("reveiveContactRequest", "There's a friend request from " + request.RequesterId + " to " + request.ReceiverId);
 
             return Ok(response);
         }

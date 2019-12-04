@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Services;
 
-namespace realtime_app.SignalRChat.Hubs
+namespace realtime_app.SignalR.Hubs
 {
     public class ChatHub : Hub
     {
