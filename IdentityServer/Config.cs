@@ -39,7 +39,7 @@ namespace IdentityServerWithAspNetIdentity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
                     RequireConsent = false,
-                    AccessTokenLifetime = 120,
+                    AccessTokenLifetime = 36000,
 
                     RedirectUris = { 
                         "http://localhost:8080/#/callback",
@@ -47,7 +47,7 @@ namespace IdentityServerWithAspNetIdentity
                     },
                     PostLogoutRedirectUris = 
                     { 
-                        "http://localhost:5000/account/login"
+                        "http://localhost:5050/account/login"
                     },
                     AllowedCorsOrigins = { "http://localhost:8080" },
 

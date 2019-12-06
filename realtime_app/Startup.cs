@@ -5,12 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using realtime_app.Db;
-using realtime_app.Models;
 using realtime_app.Services;
 using realtime_app.SignalR.Hubs;
-using Microsoft.AspNetCore.Identity;
-using realtime_app.IdentityServer;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace realtime_app
 {
@@ -30,39 +29,23 @@ namespace realtime_app
                 options => options.UseMySql("Server=localhost;Database=awesome.chat;User=root;Password=123456;"
             ));
 
-            services.AddDbContext<AppIdentityDbContext>(
-                options => options.UseMySql("Server=localhost;Database=awesome.identity;User=root;Password=123456;"
-            ));
-
-            services.AddIdentity<AppUser, IdentityRole>()
-                    .AddEntityFrameworkStores<AppIdentityDbContext>()
-                    .AddDefaultTokenProviders();
-
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-            });
-
-            services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-            })
-                .AddInMemoryIdentityResources(IdentityServerConfig.Ids)
-                .AddInMemoryApiResources(IdentityServerConfig.Apis)
-                .AddInMemoryClients(IdentityServerConfig.Clients)
-                .AddDeveloperSigningCredential(); // not recommended for production - you need to store your key material somewhere secure
-
-            services.AddAuthentication()
-                .AddLocalApi("Bearer", option =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    option.ExpectedScope = "api.chatapp";
+                    // base-address of your identityserver
+                    options.Authority = "http://localhost:5050";
+
+                    // name of the API resource
+                    options.Audience = "api1";
+
+                    options.RequireHttpsMetadata = false;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuerSigningKey = true,
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                        };
                 });
 
             services.AddAuthorization(options =>
@@ -105,10 +88,11 @@ namespace realtime_app
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseFileServer();
             app.UseHttpsRedirection();
-
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -116,12 +100,8 @@ namespace realtime_app
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account Service API V1");
             });
 
-            // app.UseAuthorization();
             app.UseCors("Cors");
             app.UseRouting();
-
-            app.UseIdentityServer();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
