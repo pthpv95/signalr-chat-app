@@ -265,7 +265,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             _logger.LogInformation("User logged out.");
             // logout.PostLogoutRedirectUri is always null...
             // use hardcoded url for now.
-            return Redirect("http://localhost:5100");
+            return Redirect("http://localhost:8080");
         }
 
         [HttpPost]

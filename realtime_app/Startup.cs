@@ -10,6 +10,7 @@ using realtime_app.SignalR.Hubs;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
 
 namespace realtime_app
 {
@@ -29,36 +30,31 @@ namespace realtime_app
                 options => options.UseMySql("Server=localhost;Database=awesome.chat;User=root;Password=123456;"
             ));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    // base-address of your identityserver
-                    options.Authority = "http://localhost:5050";
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "http://localhost:5050";
+                options.RequireHttpsMetadata = false;
 
-                    // name of the API resource
-                    options.Audience = "api1";
-
-                    options.RequireHttpsMetadata = false;
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuerSigningKey = true,
-                            ValidateIssuer = false,
-                            ValidateAudience = false
-                        };
-                });
+                options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+            });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Bearer", policy =>
-                {
-                    policy.AddAuthenticationSchemes("Bearer");
-                    policy.RequireAuthenticatedUser();
-                });
+                options.AddPolicy("ApiReader", policy => policy.RequireClaim("scope", "api.read"));
+                options.AddPolicy("Consumer", policy => policy.RequireClaim("role", "consumer"));
             });
 
             services.AddSignalR();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
@@ -88,20 +84,19 @@ namespace realtime_app
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("Cors");
+            app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseFileServer();
-            app.UseHttpsRedirection();
+            // app.UseFileServer();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Account Service API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat service API V1");
             });
 
-            app.UseCors("Cors");
-            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

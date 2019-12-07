@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Common;
@@ -10,6 +11,7 @@ using realtime_app.SignalR.Hubs;
 
 namespace realtime_app.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("contacts")]
     public class ContactsController : ControllerBase
