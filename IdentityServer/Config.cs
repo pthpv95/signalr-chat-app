@@ -39,7 +39,7 @@ namespace IdentityServerWithAspNetIdentity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser = true,
                     RequireConsent = false,
-                    AccessTokenLifetime = 120,
+                    AccessTokenLifetime = 3600,
 
                     RedirectUris = { 
                         "http://localhost:8080/callback",

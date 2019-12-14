@@ -41,18 +41,21 @@ namespace realtime_app.Services
       }
     }
 
-    public IList<ContactSuggestionsContract> GetContactSuggestions(int userId)
+    public IList<ContactSuggestionsContract> GetContactSuggestions(string userName)
     {
       var currentUserContactIds = _context.Set<UserContact>()
-          .Where(c => c.UserId == userId)
-          .Select(x => x.ContactId);
+          .Include(u => u.User)
+          .Where(c => c.User.UserName == userName)
+          .Select(x => x.User.Id);
       
       var requestedAddFriendUserIds = _context.Set<FriendsRequest>()
-          .Where(x => x.RequesterId == userId && x.Status == FriendsRequestEnum.PENDING)
+          .Include(f => f.Requester)
+          .Where(x => x.Requester.UserName == userName && x.Status == FriendsRequestEnum.PENDING)
           .Select(x => x.RecieverId);
 
       var suggestedContacts = _context.Set<User>()
-          .Where(u => !currentUserContactIds.Contains(u.Id) && u.Id != userId && !requestedAddFriendUserIds.Contains(u.Id))
+          .Where(u => !currentUserContactIds.Contains(u.Id) && u.UserName != userName 
+            && !requestedAddFriendUserIds.Contains(u.Id))
           .Select(x => new ContactSuggestionsContract
           {
             Id = x.Id,

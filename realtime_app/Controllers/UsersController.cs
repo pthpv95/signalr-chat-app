@@ -6,7 +6,7 @@ using realtime_app.Services;
 namespace realtime_app.Controllers
 {
     [ApiController]
-    [Route("users")]
+    [Route("api/users")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -19,7 +19,8 @@ namespace realtime_app.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(RegiserUserContract contract)
         {
-            return Ok(await _userService.RegisterUserAsync(contract));
+            var result = await _userService.RegisterUserAsync(contract);
+            return Ok(result);
         } 
     }
 }

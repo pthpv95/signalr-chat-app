@@ -12,6 +12,7 @@ using IdentityServerWithAspNetIdentity.Data;
 using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Services;
 using Microsoft.Extensions.Hosting;
+using IdentityServer.Services;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -42,6 +43,7 @@ namespace IdentityServerWithAspNetIdentity
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IChatService, ChatService>();
 
             services.AddMvc();
 
@@ -54,6 +56,10 @@ namespace IdentityServerWithAspNetIdentity
                 .AddInMemoryClients(Config.GetClients())
                 .AddAspNetIdentity<ApplicationUser>();
 
+            services.AddHttpClient("ChatApp", c =>
+            {
+                c.BaseAddress = new Uri("http://localhost:5000/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

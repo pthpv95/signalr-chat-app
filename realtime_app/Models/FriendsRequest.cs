@@ -20,6 +20,10 @@ namespace realtime_app.Models
 
         public int RequesterId { get; set; }
 
+        public virtual User Receiver { get; set; }
+
+        public virtual User Requester { get; set; }
+
         public FriendsRequestEnum Status { get; set; }
     }
 
