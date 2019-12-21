@@ -21,6 +21,12 @@ namespace realtime_app.Controllers
         {
             var result = await _userService.RegisterUserAsync(contract);
             return Ok(result);
-        } 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNotifications()
+        {
+            return Ok();
+        }
     }
 }

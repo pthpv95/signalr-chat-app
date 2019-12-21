@@ -6,7 +6,7 @@ namespace realtime_app.Services
 {
     public interface IContactService
     {
-         IList<ContactSuggestionsContract> GetContactSuggestions (string userName);
+         IList<ContactSuggestionsContract> GetContactSuggestions (int id);
 
          Task<string> RequestAddContact(RequestAddFriendContract contract);
 

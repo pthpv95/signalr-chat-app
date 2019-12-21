@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using realtime_app.Services;
 
 namespace realtime_app.SignalR.Hubs
 {
@@ -12,24 +14,28 @@ namespace realtime_app.SignalR.Hubs
 
         public string UserId { get; set; }
     }
+
     public static class UserHandler
     {
         public static List<ConnectionUserIdentifierPair> UserConnectionIds = new List<ConnectionUserIdentifierPair>();
     }
 
+    [Authorize]
     public class NotificationHub : Hub
     {
-        
-        // public async Task SendFriendRequest(string userId)
-        // {
-        //     await Clients.Client(Context.ConnectionId).SendAsync("message");
-        // }
+        private readonly IClaimsService _claimsService;
+
+        public NotificationHub(IClaimsService claimsService)
+        {
+            _claimsService = claimsService;
+        }
 
         public override async Task OnConnectedAsync()
         {
-            var userId = Context.GetHttpContext().Request.Query["userId"];
+            var user = _claimsService.GetUserClaims();
+
             UserHandler.UserConnectionIds.Add(new ConnectionUserIdentifierPair(){
-                UserId = userId,
+                UserId = user.Id,
                 ConnectionId = Context.ConnectionId
             });
             await base.OnConnectedAsync();
@@ -37,8 +43,8 @@ namespace realtime_app.SignalR.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userId = Context.GetHttpContext().Request.Query["userId"].ToString();
-            UserHandler.UserConnectionIds.RemoveAll(x => x.ConnectionId == Context.ConnectionId);
+            var user = _claimsService.GetUserClaims();
+            UserHandler.UserConnectionIds.RemoveAll(x => x.UserId == user.Id);
             await base.OnDisconnectedAsync(exception);
         }
     }

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace realtime_app
 {
@@ -45,6 +46,24 @@ namespace realtime_app
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };
+                
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/notification")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             services.AddAuthorization(options =>
@@ -53,11 +72,11 @@ namespace realtime_app
                 options.AddPolicy("Consumer", policy => policy.RequireClaim("role", "consumer"));
             });
 
-            services.AddSignalR();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
+            services.AddScoped<IClaimsService, ClaimsService>();
             
             services.AddCors(options => options.AddPolicy("Cors", builder =>
             {
@@ -67,6 +86,7 @@ namespace realtime_app
                 .AllowAnyHeader();
             }));
 
+            services.AddSignalR();
             services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
@@ -84,25 +104,25 @@ namespace realtime_app
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("Cors");
+
             app.UseHttpsRedirection();
-            app.UseRouting();
             app.UseAuthentication();
+
+            app.UseRouting();
             app.UseAuthorization();
-            // app.UseFileServer();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat service API V1");
-            });
-
+            app.UseCors("Cors");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapHub<NotificationHub>("/notification");
+            });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat service API V1");
             });
         }
     }

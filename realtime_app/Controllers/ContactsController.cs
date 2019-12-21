@@ -16,22 +16,25 @@ namespace realtime_app.Controllers
     [Route("contacts")]
     public class ContactsController : ControllerBase
     {
+        private readonly IClaimsService _claimsService;
         private readonly IContactService _contactService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ContactsController(IContactService contactService, IHubContext<NotificationHub> hubContext)
+        public ContactsController(IContactService contactService, IHubContext<NotificationHub> hubContext, IClaimsService claimsService)
         {
             _contactService = contactService;
             _hubContext = hubContext;
+            _claimsService = claimsService;
         }
 
         [HttpGet]
-        [Route("{username}/contacts-suggestion")]
-        public IActionResult GetSuggestedContacts([FromRoute] string username)
+        [Route("contacts-suggestion")]
+        public IActionResult GetSuggestedContacts()
         {
+            var claims = _claimsService.GetUserClaims();
             var response = new ResponseMessage
             {
-                Data = _contactService.GetContactSuggestions(username),
+                Data = _contactService.GetContactSuggestions(Int32.Parse(claims.Id)),
             };
 
             return Ok(response);

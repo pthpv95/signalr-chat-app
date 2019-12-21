@@ -54,7 +54,8 @@ namespace IdentityServerWithAspNetIdentity
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GetClients())
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .AddProfileService<IdentityProfileService>();
 
             services.AddHttpClient("ChatApp", c =>
             {
