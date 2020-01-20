@@ -1,8 +1,12 @@
+using System;
+
 namespace realtime_app.Contracts
 {
-    public class ContactSuggestionsContract
+    public class FriendRequestContract
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+
+        public Guid ContactId { get; set; }
 
         public string FirstName { get; set; }
 

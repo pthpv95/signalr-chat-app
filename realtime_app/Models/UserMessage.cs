@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using realtime_app.Common;
 
@@ -10,9 +11,9 @@ namespace realtime_app.Models
 
         }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
-        public int MessageId { get; set; }
+        public Guid MessageId { get; set; }
 
         public User User { get; set; }
 

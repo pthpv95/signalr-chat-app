@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using realtime_app.Contracts;
@@ -19,8 +20,8 @@ namespace realtime_app.Services
 
             var context = new ClaimsContext
             {
-                Id = user.Claims.SingleOrDefault(c => c.Type == "ChatUserId")?.Value,
-                UserName = user.Claims.SingleOrDefault(c => c.Type == "UserName")?.Value
+                Id = new Guid(user.Claims.SingleOrDefault(c => c.Type == "chatUserId")?.Value),
+                UserName = user.Claims.SingleOrDefault(c => c.Type == "userName")?.Value
             };
 
             return context;

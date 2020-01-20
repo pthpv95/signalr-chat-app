@@ -1,14 +1,21 @@
+using System;
 using realtime_app.Common;
 
 namespace realtime_app.Models
 {
     public class Contact : AggregateRootBase
     {
+        public Contact(Guid userId, string firstName, string lastName)
+        {
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.UserId = userId;
+        }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public string Email { get; set; }
-
+        public Guid UserId { get; set; }
     }
 }

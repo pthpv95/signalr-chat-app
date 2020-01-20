@@ -249,7 +249,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
                     await _userManager.AddClaimAsync(user, new Claim("identityId", user.Id));
                     await _userManager.AddClaimAsync(user, new Claim("userName", user.UserName));
-                    await _userManager.AddClaimAsync(user, new Claim("chatUserId", chatUserId.ToString()));
+                    await _userManager.AddClaimAsync(user, new Claim("chatUserId", chatUserId));
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);

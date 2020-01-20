@@ -2,7 +2,7 @@ using System;
 
 namespace realtime_app.Contracts
 {
-    public class UserContract
+    public class UserContactContract
     {
         public Guid Id { get; set; }
 
@@ -10,6 +10,6 @@ namespace realtime_app.Contracts
 
         public string LastName { get; set; }
 
-        public string UserName { get; set; }
+        public Guid? ConversationId { get; set; }
     }
 }

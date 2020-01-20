@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using realtime_app.Common;
 
@@ -7,7 +8,7 @@ namespace realtime_app.Models
     {
         protected Conversation() {}
 
-        public Conversation(string title, int creatorId)
+        public Conversation(string title, Guid creatorId)
         {
             this.Title = title;
             this.CreatorId = creatorId;
@@ -15,11 +16,8 @@ namespace realtime_app.Models
 
         public string Title { get; set; }
 
-        public int CreatorId { get; set; }  
+        public Guid CreatorId { get; set; }  
         
-        public ICollection<User> Users { get; set; }
-
-        public ICollection<Message> Messages { get; set; }
-
+        public User Creator { get; set; }
     }
 }

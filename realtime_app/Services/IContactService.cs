@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using realtime_app.Contracts;
@@ -6,10 +7,14 @@ namespace realtime_app.Services
 {
     public interface IContactService
     {
-         IList<ContactSuggestionsContract> GetContactSuggestions (int id);
+         IList<UserContactContract> GetContactSuggestions (Guid id);
 
          Task<string> RequestAddContact(RequestAddFriendContract contract);
 
-         Task AcceptFriendRequest(AcceptFriendRequest request);
+         Task AcceptFriendRequest(Guid userId, Guid requestId);
+
+        Task<IList<UserContactContract>> GetUserContacts(Guid userId);
+
+        Task<IList<FriendRequestContract>> GetFriendsRequests(Guid userId);
     }
 }

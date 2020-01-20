@@ -12,7 +12,7 @@ namespace realtime_app.SignalR.Hubs
     {
         public string ConnectionId { get; set; }
 
-        public string UserId { get; set; }
+        public int UserId { get; set; }
     }
 
     public static class UserHandler
@@ -21,7 +21,7 @@ namespace realtime_app.SignalR.Hubs
     }
 
     [Authorize]
-    public class NotificationHub : Hub
+    public class NotificationHub : Hub<INotify>
     {
         private readonly IClaimsService _claimsService;
 
@@ -30,21 +30,21 @@ namespace realtime_app.SignalR.Hubs
             _claimsService = claimsService;
         }
 
+        public async Task DispatchNotifications()
+        {
+            await Clients.Client(Context.ConnectionId).DispatchNewNotification();
+        }
+
         public override async Task OnConnectedAsync()
         {
             var user = _claimsService.GetUserClaims();
 
-            UserHandler.UserConnectionIds.Add(new ConnectionUserIdentifierPair(){
-                UserId = user.Id,
-                ConnectionId = Context.ConnectionId
-            });
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = _claimsService.GetUserClaims();
-            UserHandler.UserConnectionIds.RemoveAll(x => x.UserId == user.Id);
             await base.OnDisconnectedAsync(exception);
         }
     }

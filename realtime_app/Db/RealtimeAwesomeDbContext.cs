@@ -19,6 +19,9 @@ namespace realtime_app.Db
             MessageBuilder.Build(builder);
             UserContactBuilder.Build(builder);
             ContactBuilder.Build(builder);
+            NotificationBuilder.Build(builder);
+            NotificationTypeBuilder.Build(builder);
+            ParticipantBuilder.Build(builder);
         }
     }
 }

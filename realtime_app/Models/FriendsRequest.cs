@@ -8,7 +8,7 @@ namespace realtime_app.Models
 
         protected FriendsRequest(){}
 
-        public FriendsRequest(int receiverId, int requesterId)
+        public FriendsRequest(Guid receiverId, Guid requesterId)
         {
             this.RecieverId = receiverId;
             this.RequesterId = requesterId;
@@ -16,13 +16,9 @@ namespace realtime_app.Models
             this.Status = FriendsRequestEnum.PENDING;
         }
 
-        public int RecieverId { get; set; }
+        public Guid RecieverId { get; set; }
 
-        public int RequesterId { get; set; }
-
-        public virtual User Receiver { get; set; }
-
-        public virtual User Requester { get; set; }
+        public Guid RequesterId { get; set; }
 
         public FriendsRequestEnum Status { get; set; }
     }

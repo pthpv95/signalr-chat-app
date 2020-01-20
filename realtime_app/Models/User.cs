@@ -14,8 +14,6 @@ namespace realtime_app.Models
 
         public string Email { get; set; }
 
-        public virtual Conversation Conversation { get; set; }
-
         public User(string firstName, string lastName, string userName)
         {
             this.FirstName = firstName;
@@ -23,8 +21,6 @@ namespace realtime_app.Models
             this.LastName = lastName;
 
             this.UserName = userName;
-
-            this.Created = DateTime.Now;
         }
     }
 }

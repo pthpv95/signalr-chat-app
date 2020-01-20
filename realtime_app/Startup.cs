@@ -56,7 +56,7 @@ namespace realtime_app
                         // If the request is for our hub...
                         var path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/notification")))
+                            (path.StartsWithSegments("/hub")))
                         {
                             // Read the token out of the query string
                             context.Token = accessToken;
@@ -78,6 +78,7 @@ namespace realtime_app
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             
+            services.AddMemoryCache();
             services.AddCors(options => options.AddPolicy("Cors", builder =>
             {
                 builder
@@ -89,11 +90,11 @@ namespace realtime_app
             services.AddSignalR();
             services.AddSwaggerGen(c => 
             {
-                c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
+               c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
             });
 
             services.AddControllers()
-                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+               .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
         }
 
@@ -115,8 +116,8 @@ namespace realtime_app
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chat");
-                endpoints.MapHub<NotificationHub>("/notification");
+                endpoints.MapHub<ChatHub>("/hub/chat");
+                endpoints.MapHub<NotificationHub>("/hub/notification");
             });
 
             app.UseSwagger();

@@ -16,7 +16,7 @@ namespace IdentityServer.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<int> CreateChatUserAsync(string firstName, string lastName, string userName)
+        public async Task<string> CreateChatUserAsync(string firstName, string lastName, string userName)
         {
             var client = _httpClientFactory.CreateClient("ChatApp");
 
