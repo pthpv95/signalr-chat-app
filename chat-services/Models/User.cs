@@ -14,6 +14,8 @@ namespace realtime_app.Models
 
         public string Email { get; set; }
 
+        public IList<UserContact> UserContacts { get; set; }
+
         public User(string firstName, string lastName, string userName)
         {
             this.FirstName = firstName;

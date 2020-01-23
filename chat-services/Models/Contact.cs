@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using realtime_app.Common;
 
 namespace realtime_app.Models
@@ -17,5 +18,7 @@ namespace realtime_app.Models
         public string LastName { get; set; }
 
         public Guid UserId { get; set; }
+
+        public IList<UserContact> UserContacts { get; set; }
     }
 }

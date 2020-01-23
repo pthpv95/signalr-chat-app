@@ -40,21 +40,20 @@ namespace realtime_app.SignalR.Hubs
       await base.OnDisconnectedAsync(exception);
     }
 
-    public async Task SendMessage(string message, Guid contactId, Guid conversationId)
+    public async Task SendMessage(string message, Guid contactUserId)
     {
       var identity = _claimsService.GetUserClaims();
       var payload = new SendMessageRequestContract 
       {
           SenderId = identity.Id,
           Message = message,
-          ConversationId = conversationId,
-          ContactId = contactId
+          ContactId = contactUserId
       };
 
-      var messageRes = await _messageService.CreateMessageAsync(payload);
-      var userConnectionIds = _cache.Get<List<string>>(contactId);
-      
-      await Clients.All.SendAsync("ReceiveMessage", message);
+      await _messageService.CreateMessageAsync(payload);
+      //var userConnectionIds = _cache.Get<List<string>>(contactUserId);
+      await Clients.All.SendAsync("ReceiveMessage", payload);
+
       // foreach (var connectionId in userConnectionIds)
       // {
       //   await Clients.Client(connectionId).SendAsync("broadcastMessage", message);

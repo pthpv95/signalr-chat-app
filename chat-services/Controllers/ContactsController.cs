@@ -92,8 +92,13 @@ namespace realtime_app.Controllers
     [Route("{requestId}/accept-friend-request")]
     public async Task<IActionResult> AcceptFriendRequest([FromRoute] Guid requestId)
     {
-      await _contactService.AcceptFriendRequest(_claimsService.GetUserClaims().Id, requestId);
-      return Ok();
+        await _contactService.AcceptFriendRequest(_claimsService.GetUserClaims().Id, requestId);
+        var response = new ResponseMessage
+        {
+            Data = "Success",
+            IsSuccess = true
+        };
+        return Ok(response);
     }
   }
 }

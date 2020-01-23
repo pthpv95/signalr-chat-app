@@ -18,7 +18,7 @@ namespace realtime_app.Services
         public Task<int> GetUserNumberOfNotifications(Guid userId)
         {
             var pendingFriendRequests = _context.Set<FriendsRequest>()
-                .Where(x => x.RecieverId == userId && x.Status == FriendsRequestEnum.PENDING)
+                .Where(x => x.ReceiverId == userId && x.Status == FriendsRequestEnum.PENDING)
                 .Count();
 
 

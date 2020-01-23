@@ -19,36 +19,43 @@ namespace realtime_app.Services
 
     public async Task<Guid> CreateMessageAsync(SendMessageRequestContract request)
     {
-      var conversationId = request.ConversationId;
-      if (request.ConversationId == Guid.Empty)
-      {
-        var contactInfo = await _context.Set<Contact>()
-          .FirstAsync(c => c.Id == request.ContactId);
+        var members = new Guid[] { request.SenderId, request.ContactId };
+        var participantInConversations = await GetConversationOfParticipants(members);
 
-        var conversation = new Conversation(contactInfo.FirstName, request.SenderId);
-        conversationId = conversation.Id;
+        if (participantInConversations != null && participantInConversations.Count == 1)
+        {
+            var conversation = await _context.Set<Conversation>()
+                                    .FirstOrDefaultAsync(c => c.Id == participantInConversations.First());
 
-        var sender = new Participant(conversationId, ParticipanTypeEnum.Private, request.SenderId);
-        var contact = new Participant(conversationId, ParticipanTypeEnum.Private, request.ContactId);
-        await _context.AddRangeAsync(conversation, sender, contact);
-      }
-
-      var message = new Message(request.Message, request.SenderId, MessageType.Text, conversationId);
-      await _context.AddAsync(message);
-      await _context.SaveChangesAsync();
-
-      return conversationId;
+            var message = new Message(request.Message, request.SenderId, MessageType.Text, conversation.Id);
+            await _context.AddAsync(message);
+            await _context.SaveChangesAsync();
+            return request.SenderId;
+        }
+        throw new Exception("Conversation is not existed");
     }
 
-    public async Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId, Guid conversationId)
+    private async Task<IList<Guid>> GetConversationOfParticipants(Guid[] members)
     {
-      var members = new Guid[] { userId, contactUserId };
-      var hasMemberInConversation = await _context.Set<Participant>().AnyAsync(p => members.Contains(p.UserId));
+        var participantInConversations = await _context.Set<Participant>()
+                            .Where(p => members.Contains(p.UserId))
+                            .GroupBy(x => x.ConversationId)
+                            .Where(x => x.Count() > 1)
+                            .Select(x => x.Key)
+                            .ToListAsync();
 
-      if (hasMemberInConversation)
-      {
-        var conversation = await _context.Set<Conversation>()
-                  .FirstOrDefaultAsync(c => c.Id == conversationId);
+        return participantInConversations;
+    }
+
+    public async Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId)
+    {
+        var members = new Guid[] { userId, contactUserId };
+        var participantInConversations = await GetConversationOfParticipants(members);
+
+        if (participantInConversations != null && participantInConversations.Count == 1)
+        {
+            var conversation = await _context.Set<Conversation>()
+                            .FirstOrDefaultAsync(c => c.Id == participantInConversations.First());
 
         if (conversation == null)
         {
@@ -56,7 +63,7 @@ namespace realtime_app.Services
         }
 
         var messages = await _context.Set<Message>()
-          .Where(m => m.ConversationId == conversationId)
+          .Where(m => m.ConversationId == conversation.Id)
           .OrderBy(x => x.Created)
           .Select(x => new MessageDetailsContract
           {
@@ -76,23 +83,20 @@ namespace realtime_app.Services
       }
       else
       {
-        var contactInfo = await (from c in _context.Set<Contact>()
-                                 join u in _context.Set<User>()
-                                 on c.UserId equals u.Id
-                                 where u.Id == contactUserId
-                                 select new UserContactContract
-                                 {
-                                   Id = c.Id,
-                                   FirstName = u.FirstName,
-                                   LastName = u.LastName
-                                 }).FirstOrDefaultAsync();
+        var defaultContact = await _context.Set<Contact>()
+                    .SingleOrDefaultAsync(uc => uc.UserId == contactUserId);
 
-        var title = contactInfo.FirstName + ' ' + contactInfo.LastName;
+        if(defaultContact == null)
+        {
+            throw new Exception("Contact is not existed.");
+        }
+
+        var title = defaultContact.FirstName + ' ' + defaultContact.LastName;
 
         var conversation = new Conversation(title, userId);
 
         var sender = new Participant(conversation.Id, ParticipanTypeEnum.Private, userId);
-        var contact = new Participant(conversation.Id, ParticipanTypeEnum.Private, contactInfo.Id);
+        var contact = new Participant(conversation.Id, ParticipanTypeEnum.Private, contactUserId);
         await _context.AddRangeAsync(conversation, sender, contact);
         await _context.SaveChangesAsync();
 

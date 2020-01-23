@@ -9,6 +9,6 @@ namespace realtime_app.Services
     {
          Task<Guid> CreateMessageAsync(SendMessageRequestContract request);
 
-         Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId, Guid conversationId);
+         Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId);
     }
 }

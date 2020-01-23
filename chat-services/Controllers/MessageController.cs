@@ -23,10 +23,10 @@ namespace realtime_app.Controllers
     }
 
     [HttpGet]
-    [Route("{conversationId}/contact/{contactUserId}/")]
-    public async Task<IActionResult> GetConversationInfo([FromRoute] Guid conversationId, Guid contactUserId)
+    [Route("contact/{contactUserId}")]
+    public async Task<IActionResult> GetConversationInfo([FromRoute] Guid contactUserId)
     {
-      var conversation = await _messageService.GetPrivateConversationInfo(_claimsService.GetUserClaims().Id, contactUserId, conversationId);
+      var conversation = await _messageService.GetPrivateConversationInfo(_claimsService.GetUserClaims().Id, contactUserId);
       var response = new ResponseMessage
       {
         Data = conversation,

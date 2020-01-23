@@ -12,69 +12,96 @@ namespace realtime_app.Services
   public class ContactService : IContactService
   {
     private RealtimeAwesomeDbContext _context;
+
     public ContactService(RealtimeAwesomeDbContext context)
     {
-      _context = context;
+        _context = context;
     }
 
     public async Task AcceptFriendRequest(Guid userId, Guid requestId)
     {
-      var friendRequest = await _context.Set<FriendsRequest>()
-          .SingleOrDefaultAsync(f => f.RequesterId == requestId);
+        var friendRequest = await _context.Set<FriendsRequest>()
+            .SingleOrDefaultAsync(f => f.Id == requestId);
 
-      if (friendRequest == null)
-      {
-        return;
-      }
+        if (friendRequest == null)
+        {
+            return;
+        }
 
-      var requester = await _context.Set<User>().SingleOrDefaultAsync(u => u.Id == friendRequest.RequesterId);
+        friendRequest.Status = FriendsRequestEnum.ACCEPTED;
 
-      var contact = new Contact(friendRequest.RequesterId, requester.FirstName, requester.LastName);
+        var requester = await _context.Set<User>().SingleAsync(u => u.Id == friendRequest.RequesterId);
+        var user = await _context.Set<User>().SingleAsync(user => user.Id == userId);
 
-      var userContact = new UserContact(userId, contact.Id);
+        var receivedContact = await _context.Set<Contact>().SingleAsync(x => x.UserId == user.Id);
+        var requesterContact = await _context.Set<Contact>().SingleAsync(x => x.UserId == requester.Id);
+
+        var userContact1 = new UserContact(user.Id, requesterContact.Id);
+        var userContact2 = new UserContact(requester.Id, receivedContact.Id);
       
-
-      friendRequest.Status = FriendsRequestEnum.ACCEPTED;
-      await _context.Set<Contact>().AddAsync(contact);
-      await _context.Set<UserContact>().AddAsync(userContact);
-      await _context.SaveChangesAsync();
+        await _context.Set<UserContact>().AddRangeAsync(userContact1, userContact2);          
+        await _context.SaveChangesAsync();
     }
 
     public IList<UserContactContract> GetContactSuggestions(Guid id)
     {
-      var currentUserContactIds = _context.Set<UserContact>()
-          .Where(c => c.UserId == id)
-          .Select(x => x.ContactId)
-          .ToList();
+        var currentUserContactIds = _context.Set<UserContact>()
+              .Where(c => c.UserId == id)
+              .Include(x => x.Contact)
+              .Select(x => x.Contact.UserId)
+              .ToList();
 
-      var requestedAddFriendUserIds = _context.Set<FriendsRequest>()
-          .Where(x => x.RequesterId == id && x.Status == FriendsRequestEnum.PENDING)
-          .Select(x => x.RecieverId)
-          .ToList();
+        var friendRequestIds = new List<Guid>();
 
-      var suggestedContacts = _context.Set<User>()
-          .Where(u => u.Id != id
-            && !currentUserContactIds.Contains(u.Id)
-            && !requestedAddFriendUserIds.Contains(u.Id))
-          .Select(x => new UserContactContract
-          {
-            Id = x.Id,
-            FirstName = x.FirstName,
-            LastName = x.LastName
-          }).ToList();
+        var userReceivedFriendRequests = _context.Set<FriendsRequest>()
+            .Any(fr => fr.ReceiverId == id);
 
-      return suggestedContacts;
+        var pendingFriendRequestQuery = _context.Set<FriendsRequest>()
+                .Where(x => x.Status == FriendsRequestEnum.PENDING);
+
+        if (userReceivedFriendRequests)
+        {
+            friendRequestIds = pendingFriendRequestQuery
+                .Where(x => x.ReceiverId == id)
+                .Select(x => x.RequesterId)
+                .ToList();
+        }
+        else
+        {
+            friendRequestIds = pendingFriendRequestQuery
+                .Where(x => x.RequesterId == id)
+                .Select(x => x.ReceiverId)
+                .ToList();
+        }
+
+        var suggestedContacts = _context.Set<User>()
+                .Where(u => u.Id != id
+                    && !currentUserContactIds.Contains(u.Id)
+                    && !friendRequestIds.Contains(u.Id))
+                .Select(x => new UserContactContract
+                    {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName
+                }).ToList();
+
+        return suggestedContacts;
     }
 
     public async Task<IList<FriendRequestContract>> GetFriendsRequests(Guid userId)
     {
-      var friendRequestsQuery =
-        from fr in _context.Set<FriendsRequest>()
-        join u in _context.Set<User>()
-        on fr.RequesterId equals u.Id
-        where fr.RecieverId == userId && fr.Status == FriendsRequestEnum.PENDING
-        select new FriendRequestContract { Id = fr.Id, ContactId = u.Id, FirstName = u.FirstName, LastName = u.LastName };
-
+      var friendRequestsQuery = from fr in _context.Set<FriendsRequest>()
+                                join u in _context.Set<User>()
+                                on fr.RequesterId equals u.Id
+                                where fr.Status == FriendsRequestEnum.PENDING && fr.ReceiverId == userId
+                                select new FriendRequestContract
+                                {
+                                    Id = fr.Id,
+                                    ContactId = u.Id,
+                                    FirstName = u.FirstName,
+                                    LastName = u.LastName
+                                };
+    
       return await friendRequestsQuery.ToListAsync();
     }
 
@@ -85,21 +112,12 @@ namespace realtime_app.Services
         .Where(uc => uc.UserId == userId)
         .ToListAsync();
 
-      var partipants = _context.Set<Participant>()
-        .Where(p => p.UserId != userId)
-        .Select(x => new 
-        {
-          ContactId = x.UserId,
-          ConversationId = x.ConversationId
-        }).ToList();
-
-
       return contacts.Select(x => new UserContactContract
       {
         Id = x.Contact.Id,
+        UserId = x.Contact.UserId,
         FirstName = x.Contact.FirstName,
         LastName = x.Contact.LastName,
-        ConversationId = partipants.FirstOrDefault(p => p.ContactId == x.ContactId)?.ConversationId
       }).ToList();
     }
 

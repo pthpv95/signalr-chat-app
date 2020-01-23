@@ -13,8 +13,8 @@ namespace realtime_app.Services
 
          Task AcceptFriendRequest(Guid userId, Guid requestId);
 
-        Task<IList<UserContactContract>> GetUserContacts(Guid userId);
+         Task<IList<UserContactContract>> GetUserContacts(Guid userId);
 
-        Task<IList<FriendRequestContract>> GetFriendsRequests(Guid userId);
+         Task<IList<FriendRequestContract>> GetFriendsRequests(Guid userId);
     }
 }

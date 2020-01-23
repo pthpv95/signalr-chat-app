@@ -77,7 +77,7 @@ namespace realtime_app.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("RecieverId")
+                    b.Property<Guid>("ReceiverId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("RequesterId")
@@ -254,8 +254,7 @@ namespace realtime_app.Migrations
 
             modelBuilder.Entity("realtime_app.Models.UserContact", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("ContactId")
@@ -264,17 +263,17 @@ namespace realtime_app.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("Updated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
+                    b.HasKey("UserId", "ContactId");
 
-                    b.HasKey("Id");
+                    b.HasAlternateKey("Id");
 
                     b.HasIndex("ContactId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("UserContacts");
                 });
@@ -323,13 +322,13 @@ namespace realtime_app.Migrations
             modelBuilder.Entity("realtime_app.Models.UserContact", b =>
                 {
                     b.HasOne("realtime_app.Models.Contact", "Contact")
-                        .WithMany()
+                        .WithMany("UserContacts")
                         .HasForeignKey("ContactId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("realtime_app.Models.User", "User")
-                        .WithMany()
+                        .WithMany("UserContacts")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace realtime_app.Migrations
 {
-    public partial class Initial_Create : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +30,7 @@ namespace realtime_app.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
                     Updated = table.Column<DateTime>(nullable: false),
-                    RecieverId = table.Column<Guid>(nullable: false),
+                    ReceiverId = table.Column<Guid>(nullable: false),
                     RequesterId = table.Column<Guid>(nullable: false),
                     Status = table.Column<int>(nullable: false)
                 },
@@ -180,15 +180,16 @@ namespace realtime_app.Migrations
                 name: "UserContacts",
                 columns: table => new
                 {
+                    UserId = table.Column<Guid>(nullable: false),
+                    ContactId = table.Column<Guid>(nullable: false),
                     Id = table.Column<Guid>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    Updated = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
-                    ContactId = table.Column<Guid>(nullable: false)
+                    Updated = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserContacts", x => x.Id);
+                    table.PrimaryKey("PK_UserContacts", x => new { x.UserId, x.ContactId });
+                    table.UniqueConstraint("AK_UserContacts_Id", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserContacts_Contacts_ContactId",
                         column: x => x.ContactId,
@@ -237,11 +238,6 @@ namespace realtime_app.Migrations
                 name: "IX_UserContacts_ContactId",
                 table: "UserContacts",
                 column: "ContactId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserContacts_UserId",
-                table: "UserContacts",
-                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
