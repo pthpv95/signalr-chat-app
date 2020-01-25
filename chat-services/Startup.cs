@@ -77,6 +77,7 @@ namespace realtime_app
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IClaimsService, ClaimsService>();
+            services.AddScoped<IFileService, FileService>();
             
             services.AddMemoryCache();
             services.AddCors(options => options.AddPolicy("Cors", builder =>

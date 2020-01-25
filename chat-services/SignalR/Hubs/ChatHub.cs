@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -42,27 +43,18 @@ namespace realtime_app.SignalR.Hubs
 
     public async Task SendMessage(string message, Guid contactUserId)
     {
-      var identity = _claimsService.GetUserClaims();
-      var payload = new SendMessageRequestContract 
-      {
-          SenderId = identity.Id,
-          Message = message,
-          ContactId = contactUserId
-      };
+        var identity = _claimsService.GetUserClaims();
+        var payload = new SendMessageRequestContract 
+        {
+            SenderId = identity.Id,
+            ContactUserId = contactUserId,
+            Message = message
+        };
 
-      await _messageService.CreateMessageAsync(payload);
-      //var userConnectionIds = _cache.Get<List<string>>(contactUserId);
-      await Clients.All.SendAsync("ReceiveMessage", payload);
-
-      // foreach (var connectionId in userConnectionIds)
-      // {
-      //   await Clients.Client(connectionId).SendAsync("broadcastMessage", message);
-      // }
+        await _messageService.CreateMessageAsync(payload);
+        var userConnectionIds = _cache.Get<List<string>>(identity.Id) ?? new List<string>();
+        var contactConnectionIds = _cache.Get<List<string>>(contactUserId) ?? new List<string>();
+        await Clients.Clients(userConnectionIds?.Concat(contactConnectionIds).ToList()).SendAsync("ReceiveMessage", payload);
     }
-
-    // public async Task SendMessage(string user, string message)
-    // {
-    //   await Clients.All.SendAsync("ReceiveMessage", user, message);
-    // }
   }
 }

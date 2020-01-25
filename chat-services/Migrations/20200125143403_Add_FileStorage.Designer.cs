@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using realtime_app.Db;
 
 namespace realtime_app.Migrations
 {
     [DbContext(typeof(RealtimeAwesomeDbContext))]
-    partial class RealtimeAwesomeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200125143403_Add_FileStorage")]
+    partial class Add_FileStorage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,8 +76,8 @@ namespace realtime_app.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("ContentType")
-                        .HasColumnType("longtext");
+                    b.Property<int>("ContentType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");

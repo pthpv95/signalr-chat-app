@@ -19,7 +19,7 @@ namespace realtime_app.Services
 
     public async Task<Guid> CreateMessageAsync(SendMessageRequestContract request)
     {
-        var members = new Guid[] { request.SenderId, request.ContactId };
+        var members = new Guid[] { request.SenderId, request.ContactUserId };
         var participantInConversations = await GetConversationOfParticipants(members);
 
         if (participantInConversations != null && participantInConversations.Count == 1)
@@ -69,7 +69,7 @@ namespace realtime_app.Services
           {
             Id = x.Id,
             Content = x.Text,
-            SentAt = x.Created.ToString("h:mm tt"),
+            SentAt = x.Created.ToString("HH:mm"),
             IsResponse = x.SenderId != userId
 
           }).ToListAsync();

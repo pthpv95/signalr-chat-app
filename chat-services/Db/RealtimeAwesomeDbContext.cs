@@ -1,3 +1,4 @@
+using chat_services.Models.ModelBuilders;
 using Microsoft.EntityFrameworkCore;
 using realtime_app.Models.ModelBuilders;
 
@@ -22,6 +23,7 @@ namespace realtime_app.Db
             NotificationBuilder.Build(builder);
             NotificationTypeBuilder.Build(builder);
             ParticipantBuilder.Build(builder);
+            FileStorageBuilder.Build(builder);
         }
     }
 }
