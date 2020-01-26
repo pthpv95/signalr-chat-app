@@ -11,5 +11,7 @@ namespace realtime_app.Contracts
         public string Message { get; set; }
 
         public int MessageType { get; set; }
+
+        public string AttachmentUrl { get; set; }
     }
 }

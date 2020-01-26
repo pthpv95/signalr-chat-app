@@ -27,7 +27,14 @@ namespace realtime_app.Services
             var conversation = await _context.Set<Conversation>()
                                     .FirstOrDefaultAsync(c => c.Id == participantInConversations.First());
 
-            var message = new Message(request.Message, request.SenderId, MessageType.Text, conversation.Id);
+            var message = new Message(
+              request.Message,
+              request.SenderId,
+              (MessageType)request.MessageType, 
+              conversation.Id, 
+              request.AttachmentUrl
+            );
+
             await _context.AddAsync(message);
             await _context.SaveChangesAsync();
             return request.SenderId;
@@ -68,10 +75,11 @@ namespace realtime_app.Services
           .Select(x => new MessageDetailsContract
           {
             Id = x.Id,
-            Content = x.Text,
+            Text = x.Text,
+            AttachmentUrl = x.AttachmentUrl,
             SentAt = x.Created.ToString("HH:mm"),
-            IsResponse = x.SenderId != userId
-
+            IsResponse = x.SenderId != userId,
+            MessageType = (int)x.MessageType
           }).ToListAsync();
 
         return new ConversationContract()

@@ -11,9 +11,10 @@ namespace realtime_app.Models
 
         }
 
-        public Message(string text, Guid senderId, MessageType messageType, Guid conversationId)
+        public Message(string text, Guid senderId, MessageType messageType, Guid conversationId, string attachmentUrl)
         {
             this.Text = text;
+            this.AttachmentUrl = attachmentUrl;
             this.SenderId = senderId;
             this.MessageType = messageType;
             this.ConversationId = conversationId;

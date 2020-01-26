@@ -6,7 +6,11 @@ namespace realtime_app.Contracts
     {
         public Guid Id { get; set; }
 
-        public string Content { get; set; }
+        public string Text { get; set; }
+
+        public string AttachmentUrl { get; set; }
+
+        public int MessageType { get; set; }
 
         public string SentAt { get; set; }
 

@@ -42,13 +42,13 @@ namespace realtime_app.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] UploadFileModel model)
+        public async Task<IActionResult> Post([FromForm] IFormFile file)
         {
-            if(model.File == null)
+            if(file == null)
             {
                 return BadRequest("Please select file.");
             }
-            var fileId = await _fileService.StoreFileAsync(model);
+            var fileId = await _fileService.StoreFileAsync(file);
             var response = new ResponseMessage
             {
                 Data = fileId

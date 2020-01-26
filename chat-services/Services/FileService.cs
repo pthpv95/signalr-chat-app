@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using chat_services.Contracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using realtime_app.Contracts;
 using realtime_app.Db;
@@ -18,14 +19,14 @@ namespace realtime_app.Services
             _context = context;
         }
 
-        public async Task<Guid> StoreFileAsync(UploadFileModel model)
+        public async Task<Guid> StoreFileAsync(IFormFile fileInput)
         {
             byte[] content;
-            using (var stream = model.File.OpenReadStream())
+            using (var stream = fileInput.OpenReadStream())
             {
                 content = ReadAllBytes(stream);
             }
-            var file = new FileStorage(model.File.FileName, model.File.ContentType, content);
+            var file = new FileStorage(fileInput.FileName, fileInput.ContentType, content);
             await _context.Set<FileStorage>().AddAsync(file);
             await _context.SaveChangesAsync();
             return file.Id;
