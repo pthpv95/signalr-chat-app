@@ -8,6 +8,7 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'IdentityServerWithAspNetIdentity' ">
     <StartAction>Project</StartAction>
     <LaunchUrl>http://localhost:5000</LaunchUrl>
+    <ApplicationURL>http://localhost:5000</ApplicationURL>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="3.0.1" />
