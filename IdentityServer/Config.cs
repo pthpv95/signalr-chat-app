@@ -47,7 +47,7 @@ namespace IdentityServerWithAspNetIdentity
                     },
                     PostLogoutRedirectUris = 
                     { 
-                        "http://localhost:5050/account/login"
+                        "http://localhost:5060/account/login"
                     },
                     AllowedCorsOrigins = { "http://localhost:8080" },
 

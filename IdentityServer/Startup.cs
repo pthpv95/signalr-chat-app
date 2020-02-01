@@ -13,6 +13,8 @@ using IdentityServerWithAspNetIdentity.Models;
 using IdentityServerWithAspNetIdentity.Services;
 using Microsoft.Extensions.Hosting;
 using IdentityServer.Services;
+using IdentityServer.Data;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -29,7 +31,7 @@ namespace IdentityServerWithAspNetIdentity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                 options.Password.RequireDigit = false;
