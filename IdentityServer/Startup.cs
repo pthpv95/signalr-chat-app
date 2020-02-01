@@ -15,6 +15,10 @@ using Microsoft.Extensions.Hosting;
 using IdentityServer.Services;
 using IdentityServer.Data;
 using Microsoft.AspNetCore.DataProtection;
+using IdentityServer.Infrastructure.Settings;
+using System.Reflection;
+using IdentityServer4.EntityFramework.Mappers;
+using IdentityServer4.EntityFramework.DbContexts;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -30,9 +34,16 @@ namespace IdentityServerWithAspNetIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection"); 
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
+            // Add a DbContext to store your Database Keys
+            services.AddDbContext<MyKeysContext>(options => options.UseNpgsql(connectionString));
+
+            // using Microsoft.AspNetCore.DataProtection;
+            services.AddDataProtection()
+                .PersistKeysToDbContext<MyKeysContext>();
+                
             services.AddIdentity<ApplicationUser, IdentityRole>(options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
@@ -50,18 +61,27 @@ namespace IdentityServerWithAspNetIdentity
             services.AddMvc();
 
             // configure identity server with in-memory stores, keys, clients and scopes
+            
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
-                .AddInMemoryPersistedGrants()
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GetClients())
                 .AddAspNetIdentity<ApplicationUser>()
-                .AddProfileService<IdentityProfileService>();
+                .AddProfileService<IdentityProfileService>()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.EnableTokenCleanup = true;
+                });
+                
 
             services.AddHttpClient("ChatApp", c =>
             {
-                c.BaseAddress = new Uri("http://localhost:5000/");
+                var clients = Configuration.GetSection("NamedHttpClientFactories").Get<NamedHttpClientFactories[]>();
+                c.BaseAddress = new Uri(clients.First().BaseAddress);
             });
         }
 
@@ -77,7 +97,7 @@ namespace IdentityServerWithAspNetIdentity
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            //InitializeDatabase(app);
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
@@ -90,6 +110,43 @@ namespace IdentityServerWithAspNetIdentity
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{Action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                context.Database.Migrate();
+                if (!context.Clients.Any())
+                {
+                    foreach (var client in Config.GetClients())
+                    {
+                        context.Clients.Add(client.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
+
+                if (!context.IdentityResources.Any())
+                {
+                    foreach (var resource in Config.GetIdentityResources())
+                    {
+                        context.IdentityResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
+
+                if (!context.ApiResources.Any())
+                {
+                    foreach (var resource in Config.GetApiResources())
+                    {
+                        context.ApiResources.Add(resource.ToEntity());
+                    }
+                    context.SaveChanges();
+                }
+            }
         }
     }
 }

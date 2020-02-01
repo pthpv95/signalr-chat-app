@@ -41,15 +41,15 @@ namespace IdentityServerWithAspNetIdentity
                     RequireConsent = false,
                     AccessTokenLifetime = 3600,
 
-                    RedirectUris = { 
-                        "http://localhost:8080/callback",
-                        "http://localhost:8080/silent-renew",
+                    RedirectUris = {
+                        "https://chatapp-web.herokuapp.com//callback",
+                        "https://chatapp-web.herokuapp.com//silent-renew",
                     },
                     PostLogoutRedirectUris = 
-                    { 
-                        "http://localhost:5060/account/login"
+                    {
+                        "https://chat-identity-server.herokuapp.com/account/login"
                     },
-                    AllowedCorsOrigins = { "http://localhost:8080" },
+                    AllowedCorsOrigins = { "https://chatapp-web.herokuapp.com/" },
 
                     AllowedScopes =
                     {

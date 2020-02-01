@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using chat_services.Infrastructure.Settings;
+using chat_services.Db;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace realtime_app
 {
@@ -28,8 +31,15 @@ namespace realtime_app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<RealtimeAwesomeDbContext>(
-                options => options.UseMySql("Server=localhost;Database=awesome.chat;User=root;Password=123456;"
-            ));
+                options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add a DbContext to store your Database Keys
+            services.AddDbContext<MyKeysContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            // using Microsoft.AspNetCore.DataProtection;
+            services.AddDataProtection()
+                .PersistKeysToDbContext<MyKeysContext>();
 
             services.AddAuthentication(options =>
             {
@@ -37,7 +47,8 @@ namespace realtime_app
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
             }).AddJwtBearer(options =>
             {
-                options.Authority = "http://localhost:5050";
+                var identityServerOpts = Configuration.GetSection(nameof(IdentityServerOptions));
+                options.Authority = identityServerOpts.GetValue<string>(nameof(IdentityServerOptions.Authority));
                 options.RequireHttpsMetadata = false;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -94,8 +105,7 @@ namespace realtime_app
                c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
             });
 
-            services.AddControllers()
-               .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers();
 
         }
 

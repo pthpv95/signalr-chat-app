@@ -8,7 +8,7 @@ RUN dotnet publish -c Release -o /app
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
 WORKDIR /app
 COPY --from=build /app .
-#ENTRYPOINT ["dotnet", "IdentityServer.dll"]
+#ENTRYPOINT ["dotnet", "realtime_app.dll"]
 
 # heroku uses the following
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet IdentityServer.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet realtime_app.dll

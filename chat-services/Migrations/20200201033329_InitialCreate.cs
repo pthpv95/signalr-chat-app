@@ -24,6 +24,22 @@ namespace realtime_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FileStorages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    ContentType = table.Column<string>(nullable: true),
+                    Data = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileStorages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FriendsRequests",
                 columns: table => new
                 {
@@ -244,6 +260,9 @@ namespace realtime_app.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Conversations");
+
+            migrationBuilder.DropTable(
+                name: "FileStorages");
 
             migrationBuilder.DropTable(
                 name: "FriendsRequests");
