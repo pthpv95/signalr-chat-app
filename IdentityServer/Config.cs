@@ -42,14 +42,14 @@ namespace IdentityServerWithAspNetIdentity
                     AccessTokenLifetime = 3600,
 
                     RedirectUris = {
-                        "https://chatapp-web.herokuapp.com//callback",
-                        "https://chatapp-web.herokuapp.com//silent-renew",
+                        "https://chatapp-web.herokuapp.com/callback",
+                        "https://chatapp-web.herokuapp.com/silent-renew",
                     },
                     PostLogoutRedirectUris = 
                     {
                         "https://chat-identity-server.herokuapp.com/account/login"
                     },
-                    AllowedCorsOrigins = { "https://chatapp-web.herokuapp.com/" },
+                    AllowedCorsOrigins = { "https://chatapp-web.herokuapp.com/", "http://chatapp-web.herokuapp.com/" },
 
                     AllowedScopes =
                     {

@@ -7,20 +7,27 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityServerWithAspNetIdentity.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Quickstart.UI;
+using IdentityServer.Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServerWithAspNetIdentity.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
+        private readonly ClientConfigs _clientConfigs;
 
-        public HomeController(IIdentityServerInteractionService interaction)
+        public HomeController(
+            IIdentityServerInteractionService interaction, 
+            IOptions<ClientConfigs> clientConfigs)
         {
             _interaction = interaction;
+            _clientConfigs = clientConfigs.Value;
         }
 
         public IActionResult Index()
         {
+            ViewData["ApplicationUrl"] = _clientConfigs.BaseAddress;
             return View();
         }
 

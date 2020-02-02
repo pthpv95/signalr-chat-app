@@ -28,6 +28,7 @@ namespace IdentityServerWithAspNetIdentity
         {
             Configuration = configuration;
         }
+        readonly string AllowAnyOrigin = "_allowAnyOrigin";
 
         public IConfiguration Configuration { get; }
 
@@ -57,7 +58,7 @@ namespace IdentityServerWithAspNetIdentity
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChatService, ChatService>();
-
+            services.Configure<ClientConfigs>(Configuration.GetSection("ClientConfigs"));
             services.AddMvc();
 
             // configure identity server with in-memory stores, keys, clients and scopes
@@ -76,7 +77,17 @@ namespace IdentityServerWithAspNetIdentity
                     options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                 });
-                
+
+            services.AddCors(options =>
+            {
+                    // this defines a CORS policy called "default"
+                options.AddPolicy(AllowAnyOrigin, policy =>
+                {
+                    policy.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                });
+            });
 
             services.AddHttpClient("ChatApp", c =>
             {
@@ -96,13 +107,14 @@ namespace IdentityServerWithAspNetIdentity
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
+            
             //InitializeDatabase(app);
+            app.UseCors(AllowAnyOrigin);
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-
-            // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>

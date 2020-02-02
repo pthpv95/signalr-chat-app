@@ -25,6 +25,8 @@ namespace realtime_app
             Configuration = configuration;
         }
 
+        readonly string AllowAnyOrigin = "_allowAnyOrigin";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -91,13 +93,16 @@ namespace realtime_app
             services.AddScoped<IFileService, FileService>();
             
             services.AddMemoryCache();
-            services.AddCors(options => options.AddPolicy("Cors", builder =>
+            services.AddCors(options =>
             {
-                builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-            }));
+                    // this defines a CORS policy called "default"
+                    options.AddPolicy(AllowAnyOrigin, policy =>
+                    {
+                    policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                });
+            });
 
             services.AddSignalR();
             services.AddSwaggerGen(c => 
@@ -117,12 +122,12 @@ namespace realtime_app
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(AllowAnyOrigin);
             app.UseHttpsRedirection();
             app.UseAuthentication();
 
             app.UseRouting();
             app.UseAuthorization();
-            app.UseCors("Cors");
 
             app.UseEndpoints(endpoints =>
             {

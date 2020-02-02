@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authentication;
 @{
     ViewData["Title"] = "Home Page";
+    var url = ViewData["ApplicationUrl"];
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
@@ -18,4 +19,4 @@
     <dd>@await ViewContext.HttpContext.GetTokenAsync("id_token")</dd>
 </dl>
 
-<a href="http://localhost:8080" class="btn btn-primary">Go to awesome app</a>
+<a href='@url' class="btn btn-primary">Go to awesome chat app</a>
