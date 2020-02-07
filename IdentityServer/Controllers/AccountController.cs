@@ -18,6 +18,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Http;
 using IdentityServer.Services;
+using IdentityServer.Infrastructure.Settings;
 
 namespace IdentityServerWithAspNetIdentity.Controllers
 {
@@ -35,6 +36,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
         private readonly IChatService _chatService;
 
+        private readonly ClientConfigs _clientConfigs;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -44,7 +47,8 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             IClientStore clientStore,
             IHttpContextAccessor httpContextAccessor,
             IAuthenticationSchemeProvider schemeProvider,
-            IChatService chatService
+            IChatService chatService,
+            IOptions<ClientConfigs> clientConfigs
         )
         {
             _userManager = userManager;
@@ -55,6 +59,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             _interaction = interaction;
             _account = new AccountService(interaction, httpContextAccessor, schemeProvider, clientStore);
             _chatService = chatService;
+            _clientConfigs = clientConfigs.Value;
         }
 
         [TempData]
@@ -275,7 +280,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             _logger.LogInformation("User logged out.");
             // logout.PostLogoutRedirectUri is always null...
             // use hardcoded url for now.
-            return Redirect("http://localhost:8080");
+            return Redirect(_clientConfigs.BaseAddress);
         }
 
         [HttpPost]

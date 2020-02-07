@@ -19,6 +19,9 @@ using IdentityServer.Infrastructure.Settings;
 using System.Reflection;
 using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -77,6 +80,18 @@ namespace IdentityServerWithAspNetIdentity
                     options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                 });
+            
+            services.ConfigureNonBreakingSameSiteCookies();
+
+            services.ConfigureExternalCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+            });
 
             services.AddCors(options =>
             {
@@ -109,8 +124,14 @@ namespace IdentityServerWithAspNetIdentity
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
             //InitializeDatabase(app);
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.None,
+            });
+
             app.UseCors(AllowAnyOrigin);
             app.UseStaticFiles();
             app.UseRouting();
