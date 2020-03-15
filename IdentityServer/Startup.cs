@@ -127,10 +127,7 @@ namespace IdentityServerWithAspNetIdentity
 
             //InitializeDatabase(app);
 
-            app.UseCookiePolicy(new CookiePolicyOptions
-            {
-                MinimumSameSitePolicy = SameSiteMode.None,
-            });
+            app.UseCookiePolicy();
 
             app.UseCors(AllowAnyOrigin);
             app.UseStaticFiles();
