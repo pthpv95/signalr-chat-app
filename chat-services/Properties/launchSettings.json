@@ -9,10 +9,9 @@
     }
   },
   "profiles": {
-    "realtime_app": {
+    "chat-services": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -52,14 +52,14 @@ namespace realtime_app.SignalR.Hubs
             SenderId = identity.Id,
             ContactUserId = contactUserId,
             Message = message,
-            MessageType = String.IsNullOrEmpty(fileUrl) ? 0 : 1,
+            MessageType = string.IsNullOrEmpty(fileUrl) ? 0 : 1,
             AttachmentUrl = fileUrl
         };
 
         await _messageService.CreateMessageAsync(payload);
         var userConnectionIds = _cache.Get<List<string>>(identity.Id) ?? new List<string>();
         var contactConnectionIds = _cache.Get<List<string>>(contactUserId) ?? new List<string>();
-        await Clients.Clients(userConnectionIds?.Concat(contactConnectionIds).ToList()).SendAsync("ReceiveMessage", payload);
+        await Clients.Clients(userConnectionIds.Concat(contactConnectionIds).ToList()).SendAsync("ReceiveMessage", payload);
     }
   }
 }

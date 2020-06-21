@@ -8,9 +8,9 @@ namespace realtime_app.Services
 {
     public class NotificationService : INotificationService
     {
-        private RealtimeAwesomeDbContext _context;
+        private ChatDbContext _context;
 
-        public NotificationService(RealtimeAwesomeDbContext context)
+        public NotificationService(ChatDbContext context)
         {
             _context = context;
         }
@@ -20,9 +20,6 @@ namespace realtime_app.Services
             var pendingFriendRequests = _context.Set<FriendsRequest>()
                 .Where(x => x.ReceiverId == userId && x.Status == FriendsRequestEnum.PENDING)
                 .Count();
-
-
-
             throw new NotImplementedException();
         }
     }

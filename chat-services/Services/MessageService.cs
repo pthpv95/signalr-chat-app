@@ -11,8 +11,8 @@ namespace realtime_app.Services
 {
   public class MessageService : IMessageService
   {
-    private RealtimeAwesomeDbContext _context;
-    public MessageService(RealtimeAwesomeDbContext context)
+    private ChatDbContext _context;
+    public MessageService(ChatDbContext context)
     {
       _context = context;
     }

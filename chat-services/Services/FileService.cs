@@ -12,9 +12,9 @@ namespace realtime_app.Services
 {
     public class FileService : IFileService
     {
-        private readonly RealtimeAwesomeDbContext _context;
+        private readonly ChatDbContext _context;
 
-        public FileService(RealtimeAwesomeDbContext context)
+        public FileService(ChatDbContext context)
         {
             _context = context;
         }

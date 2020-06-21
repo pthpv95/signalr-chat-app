@@ -11,9 +11,9 @@ namespace realtime_app.Services
 {
   public class ContactService : IContactService
   {
-    private RealtimeAwesomeDbContext _context;
+    private ChatDbContext _context;
 
-    public ContactService(RealtimeAwesomeDbContext context)
+    public ContactService(ChatDbContext context)
     {
         _context = context;
     }

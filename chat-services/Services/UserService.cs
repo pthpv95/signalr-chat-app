@@ -8,9 +8,9 @@ namespace realtime_app.Services
 {
   public class UserService : IUserService
   {
-    private readonly RealtimeAwesomeDbContext _context;
+    private readonly ChatDbContext _context;
 
-    public UserService(RealtimeAwesomeDbContext context)
+    public UserService(ChatDbContext context)
     {
         _context = context;
     }

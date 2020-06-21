@@ -13,8 +13,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using chat_services.Infrastructure.Settings;
-using chat_services.Db;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace realtime_app
 {
@@ -32,16 +30,16 @@ namespace realtime_app
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<RealtimeAwesomeDbContext>(
-                options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ChatDbContext>(
+                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add a DbContext to store your Database Keys
-            services.AddDbContext<MyKeysContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ChatDbContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             // using Microsoft.AspNetCore.DataProtection;
-            services.AddDataProtection()
-                .PersistKeysToDbContext<MyKeysContext>();
+            // services.AddDataProtection()
+            //     .PersistKeysToDbContext<MyKeysContext>();
 
             services.AddAuthentication(options =>
             {
@@ -91,8 +89,8 @@ namespace realtime_app
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IFileService, FileService>();
-            
             services.AddMemoryCache();
+            
             services.AddCors(options =>
             {
                     // this defines a CORS policy called "default"
