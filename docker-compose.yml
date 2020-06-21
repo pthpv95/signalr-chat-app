@@ -30,7 +30,7 @@ services:
     ports:
       - "5001:80"
     build:
-      context: ./IdentityServer
+      context: ./identity-server
       dockerfile: Dockerfile
     environment:
       NamedHttpClientFactories__0__BaseAddress: http://chat-service

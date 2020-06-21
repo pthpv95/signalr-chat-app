@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "realtime_app", "realtime_app.csproj", "{CF6CE94B-2825-470D-A045-A98B06344378}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chat-services", "chat-services.csproj", "{CF6CE94B-2825-470D-A045-A98B06344378}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
