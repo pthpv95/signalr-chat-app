@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql
     ports:
       - "3306:3306"
     volumes:
@@ -10,7 +10,7 @@ services:
     restart: always
     environment:
       MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: d^*E$E=%XhmyM=AE4d+RU39RB9KFVR8LcdR86punMj9V4#FJ#j
   
   chat-service:
     image: hienpham95/chat-web-api
@@ -20,7 +20,7 @@ services:
       context: ./chat-services
       dockerfile: Dockerfile
     environment:
-      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=123456;Database=chat-app"
+      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=d^*E$E=%XhmyM=AE4d+RU39RB9KFVR8LcdR86punMj9V4#FJ#j;Database=chat-app"
       IdentityServerOptions__Authority: http://identity-service
     depends_on:
       - db
@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile
     environment:
       NamedHttpClientFactories__0__BaseAddress: http://chat-service
-      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=123456;Database=chat-identity"
+      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=d^*E$E=%XhmyM=AE4d+RU39RB9KFVR8LcdR86punMj9V4#FJ#j;Database=chat-identity"
       ClientConfigs__BaseAddress: "ttp://localhost:8080"
     depends_on:
       - db
