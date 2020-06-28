@@ -39,7 +39,8 @@ namespace realtime_app.SignalR.Hubs
             var user = _claimsService.GetUserClaims();
             var connectionIds = await _cacheService.Get<List<string>>(BuildKey(user.Id)) ?? new List<string>();
 
-            await _cacheService.Set(BuildKey(user.Id), connectionIds.Remove(Context.ConnectionId));
+            var keys = connectionIds.Where(x => x != Context.ConnectionId).ToList();
+            await _cacheService.Set(BuildKey(user.Id), keys);
             await base.OnDisconnectedAsync(exception);
         }
 
