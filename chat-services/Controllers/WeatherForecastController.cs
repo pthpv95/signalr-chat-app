@@ -36,7 +36,10 @@ namespace realtime_app.Controllers
         public async Task<IEnumerable<WeatherForecast>> Get()
         {
             await _cacheService.Set("foo", new List<string>() { "hello world" });
-            var value = await _cacheService.Get<List<string>>("foo");
+            var x = await _cacheService.Get<List<string>>("foo");
+            // var value1 = await _cacheService.Get<List<string>>("OT_666f1370-9a66-45ab-a95e-cdc9e0a0764a");
+            // var value2 = await _cacheService.Get<List<string>>("OT_be8d770c-af48-4392-b04d-a21ef9fd647f");
+
             var user = _httpContextAccessor.HttpContext.User;
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

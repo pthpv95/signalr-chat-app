@@ -21,8 +21,11 @@ services:
     environment:
       ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-app"
       IdentityServerOptions__Authority: http://identity-service
+      RedisSettings__Host: redis
+      RedisSettings__Password: cd2kYw74FTYPg29
     depends_on:
       - db
+      - redis
 
   identity-service:
     image: hienpham95/chat-identity-service
@@ -37,5 +40,16 @@ services:
       ClientConfigs__BaseAddress: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
     depends_on:
       - db
+  
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass cd2kYw74FTYPg29
+    hostname: redis
+    volumes:
+      - redis_data:/data
+
 volumes:
-  db_data: {}
+  db_data:
+  redis_data:

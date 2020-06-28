@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using chat_services.Infrastructure.Settings;
 using chatservices.Services;
+using chatservices.Infrastructure.Settings;
 
 namespace realtime_app
 {
@@ -84,6 +85,7 @@ namespace realtime_app
                 options.AddPolicy("Consumer", policy => policy.RequireClaim("role", "consumer"));
             });
 
+            services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<RedisStore>();
             services.AddSingleton<ICacheService, CacheService>();

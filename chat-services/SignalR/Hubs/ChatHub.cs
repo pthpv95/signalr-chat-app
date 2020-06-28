@@ -13,7 +13,7 @@ namespace realtime_app.SignalR.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        private IMessageService _messageService;
+        private readonly IMessageService _messageService;
         private readonly ICacheService _cacheService;
         private readonly IClaimsService _claimsService;
 
