@@ -27,7 +27,9 @@ namespace realtime_app.SignalR.Hubs
         public override async Task OnConnectedAsync()
         {
             var user = _claimsService.GetUserClaims();
-            await _cacheService.Set(BuildKey(user.Id), new List<string> { Context.ConnectionId });
+            var userConnections = await _cacheService.Get<List<string>>(BuildKey(user.Id)) ?? new List<string>();
+            userConnections.Add(Context.ConnectionId);
+            await _cacheService.Set(BuildKey(user.Id), userConnections);
 
             await base.OnConnectedAsync();
         }
@@ -35,7 +37,7 @@ namespace realtime_app.SignalR.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = _claimsService.GetUserClaims();
-            var connectionIds = await _cacheService.Get<List<string>>(user.Id.ToString());
+            var connectionIds = await _cacheService.Get<List<string>>(BuildKey(user.Id)) ?? new List<string>();
 
             await _cacheService.Set(BuildKey(user.Id), connectionIds.Remove(Context.ConnectionId));
             await base.OnDisconnectedAsync(exception);
