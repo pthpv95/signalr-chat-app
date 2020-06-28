@@ -18,13 +18,11 @@ namespace realtime_app.Services
         {
             var user = _httpContextAccessor.HttpContext.User;
 
-            var context = new ClaimsContext
+            return new ClaimsContext
             {
-                Id = new Guid(user.Claims.SingleOrDefault(c => c.Type == "chatUserId")?.Value),
-                UserName = user.Claims.SingleOrDefault(c => c.Type == "userName")?.Value
+                Id = new Guid(user.Claims.SingleOrDefault(c => c.Type == "chat_user_id")?.Value),
+                UserName = user.Claims.SingleOrDefault(c => c.Type == "user_name")?.Value
             };
-
-            return context;
         }
     }
 }

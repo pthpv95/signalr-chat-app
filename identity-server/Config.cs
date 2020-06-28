@@ -42,7 +42,9 @@ namespace IdentityServerWithAspNetIdentity
                     AccessTokenLifetime = 3600,
                     RedirectUris = {
                         "http://localhost:8080/callback",
-                        "http://localhost:8080/silent-renew",
+                        "http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com/silent-renew",
+                        "http://localhost:8080/callback",
+                        "http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com/silent-renew",
                     },
                     ClientSecrets =
                     {
@@ -50,9 +52,13 @@ namespace IdentityServerWithAspNetIdentity
                     },
                     PostLogoutRedirectUris = 
                     {
-                        "http://localhost:5001/account/login"
+                        "http://localhost:5001/account/login",
+                        "http://159.65.14.138:5001/account/login"
                     },
-                    AllowedCorsOrigins = { "https://localhost:8080/", "http://localhost:8080/" },
+                    AllowedCorsOrigins = {
+                        "https://localhost:8080/", "http://localhost:8080/",
+                        "http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com/", "https://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com/"
+                    },
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

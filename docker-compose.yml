@@ -34,7 +34,7 @@ services:
     environment:
       NamedHttpClientFactories__0__BaseAddress: http://chat-service
       ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-identity"
-      ClientConfigs__BaseAddress: "ttp://localhost:8080"
+      ClientConfigs__BaseAddress: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
     depends_on:
       - db
 volumes:

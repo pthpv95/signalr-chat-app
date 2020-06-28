@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using chat_services.Infrastructure.Settings;
+using chatservices.Services;
 
 namespace realtime_app
 {
@@ -84,12 +85,16 @@ namespace realtime_app
             });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<RedisStore>();
+            services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IFileService, FileService>();
             services.AddMemoryCache();
+
+            services.AddDistributedMemoryCache();
             
             services.AddCors(options =>
             {

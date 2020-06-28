@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
@@ -24,15 +26,17 @@ namespace IdentityServer.Services
         {
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
-            var userClaims = await _userManager.GetClaimsAsync(user);
 
             if(user == null)
             {
                 throw new Exception("User not found");
             }
-            var principal = await _claimsFactory.CreateAsync(user);
-            var claims = principal.Claims.ToList();
-            claims.AddRange(userClaims);
+            var claims = new List<Claim>()
+            {
+                new Claim("chat_user_id", user.Id),
+                new Claim("user_name", user.UserName),
+            };
+            claims.AddRange(claims);
 
             context.IssuedClaims = claims;
         }
