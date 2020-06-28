@@ -15,7 +15,7 @@ namespace IdentityServer.Services
     {
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> _claimsFactory;
         private readonly UserManager<ApplicationUser> _userManager;
-        
+
         public IdentityProfileService(IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory, UserManager<ApplicationUser> userManager)
         {
             _claimsFactory = claimsFactory;
@@ -27,15 +27,19 @@ namespace IdentityServer.Services
             var sub = context.Subject.GetSubjectId();
             var user = await _userManager.FindByIdAsync(sub);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new Exception("User not found");
             }
+
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
             var claims = new List<Claim>()
             {
-                new Claim("chat_user_id", user.Id),
+                new Claim("chat_user_id", userClaims.FirstOrDefault(x => x.Type == "chatUserId")?.Value),
                 new Claim("user_name", user.UserName),
             };
+
             claims.AddRange(claims);
 
             context.IssuedClaims = claims;

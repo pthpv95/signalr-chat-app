@@ -34,7 +34,7 @@ namespace IdentityServerWithAspNetIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection"); 
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString));
 
             //Add a DbContext to store your Database Keys
@@ -43,8 +43,9 @@ namespace IdentityServerWithAspNetIdentity
             // using Microsoft.AspNetCore.DataProtection;
             services.AddDataProtection()
                 .PersistKeysToDbContext<MyKeysContext>();
-                
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
@@ -61,7 +62,7 @@ namespace IdentityServerWithAspNetIdentity
             services.AddMvc();
 
             // configure identity server with in-memory stores, keys, clients and scopes
-            
+
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -79,7 +80,7 @@ namespace IdentityServerWithAspNetIdentity
 
             services.AddCors(options =>
             {
-                    // this defines a CORS policy called "default"
+                // this defines a CORS policy called "default"
                 options.AddPolicy(AllowAnyOrigin, policy =>
                 {
                     policy.AllowAnyOrigin()
