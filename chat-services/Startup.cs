@@ -45,7 +45,7 @@ namespace realtime_app
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;                
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
                 var identityServerOpts = Configuration.GetSection(nameof(IdentityServerOptions));
@@ -53,12 +53,12 @@ namespace realtime_app
                 options.RequireHttpsMetadata = false;
 
                 options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
@@ -95,22 +95,22 @@ namespace realtime_app
             services.AddMemoryCache();
 
             services.AddDistributedMemoryCache();
-            
+
             services.AddCors(options =>
             {
-                    // this defines a CORS policy called "default"
-                    options.AddPolicy(AllowAnyOrigin, policy =>
-                    {
+                // this defines a CORS policy called "default"
+                options.AddPolicy(AllowAnyOrigin, policy =>
+                {
                     policy.AllowAnyOrigin()
-                                .AllowAnyHeader()
-                                .AllowAnyMethod();
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
                 });
             });
 
             services.AddSignalR();
-            services.AddSwaggerGen(c => 
+            services.AddSwaggerGen(c =>
             {
-               c.SwaggerDoc("v1", new OpenApiInfo{ Title = "Chat Service API", Version = "v1" });   
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chat Service API", Version = "v1" });
             });
 
             services.AddControllers();

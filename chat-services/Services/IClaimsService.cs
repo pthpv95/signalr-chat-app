@@ -4,6 +4,6 @@ namespace realtime_app.Services
 {
     public interface IClaimsService
     {
-         ClaimsContext GetUserClaims();
+        ClaimsContext GetUserClaims();
     }
 }

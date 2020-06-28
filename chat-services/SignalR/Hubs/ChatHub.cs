@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using chatservices.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Contracts;
 using realtime_app.Services;
@@ -17,20 +16,18 @@ namespace realtime_app.SignalR.Hubs
         private IMessageService _messageService;
         private readonly ICacheService _cacheService;
         private readonly IClaimsService _claimsService;
-        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ChatHub(IMessageService messageService, IClaimsService claimsService, ICacheService cacheService, IWebHostEnvironment hostEnvironment)
+        public ChatHub(IMessageService messageService, IClaimsService claimsService, ICacheService cacheService)
         {
             _messageService = messageService;
             _claimsService = claimsService;
             _cacheService = cacheService;
-            _hostEnvironment = hostEnvironment;
         }
 
         public override async Task OnConnectedAsync()
         {
             var user = _claimsService.GetUserClaims();
-            await _cacheService.Set(user.Id.ToString(), new List<string> { Context.ConnectionId });
+            await _cacheService.Set(BuildKey(user.Id), new List<string> { Context.ConnectionId });
 
             await base.OnConnectedAsync();
         }
@@ -40,7 +37,7 @@ namespace realtime_app.SignalR.Hubs
             var user = _claimsService.GetUserClaims();
             var connectionIds = await _cacheService.Get<List<string>>(user.Id.ToString());
 
-            await _cacheService.Set(user.Id.ToString(), connectionIds.Remove(Context.ConnectionId));
+            await _cacheService.Set(BuildKey(user.Id), connectionIds.Remove(Context.ConnectionId));
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -57,9 +54,11 @@ namespace realtime_app.SignalR.Hubs
             };
 
             await _messageService.CreateMessageAsync(payload);
-            var userConnectionIds = await _cacheService.Get<List<string>>(identity.Id.ToString());
-            var contactConnectionIds = await _cacheService.Get<List<string>>(contactUserId.ToString());
+            var userConnectionIds = await _cacheService.Get<List<string>>(BuildKey(identity.Id)) ?? new List<string>();
+            var contactConnectionIds = await _cacheService.Get<List<string>>(BuildKey(contactUserId)) ?? new List<string>();
             await Clients.Clients(userConnectionIds.Concat(contactConnectionIds).ToList()).SendAsync("ReceiveMessage", payload);
         }
+
+        private string BuildKey(Guid key) => $"OT_{key}";
     }
 }

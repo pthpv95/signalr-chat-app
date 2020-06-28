@@ -16,14 +16,19 @@ namespace chatservices.Services
 
         public async Task<T> Get<T>(string key)
         {
-            var cachedValue = await _redisStore.Database.StringGetAsync(key);
-            if (cachedValue.IsNullOrEmpty) return default;
-
-            byte[] data = Convert.FromBase64String(cachedValue);
-            using (var ms = new MemoryStream(data))
+            try
             {
+                var cachedValue = await _redisStore.RedisCache.StringGetAsync(key);
+                if (cachedValue.IsNullOrEmpty) return default;
+
+                byte[] data = Convert.FromBase64String(cachedValue);
+                using var ms = new MemoryStream(data);
                 var deserializedObject = MessagePackSerializer.Typeless.Deserialize(ms);
                 return (T)deserializedObject;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -31,7 +36,7 @@ namespace chatservices.Services
         {
             var bytes = MessagePackSerializer.Typeless.Serialize(value);
             var data = Convert.ToBase64String(bytes);
-            await _redisStore.Database.StringSetAsync(key, data);
+            await _redisStore.RedisCache.StringSetAsync(key, data);
         }
     }
 }
