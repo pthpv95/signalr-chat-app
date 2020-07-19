@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -77,6 +78,13 @@ namespace IdentityServerWithAspNetIdentity
                     options.ConfigureDbContext = b => b.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                 });
+
+
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "915512852300-t7qug8fnthq71q1saohnjte33vhrr6cn.apps.googleusercontent.com";
+                options.ClientSecret = "DBUysH_6rbEZItPWjtIVFjoT";
+            });
 
             services.AddCors(options =>
             {

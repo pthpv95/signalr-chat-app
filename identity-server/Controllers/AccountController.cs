@@ -377,6 +377,9 @@ namespace IdentityServerWithAspNetIdentity.Controllers
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        var chatUserId = await _chatService.CreateChatUserAsync(string.Empty, string.Empty, user.Email);
+                        await _userManager.AddClaimAsync(user, new Claim("userName", user.UserName));
+                        await _userManager.AddClaimAsync(user, new Claim("chatUserId", chatUserId));
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }
