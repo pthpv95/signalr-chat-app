@@ -91,7 +91,7 @@ namespace IdentityServerWithAspNetIdentity
                 .AddFacebook(options =>
                 {
                     options.AppId = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientId));
-                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientClientSecret));
+                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientSecret));
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 

@@ -9,6 +9,6 @@ namespace identityserver.Infrastructure.Settings
 
         public string FbClientId { get; set; }
 
-        public string FbClientClientSecret { get; set; }
+        public string FbClientSecret { get; set; }
     }
 }
