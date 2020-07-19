@@ -19,6 +19,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
+using identityserver.Infrastructure.Settings;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -79,12 +80,20 @@ namespace IdentityServerWithAspNetIdentity
                     options.EnableTokenCleanup = true;
                 });
 
+            var extenalAuthenOptions = Configuration.GetSection(nameof(ExternalAuthenticationSettings));
 
-            services.AddAuthentication().AddGoogle(options =>
-            {
-                options.ClientId = "915512852300-t7qug8fnthq71q1saohnjte33vhrr6cn.apps.googleusercontent.com";
-                options.ClientSecret = "DBUysH_6rbEZItPWjtIVFjoT";
-            });
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.GoogleClientId));
+                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.GoogleClientSecret));
+                })
+                .AddFacebook(options =>
+                {
+                    options.AppId = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientId));
+                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientClientSecret));
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                });
 
             services.AddCors(options =>
             {
