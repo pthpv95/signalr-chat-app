@@ -38,10 +38,10 @@ services:
       NamedHttpClientFactories__0__BaseAddress: http://chat-service
       ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-identity"
       ClientConfigs__BaseAddress: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
-      ExternalAuthenticationSettings__GoogleClientId: "915512852300-t7qug8fnthq71q1saohnjte33vhrr6cn.apps.googleusercontent.com"
-      ExternalAuthenticationSettings__GoogleClientSecret: "DBUysH_6rbEZItPWjtIVFjoT"
-      ExternalAuthenticationSettings__FbClientId: "1726843197454773"
-      ExternalAuthenticationSettings__FbClientSecret: "e6c4263270f2d85082613d8e4bb65ea9"
+      ExternalAuthenticationSettings__GoogleClientId: ""
+      ExternalAuthenticationSettings__GoogleClientSecret: ""
+      ExternalAuthenticationSettings__FbClientId: ""
+      ExternalAuthenticationSettings__FbClientSecret: ""
 
     depends_on:
       - db
