@@ -61,6 +61,7 @@ namespace IdentityServerWithAspNetIdentity
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IChatService, ChatService>();
             services.Configure<ClientConfigs>(Configuration.GetSection("ClientConfigs"));
+            services.Configure<ExternalAuthenticationSettings>(Configuration.GetSection("ExternalAuthenticationSettings"));
             services.AddMvc();
 
             // configure identity server with in-memory stores, keys, clients and scopes
