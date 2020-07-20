@@ -81,18 +81,18 @@ namespace IdentityServerWithAspNetIdentity
                     options.EnableTokenCleanup = true;
                 });
 
-            var extenalAuthenOptions = Configuration.GetSection(nameof(ExternalAuthenticationSettings));
+            var extenalAuthenOptions = Configuration.GetSection("ExternalAuthenticationSettings").Get<ExternalAuthenticationSettings>();
 
             services.AddAuthentication()
                 .AddGoogle(options =>
                 {
-                    options.ClientId = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.GoogleClientId));
-                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.GoogleClientSecret));
+                    options.ClientId = extenalAuthenOptions.GoogleClientId;
+                    options.ClientSecret = extenalAuthenOptions.GoogleClientSecret;
                 })
                 .AddFacebook(options =>
                 {
-                    options.AppId = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientId));
-                    options.ClientSecret = extenalAuthenOptions.GetValue<string>(nameof(ExternalAuthenticationSettings.FbClientSecret));
+                    options.AppId = extenalAuthenOptions.FbClientId;
+                    options.ClientSecret = extenalAuthenOptions.FbClientSecret;
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 

@@ -11,21 +11,21 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: cd2kYw74FTYPg29
   
-  chat-service:
-    image: hienpham95/chat-web-api
-    ports:
-      - "5000:80"
-    build:
-      context: ./chat-services
-      dockerfile: Dockerfile
-    environment:
-      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-app"
-      IdentityServerOptions__Authority: http://identity-service
-      RedisSettings__Host: redis
-      RedisSettings__Password: cd2kYw74FTYPg29
-    depends_on:
-      - db
-      - redis
+  # chat-service:
+  #   image: hienpham95/chat-web-api
+  #   ports:
+  #     - "5000:80"
+  #   build:
+  #     context: ./chat-services
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-app"
+  #     IdentityServerOptions__Authority: http://identity-service
+  #     RedisSettings__Host: redis
+  #     RedisSettings__Password: cd2kYw74FTYPg29
+  #   depends_on:
+  #     - db
+  #     - redis
 
   identity-service:
     image: hienpham95/chat-identity-service
@@ -38,23 +38,23 @@ services:
       NamedHttpClientFactories__0__BaseAddress: http://chat-service
       ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-identity"
       ClientConfigs__BaseAddress: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
-      ExternalAuthentication__GoogleClientId: ""
-      ExternalAuthentication__GoogleClientSecret: ""
-      ExternalAuthentication__FbClientId: ""
-      ExternalAuthentication__FbClientSecret: ""
+      ExternalAuthenticationSettings__GoogleClientId: "915512852300-t7qug8fnthq71q1saohnjte33vhrr6cn.apps.googleusercontent.com"
+      ExternalAuthenticationSettings__GoogleClientSecret: "DBUysH_6rbEZItPWjtIVFjoT"
+      ExternalAuthenticationSettings__FbClientId: "1726843197454773"
+      ExternalAuthenticationSettings__FbClientSecret: "e6c4263270f2d85082613d8e4bb65ea9"
 
     depends_on:
       - db
   
-  redis:
-    image: redis
-    ports:
-      - "6379:6379"
-    command: redis-server --requirepass cd2kYw74FTYPg29
-    hostname: redis
-    volumes:
-      - redis_data:/data
+  # redis:
+  #   image: redis
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --requirepass cd2kYw74FTYPg29
+  #   hostname: redis
+  #   volumes:
+  #     - redis_data:/data
 
 volumes:
   db_data:
-  redis_data:
+  # redis_data:
