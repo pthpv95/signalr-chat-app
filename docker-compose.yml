@@ -11,21 +11,21 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: cd2kYw74FTYPg29
   
-  # chat-service:
-  #   image: hienpham95/chat-web-api
-  #   ports:
-  #     - "5000:80"
-  #   build:
-  #     context: ./chat-services
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-app"
-  #     IdentityServerOptions__Authority: http://identity-service
-  #     RedisSettings__Host: redis
-  #     RedisSettings__Password: cd2kYw74FTYPg29
-  #   depends_on:
-  #     - db
-  #     - redis
+  chat-service:
+    image: hienpham95/chat-web-api
+    ports:
+      - "5000:80"
+    build:
+      context: ./chat-services
+      dockerfile: Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=cd2kYw74FTYPg29;Database=chat-app"
+      IdentityServerOptions__Authority: http://identity-service
+      RedisSettings__Host: redis
+      RedisSettings__Password: cd2kYw74FTYPg29
+    depends_on:
+      - db
+      - redis
 
   identity-service:
     image: hienpham95/chat-identity-service
@@ -46,15 +46,15 @@ services:
     depends_on:
       - db
   
-  # redis:
-  #   image: redis
-  #   ports:
-  #     - "6379:6379"
-  #   command: redis-server --requirepass cd2kYw74FTYPg29
-  #   hostname: redis
-  #   volumes:
-  #     - redis_data:/data
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass cd2kYw74FTYPg29
+    hostname: redis
+    volumes:
+      - redis_data:/data
 
 volumes:
   db_data:
-  # redis_data:
+  redis_data:
