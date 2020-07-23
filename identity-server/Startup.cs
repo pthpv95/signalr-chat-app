@@ -69,7 +69,11 @@ namespace IdentityServerWithAspNetIdentity
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var issuerUri = Configuration.GetSection("IssuerUri").Get<string>();
 
-            services.AddIdentityServer(options => options.IssuerUri = issuerUri)
+            services.AddIdentityServer(options =>
+                {
+                    options.IssuerUri = issuerUri;
+                    options.PublicOrigin = options.IssuerUri;
+                })
                 .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<IdentityProfileService>()
@@ -138,6 +142,13 @@ namespace IdentityServerWithAspNetIdentity
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+            app.Use((context, next) =>
+            {
+                if (Environment.GetEnvironmentVariable("SSL_OFFLOAD") == "true")
+                    context.Request.Scheme = "https";
+
+                return next();
+            });
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>
