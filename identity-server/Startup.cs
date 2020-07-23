@@ -67,7 +67,9 @@ namespace IdentityServerWithAspNetIdentity
             // configure identity server with in-memory stores, keys, clients and scopes
 
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            services.AddIdentityServer()
+            var issuerUri = Configuration.GetSection("IssuerUri").Get<string>();
+
+            services.AddIdentityServer(options => options.IssuerUri = issuerUri)
                 .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<ApplicationUser>()
                 .AddProfileService<IdentityProfileService>()
