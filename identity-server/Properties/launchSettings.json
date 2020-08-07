@@ -1,12 +1,20 @@
 {
   "profiles": {
+    "identity-server": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:43888",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "IdentityServerWithAspNetIdentity": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "http://localhost:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5001"
+      }
     }
   }
 }

@@ -2,46 +2,37 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using realtime_app.Db;
 
 namespace realtime_app.Migrations
 {
     [DbContext(typeof(ChatDbContext))]
-    partial class ChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200805134810_UpdateMessageConversationModel")]
+    partial class UpdateMessageConversationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("chatservices.Models.Member", b =>
-                {
-                    b.Property<Guid>("ConversationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("ConversationId", "UserId");
-
-                    b.ToTable("Members");
-                });
-
             modelBuilder.Entity("chatservices.Models.ReadReceipt", b =>
                 {
                     b.Property<Guid>("MessageId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("SeenerId")
+                    b.Property<Guid>("ReceiverId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("ConversationId")
+                    b.Property<Guid?>("ReveiverId")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("MessageId", "SeenerId");
+                    b.HasKey("MessageId", "ReceiverId");
+
+                    b.HasIndex("ReveiverId");
 
                     b.ToTable("ReadReceipts");
                 });
@@ -333,15 +324,6 @@ namespace realtime_app.Migrations
                     b.ToTable("UserContacts");
                 });
 
-            modelBuilder.Entity("chatservices.Models.Member", b =>
-                {
-                    b.HasOne("realtime_app.Models.Conversation", "Conversation")
-                        .WithMany("Members")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("chatservices.Models.ReadReceipt", b =>
                 {
                     b.HasOne("realtime_app.Models.Message", "Message")
@@ -349,6 +331,10 @@ namespace realtime_app.Migrations
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("realtime_app.Models.User", "Reveiver")
+                        .WithMany()
+                        .HasForeignKey("ReveiverId");
                 });
 
             modelBuilder.Entity("realtime_app.Models.Conversation", b =>

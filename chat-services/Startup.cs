@@ -94,6 +94,8 @@ namespace realtime_app
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddSingleton<IPubSub, PubSub>();
             services.AddMemoryCache();
 
             services.AddDistributedMemoryCache();
@@ -110,6 +112,8 @@ namespace realtime_app
             });
 
             services.AddSignalR();
+
+            RegisterRedisBackplaneBackgroundService(services);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chat Service API", Version = "v1" });
@@ -146,6 +150,11 @@ namespace realtime_app
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat service API V1");
             });
+        }
+
+        public void RegisterRedisBackplaneBackgroundService(IServiceCollection services)
+        {
+            services.AddHostedService<RedisBackplaneBackgroundService>();
         }
     }
 }

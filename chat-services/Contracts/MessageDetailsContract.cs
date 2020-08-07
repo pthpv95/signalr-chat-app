@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 
 namespace realtime_app.Contracts
 {
@@ -15,5 +16,7 @@ namespace realtime_app.Contracts
         public string SentAt { get; set; }
 
         public bool IsResponse { get; set; }
+
+        public bool Seen { get; set; }
     }
 }

@@ -8,32 +8,32 @@ using realtime_app.Services;
 
 namespace realtime_app.Controllers
 {
-  [Authorize]
-  [ApiController]
-  [Route("api/messages")]
-  public class MessageController : ControllerBase
-  {
-    private readonly IMessageService _messageService;
-    private readonly IClaimsService _claimsService;
-
-    public MessageController(IMessageService messageService, IClaimsService claimsService)
+    [Authorize]
+    [ApiController]
+    [Route("api/messages")]
+    public class MessageController : ControllerBase
     {
-      _messageService = messageService;
-      _claimsService = claimsService;
-    }
+        private readonly IMessageService _messageService;
+        private readonly IClaimsService _claimsService;
 
-    [HttpGet]
-    [Route("contact/{contactUserId}")]
-    public async Task<IActionResult> GetConversationInfo([FromRoute] Guid contactUserId)
-    {
-      var conversation = await _messageService.GetPrivateConversationInfo(_claimsService.GetUserClaims().Id, contactUserId);
-      var response = new ResponseMessage
-      {
-        Data = conversation,
-        IsSuccess = true
-      };
+        public MessageController(IMessageService messageService, IClaimsService claimsService)
+        {
+            _messageService = messageService;
+            _claimsService = claimsService;
+        }
 
-      return Ok(response);
+        [HttpGet]
+        [Route("contact/{contactUserId}")]
+        public async Task<IActionResult> GetConversationInfo([FromRoute] Guid contactUserId)
+        {
+            var conversation = await _messageService.GetPrivateConversationInfo(_claimsService.GetUserClaims().Id, contactUserId);
+            var response = new ResponseMessage
+            {
+                Data = conversation,
+                IsSuccess = true
+            };
+
+            return Ok(response);
+        }
     }
-  }
 }

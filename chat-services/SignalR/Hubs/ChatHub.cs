@@ -2,66 +2,132 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using chat_services.Infrastructure.Helpers;
+using chatservices.Constants;
+using chatservices.Contracts;
 using chatservices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Contracts;
+using realtime_app.Models;
 using realtime_app.Services;
 
 namespace realtime_app.SignalR.Hubs
 {
-    [Authorize]
-    public class ChatHub : Hub
+  [Authorize]
+  public class ChatHub : Hub<INotify>
+  {
+    private readonly IMessageService _messageService;
+    private readonly ICacheService _cacheService;
+    private readonly IClaimsService _claimsService;
+    private readonly IPubSub _pubSub;
+    private readonly INotificationService _notificationService;
+
+    public ChatHub(IMessageService messageService, IClaimsService claimsService, ICacheService cacheService, IPubSub pubSub, INotificationService notificationService)
     {
-        private readonly IMessageService _messageService;
-        private readonly ICacheService _cacheService;
-        private readonly IClaimsService _claimsService;
-
-        public ChatHub(IMessageService messageService, IClaimsService claimsService, ICacheService cacheService)
-        {
-            _messageService = messageService;
-            _claimsService = claimsService;
-            _cacheService = cacheService;
-        }
-
-        public override async Task OnConnectedAsync()
-        {
-            var user = _claimsService.GetUserClaims();
-            var userConnections = await _cacheService.Get<List<string>>(BuildKey(user.Id)) ?? new List<string>();
-            userConnections.Add(Context.ConnectionId);
-            await _cacheService.Set(BuildKey(user.Id), userConnections);
-
-            await base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            var user = _claimsService.GetUserClaims();
-            var connectionIds = await _cacheService.Get<List<string>>(BuildKey(user.Id)) ?? new List<string>();
-
-            var keys = connectionIds.Where(x => x != Context.ConnectionId).ToList();
-            await _cacheService.Set(BuildKey(user.Id), keys);
-            await base.OnDisconnectedAsync(exception);
-        }
-
-        public async Task SendMessage(string message, string fileUrl, Guid contactUserId)
-        {
-            var identity = _claimsService.GetUserClaims();
-            var payload = new SendMessageRequestContract
-            {
-                SenderId = identity.Id,
-                ContactUserId = contactUserId,
-                Message = message,
-                MessageType = string.IsNullOrEmpty(fileUrl) ? 0 : 1,
-                AttachmentUrl = fileUrl
-            };
-
-            await _messageService.CreateMessageAsync(payload);
-            var userConnectionIds = await _cacheService.Get<List<string>>(BuildKey(identity.Id)) ?? new List<string>();
-            var contactConnectionIds = await _cacheService.Get<List<string>>(BuildKey(contactUserId)) ?? new List<string>();
-            await Clients.Clients(userConnectionIds.Concat(contactConnectionIds).ToList()).SendAsync("ReceiveMessage", payload);
-        }
-
-        private string BuildKey(Guid key) => $"OT_{key}";
+      _messageService = messageService;
+      _claimsService = claimsService;
+      _cacheService = cacheService;
+      _pubSub = pubSub;
+      _notificationService = notificationService;
     }
+
+    public override async Task OnConnectedAsync()
+    {
+      var user = _claimsService.GetUserClaims();
+      var key = CachingHelpers.BuildKey(user.Id);
+
+      var userConnections = await _cacheService.Get<List<string>>(key) ?? new List<string>();
+      userConnections.Add(Context.ConnectionId);
+      await _cacheService.Set(CachingHelpers.BuildKey(user.Id), userConnections);
+      await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+      var user = _claimsService.GetUserClaims();
+      var connectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(user.Id)) ?? new List<string>();
+
+      var keys = connectionIds.Where(x => x != Context.ConnectionId).ToList();
+      await _cacheService.Set(CachingHelpers.BuildKey(user.Id), new List<string> { });
+      await base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task SendMessage(string message, string fileUrl, Guid contactUserId, Guid conversationId)
+    {
+      var identity = _claimsService.GetUserClaims();
+      var payload = new SendMessageRequestContract
+      {
+        SenderId = identity.Id,
+        ContactUserId = contactUserId,
+        Message = message,
+        MessageType = string.IsNullOrEmpty(fileUrl) ? 0 : 1,
+        AttachmentUrl = fileUrl,
+        ConversationId = conversationId
+      };
+
+      var messageId = await _messageService.CreateMessageAsync(payload);
+      payload.MessageId = messageId;
+      var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(identity.Id)) ?? new List<string>();
+      var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(contactUserId)) ?? new List<string>();
+      var connectionIds = userConnectionIds.Concat(contactConnectionIds).ToList();
+
+      await _pubSub.Publish(Channels.PrivateMessageChannel,
+          new
+          PrivateMessageContract
+          {
+            ConnectionIds = connectionIds,
+            NewMessage = payload
+          });
+
+      var unreadMessages = await _messageService.GetUnreadMessages(contactUserId);
+      await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
+      {
+        ActionType = NotificationActionType.UnreadMessage,
+        ConnectionIds = contactConnectionIds,
+        TotalUnreadMessages = unreadMessages
+      });
+    }
+
+    public async Task ReadMessage(Guid messageId, Guid contactUserId)
+    {
+      var identity = _claimsService.GetUserClaims();
+      var connectionIds = await GetUserContactConnectionIds(identity.Id, contactUserId);
+      var messageRes = await _messageService.ReadMessage(messageId, identity.Id);
+      var unreadMessages = await _messageService.GetUnreadMessages(identity.Id);
+      var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(identity.Id)) ?? new List<string>();
+
+      await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
+      {
+        ActionType = PrivateMessageActionType.SeenMessage,
+        ConnectionIds = connectionIds,
+        SeenMessage = messageRes
+      });
+
+      await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
+      {
+        ActionType = NotificationActionType.UnreadMessage,
+        ConnectionIds = userConnectionIds,
+        TotalUnreadMessages = unreadMessages
+      });
+    }
+
+    public async Task MessageTyping()
+    {
+      await Clients.All.Typing(Guid.NewGuid());
+    }
+
+    public async Task MessageStopTyping(Guid conversationId)
+    {
+      //await Clients.Clients(new List<string>() { }).SendAsync("OnMessageStopTyping", conversationId);
+    }
+    private async Task<List<string>> GetUserContactConnectionIds(Guid userId, Guid contactUserId)
+    {
+      var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(userId)) ?? new List<string>();
+      var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(contactUserId)) ?? new List<string>();
+      return userConnectionIds.Concat(contactConnectionIds).ToList();
+    }
+  }
 }
+
+

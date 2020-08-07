@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using realtime_app.Db;
 using realtime_app.Models;
 
@@ -15,12 +16,13 @@ namespace realtime_app.Services
             _context = context;
         }
 
-        public Task<int> GetUserNumberOfNotifications(Guid userId)
+        public async Task<int> GetUserNumberOfNotifications(Guid userId)
         {
-            var pendingFriendRequests = _context.Set<FriendsRequest>()
-                .Where(x => x.ReceiverId == userId && x.Status == FriendsRequestEnum.PENDING)
-                .Count();
-            throw new NotImplementedException();
+            var pendingFriendRequests = await _context.Set<FriendsRequest>()
+                .AnyAsync(x => x.ReceiverId == userId && x.Status == FriendsRequestEnum.PENDING) ? 1 : 0;
+
+
+            return pendingFriendRequests;
         }
     }
 }
