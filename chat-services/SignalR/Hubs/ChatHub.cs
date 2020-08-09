@@ -70,7 +70,7 @@ namespace realtime_app.SignalR.Hubs
       payload.MessageId = messageId;
       var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(identity.Id)) ?? new List<string>();
       var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(contactUserId)) ?? new List<string>();
-      var connectionIds = userConnectionIds.Concat(contactConnectionIds).ToList();
+      var connectionIds = userConnectionIds.Union(contactConnectionIds).ToList();
 
       await _pubSub.Publish(Channels.PrivateMessageChannel,
           new

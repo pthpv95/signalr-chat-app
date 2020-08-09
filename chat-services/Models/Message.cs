@@ -43,17 +43,8 @@ namespace realtime_app.Models
 
         public void Read(Guid receiverId)
         {
-            if (ReadReceipts == null || ReadReceipts.Count == 0)
-            {
-                ReadReceipts = new List<ReadReceipt> { new ReadReceipt(Id, receiverId, ConversationId) };
-            }
-            else
-            {
-                if (ReadReceipts.Any(x => x.MessageId != Id))
-                {
-                    ReadReceipts.Add(new ReadReceipt(Id, receiverId, ConversationId));
-                }
-            }
+            ReadReceipts.Clear();
+            ReadReceipts = new List<ReadReceipt> { new ReadReceipt(Id, receiverId, ConversationId) };
         }
     }
 

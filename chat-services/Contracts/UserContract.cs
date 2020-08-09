@@ -10,6 +10,8 @@ namespace realtime_app.Contracts
 
         public string LastName { get; set; }
 
+        public string AbbreviatedName { get; set; }
+
         public string UserName { get; set; }
     }
 }

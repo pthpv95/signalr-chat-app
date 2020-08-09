@@ -3,7 +3,7 @@
     "identity-server": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:43888",
+      "applicationUrl": "http://localhost:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using chatservices.Contracts;
+using chatservices.Db;
 using chatservices.Models;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using realtime_app.Contracts;
 using realtime_app.Db;
 using realtime_app.Models;
@@ -15,9 +17,11 @@ namespace realtime_app.Services
     public class MessageService : IMessageService
     {
         private ChatDbContext _context;
-        public MessageService(ChatDbContext context)
+        private readonly ChatDbConnection _chatDbConnection;
+        public MessageService(ChatDbContext context, ChatDbConnection chatDbConnection)
         {
             _context = context;
+            _chatDbConnection = chatDbConnection;
         }
 
         public async Task<Guid> CreateMessageAsync(SendMessageRequestContract request)
@@ -42,14 +46,22 @@ namespace realtime_app.Services
             throw new Exception("Conversation is not existed");
         }
 
-        private async Task<Conversation> GetConversationOfUser(Guid userId, Guid contactId)
+        private async Task<Conversation> GetConversationOfUser(Guid userId, Guid contactUserId)
         {
-            return await _context.Set<Conversation>()
-                    .Include(c => c.Members)
-                    .Where(c => c.Members.Any(m => m.UserId == userId || m.UserId == contactId))
-                    .SingleOrDefaultAsync();
-        }
+            var conversations = await _context.Set<Member>()
+                .Where(c => c.UserId == userId)
+                .AsNoTracking()
+                .Select(c => c.ConversationId)
+                .ToListAsync();
 
+            var conversationOfThisUser = await _context.Set<Member>()
+                .Where(m => conversations.Contains(m.ConversationId) && m.UserId == contactUserId)
+                .AsNoTracking()
+                .Select(m => m.Conversation)
+                .FirstOrDefaultAsync();
+
+            return conversationOfThisUser;
+        }
 
         public async Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId)
         {
@@ -58,9 +70,8 @@ namespace realtime_app.Services
             if (conversation != null)
             {
                 var messages = await _context.Set<Message>()
-                  .Include(m => m.ReadReceipts)
                   .Where(m => m.ConversationId == conversation.Id)
-                  .OrderBy(x => x.Created)
+                  .OrderBy(m => m.Created)
                   .Select(x => new MessageDetailsContract
                   {
                       Id = x.Id,
@@ -69,8 +80,23 @@ namespace realtime_app.Services
                       SentAt = x.Created.ToString("HH:mm"),
                       IsResponse = x.SenderId != userId,
                       MessageType = (int)x.MessageType,
-                      Seen = x.ReadReceipts.Any()
+                      SentBy = x.SenderId,
+                      Seen = false
                   }).ToListAsync();
+
+                var readReceipt = await _context.Set<ReadReceipt>()
+                  .FirstOrDefaultAsync(x => x.ConversationId == conversation.Id);
+
+                if (readReceipt != null)
+                {
+                    messages.ForEach(message =>
+                    {
+                        if (message.Id == readReceipt.MessageId)
+                        {
+                            message.Seen = true;
+                        }
+                    });
+                }
 
                 return new ConversationContract()
                 {
@@ -109,7 +135,12 @@ namespace realtime_app.Services
             {
                 if (message != null)
                 {
+                    var readReceipts = _context.Set<ReadReceipt>()
+                    .Where(x => x.ConversationId == message.ConversationId);
+
+                    _context.Set<ReadReceipt>().RemoveRange(readReceipts);
                     message.Read(reveiverId);
+
                     await _context.SaveChangesAsync();
                     return new MessageHasSeenReponseContract
                     {
@@ -143,18 +174,25 @@ namespace realtime_app.Services
                 .ToListAsync();
 
             int unreadMessages = 0;
-            var reveivedMessages = await _context.Set<Message>()
-              .Where(m => conversationIds.Contains(m.ConversationId) && m.SenderId != userId)
-              .OrderBy(x => x.Created)
-              .ToListAsync();
 
-            var messageGroupByConversation = reveivedMessages.GroupBy(x => x.ConversationId);
-            foreach (var item in messageGroupByConversation)
+            using (var conn = _chatDbConnection.Connection)
             {
-                var lastestMessage = item.OrderBy(x => x.Created).Last();
-                if (!readMessagesByConversation.Any(r => r == lastestMessage.Id))
+                var lastestMessagesByConversationQuery = $@"
+                    WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY conversationid ORDER BY created DESC) AS rn FROM Messages AS m)
+                    SELECT * FROM ranked_messages WHERE rn = 1 && ConversationId IN @conversationIds && SenderId <> @userId";
+
+                var lastestMessages = await conn.QueryAsync<Message>(lastestMessagesByConversationQuery, new
                 {
-                    unreadMessages++;
+                    conversationIds,
+                    userId
+                });
+
+                foreach (var message in lastestMessages)
+                {
+                    if (!readMessagesByConversation.Any(r => r == message.Id))
+                    {
+                        unreadMessages++;
+                    }
                 }
             }
 

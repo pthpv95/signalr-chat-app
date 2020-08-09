@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using chat_services.Infrastructure.Settings;
 using chatservices.Services;
 using chatservices.Infrastructure.Settings;
+using chatservices.Db;
 
 namespace realtime_app
 {
@@ -97,6 +98,10 @@ namespace realtime_app
             services.AddScoped<INotificationService, NotificationService>();
             services.AddSingleton<IPubSub, PubSub>();
             services.AddMemoryCache();
+            services.AddSingleton(options =>
+            {
+                return new ChatDbConnection(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddDistributedMemoryCache();
 

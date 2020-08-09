@@ -18,5 +18,7 @@ namespace realtime_app.Contracts
         public bool IsResponse { get; set; }
 
         public bool Seen { get; set; }
+
+        public Guid SentBy { get; set; }
     }
 }
