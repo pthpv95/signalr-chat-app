@@ -16,5 +16,7 @@ namespace realtime_app.Services
         Task HasUnreadMessagesAsync(int unreadMessages);
 
         Task Typing(Guid userId);
+
+        Task StopTyping(Guid userId);
     }
 }
