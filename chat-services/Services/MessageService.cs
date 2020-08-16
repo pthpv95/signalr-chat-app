@@ -162,11 +162,11 @@ namespace realtime_app.Services
 
         public async Task<int> GetUnreadMessages(Guid userId)
         {
-            var conversationIds = _context.Set<Conversation>()
+            var conversationIds = await _context.Set<Conversation>()
                 .Include(x => x.Members)
                 .Where(m => m.Members.Any(x => x.UserId == userId))
                 .Select(c => c.Id)
-                .ToArray();
+                .ToListAsync();
 
             var readMessagesByConversation = await _context.Set<ReadReceipt>()
                 .Where(x => conversationIds.Contains(x.ConversationId))

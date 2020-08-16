@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using chat_services.Contracts;
 using chat_services.Infrastructure.Helpers;
 using chatservices.Constants;
 using chatservices.Contracts;
@@ -117,7 +118,16 @@ namespace realtime_app.SignalR.Hubs
             var identity = _claimsService.GetUserClaims();
             var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
 
-            await Clients.All.Typing(conversationId);
+            await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
+            {
+                ActionType = PrivateMessageActionType.Typing,
+                ConnectionIds = contactConnectionIds,
+                TypingOnConversation = new TypingOnConversationContract
+                {
+                    Conversationid = conversationId,
+                    UserId = contactUserId
+                }
+            });
         }
 
         public async Task MessageStopTyping(Guid conversationId, Guid contactUserId)
@@ -125,7 +135,16 @@ namespace realtime_app.SignalR.Hubs
             var identity = _claimsService.GetUserClaims();
             var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
 
-            await Clients.All.StopTyping(conversationId);
+            await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
+            {
+                ActionType = PrivateMessageActionType.StopTyping,
+                ConnectionIds = contactConnectionIds,
+                TypingOnConversation = new TypingOnConversationContract
+                {
+                    Conversationid = conversationId,
+                    UserId = contactUserId
+                }
+            });
         }
         
         // private async Task<List<string>> GetUserContactConnectionIds(Guid userId, Guid contactUserId)
