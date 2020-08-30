@@ -75,11 +75,6 @@ namespace realtime_app.SignalR.Hubs
             await base.OnConnectedAsync();
         }
 
-        public async Task MessageTyping()
-        {
-            await Clients.All.Typing(Guid.NewGuid());
-        }
-
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = _claimsService.GetUserClaims();

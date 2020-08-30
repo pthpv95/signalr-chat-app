@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using chat_services.Contracts;
 using chatservices.Contracts;
 using realtime_app.Contracts;
 
@@ -10,7 +11,7 @@ namespace realtime_app.Services
     {
         Task<Guid> CreateMessageAsync(SendMessageRequestContract request);
 
-        Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId);
+        Task<PrivateMessagePaginationResponseContract> GetPrivateConversationInfo(PrivateMessagePaginationContract input);
 
         Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid reveiverId);
 

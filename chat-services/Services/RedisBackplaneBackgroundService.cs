@@ -58,15 +58,15 @@ namespace chatservices.Services
                             break;
 
                         case PrivateMessageActionType.SeenMessage:
-                            await chatHubContext.Clients.Clients(payload.ConnectionIds).ReceiveReadReadMessageAsync(payload.SeenMessage);
+                            await chatHubContext.Clients.Clients(payload.ConnectionIds).ReceiveReadMessageAsync(payload.SeenMessage);
                             break;
 
                         case PrivateMessageActionType.Typing:
-                            await chatHubContext.Clients.Clients(payload.ConnectionIds).Typing(payload.TypingOnConversation.Conversationid);
+                            await chatHubContext.Clients.Clients(payload.ConnectionIds).Typing(payload.TypingOnConversation);
                             break;
 
                         case PrivateMessageActionType.StopTyping:
-                            await chatHubContext.Clients.Clients(payload.ConnectionIds).StopTyping(payload.TypingOnConversation.Conversationid);
+                            await chatHubContext.Clients.Clients(payload.ConnectionIds).StopTyping(payload.TypingOnConversation);
                             break;
 
                         default:

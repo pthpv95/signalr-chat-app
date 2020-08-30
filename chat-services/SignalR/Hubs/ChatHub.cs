@@ -124,8 +124,8 @@ namespace realtime_app.SignalR.Hubs
                 ConnectionIds = contactConnectionIds,
                 TypingOnConversation = new TypingOnConversationContract
                 {
-                    Conversationid = conversationId,
-                    UserId = contactUserId
+                    ConversationId = conversationId,
+                    ContactUserId = identity.Id
                 }
             });
         }
@@ -141,18 +141,11 @@ namespace realtime_app.SignalR.Hubs
                 ConnectionIds = contactConnectionIds,
                 TypingOnConversation = new TypingOnConversationContract
                 {
-                    Conversationid = conversationId,
-                    UserId = contactUserId
+                    ConversationId = conversationId,
+                    ContactUserId = identity.Id
                 }
             });
         }
-        
-        // private async Task<List<string>> GetUserContactConnectionIds(Guid userId, Guid contactUserId)
-        // {
-        //   var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(userId)) ?? new List<string>();
-        //   var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey(contactUserId)) ?? new List<string>();
-        //   return userConnectionIds.Concat(contactConnectionIds).ToList();
-        // }
     }
 }
 

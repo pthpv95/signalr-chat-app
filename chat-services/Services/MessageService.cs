@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using chat_services.Contracts;
 using chatservices.Contracts;
 using chatservices.Db;
 using chatservices.Models;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using realtime_app.Contracts;
 using realtime_app.Db;
 using realtime_app.Models;
+using System.Linq.Expressions;
 
 namespace realtime_app.Services
 {
@@ -63,29 +64,41 @@ namespace realtime_app.Services
             return conversationOfThisUser;
         }
 
-        public async Task<ConversationContract> GetPrivateConversationInfo(Guid userId, Guid contactUserId)
+        public async Task<PrivateMessagePaginationResponseContract> GetPrivateConversationInfo(PrivateMessagePaginationContract input)
         {
-            var conversation = await GetConversationOfUser(userId, contactUserId);
+            var conversation = !input.ConversationId.HasValue ? await GetConversationOfUser(input.UserId, input.ContactUserId) :
+                await _context.Set<Conversation>().SingleOrDefaultAsync(c => c.Id == input.ConversationId.Value);
 
             if (conversation != null)
             {
+                var getMore = input.ConversationId.HasValue;
+
+                Expression<Func<Message, bool>> predicate = m => m.ConversationId == conversation.Id;
+
+                if(input.Cursor.HasValue)
+                {
+                    predicate = m => m.ConversationId == conversation.Id && m.Created < input.Cursor.Value;
+                }
+
                 var messages = await _context.Set<Message>()
-                  .Where(m => m.ConversationId == conversation.Id)
-                  .OrderBy(m => m.Created)
+                  .Where(predicate)
+                  .OrderByDescending(m => m.Created)
                   .Select(x => new MessageDetailsContract
                   {
                       Id = x.Id,
                       Text = x.Text,
                       AttachmentUrl = x.AttachmentUrl,
-                      SentAt = x.Created.ToString("HH:mm"),
-                      IsResponse = x.SenderId != userId,
+                      SentAt = x.Created,
+                      IsResponse = x.SenderId != input.UserId,
                       MessageType = (int)x.MessageType,
                       SentBy = x.SenderId,
-                      Seen = false
-                  }).ToListAsync();
+                      Seen = false,
+                  })
+                  .Take(input.PageSize)
+                  .ToListAsync();
 
                 var readReceipt = await _context.Set<ReadReceipt>()
-                  .FirstOrDefaultAsync(x => x.ConversationId == conversation.Id);
+                                      .FirstOrDefaultAsync(x => x.ConversationId == conversation.Id);
 
                 if (readReceipt != null)
                 {
@@ -98,29 +111,47 @@ namespace realtime_app.Services
                     });
                 }
 
-                return new ConversationContract()
+                var conversationResponse = new ConversationContract()
                 {
                     Id = conversation.Id,
                     Title = conversation.Title,
-                    Messages = messages
+                    Messages = messages.OrderBy(m => m.SentAt).ToList()
+                };
+
+                DateTime? nextCursor = null;
+                if(messages.Count >= input.PageSize)
+                {
+                    nextCursor = messages.Last().SentAt;
+                }
+
+                return new PrivateMessagePaginationResponseContract
+                {
+                    NextCursor = nextCursor,
+                    Conversation = conversationResponse
                 };
             }
             else
             {
                 var defaultContact = await _context.Set<Contact>()
-                            .SingleOrDefaultAsync(uc => uc.UserId == contactUserId);
+                            .SingleOrDefaultAsync(uc => uc.UserId == input.ContactUserId);
 
                 var title = defaultContact?.FirstName + ' ' + defaultContact?.LastName;
 
-                var newConversation = new Conversation(title, userId, defaultContact.UserId);
+                var newConversation = new Conversation(title, input.UserId, defaultContact.UserId);
 
                 await _context.AddAsync(newConversation);
                 await _context.SaveChangesAsync();
-                return new ConversationContract
+                var conversationReponse = new ConversationContract
                 {
                     Id = newConversation.Id,
                     Title = title,
                     Messages = new List<MessageDetailsContract>()
+                };
+
+                return new PrivateMessagePaginationResponseContract
+                {
+                    NextCursor = null,
+                    Conversation = conversationReponse
                 };
             }
         }

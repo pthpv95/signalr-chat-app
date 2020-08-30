@@ -13,7 +13,7 @@ namespace realtime_app.Contracts
 
         public int MessageType { get; set; }
 
-        public string SentAt { get; set; }
+        public DateTime SentAt { get; set; }
 
         public bool IsResponse { get; set; }
 

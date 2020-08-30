@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using chat_services.Contracts;
 using chatservices.Contracts;
 using realtime_app.Contracts;
 
@@ -11,12 +12,12 @@ namespace realtime_app.Services
 
         Task HasNewPrivateMessageAsync(SendMessageRequestContract message);
 
-        Task ReceiveReadReadMessageAsync(MessageHasSeenReponseContract message);
+        Task ReceiveReadMessageAsync(MessageHasSeenReponseContract message);
 
         Task HasUnreadMessagesAsync(int unreadMessages);
 
-        Task Typing(Guid conversationId);
+        Task Typing(TypingOnConversationContract data);
 
-        Task StopTyping(Guid conversationId);
+        Task StopTyping(TypingOnConversationContract data);
     }
 }

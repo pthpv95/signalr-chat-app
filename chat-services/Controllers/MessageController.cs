@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using chat_services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using realtime_app.Common;
@@ -22,11 +23,19 @@ namespace realtime_app.Controllers
             _claimsService = claimsService;
         }
 
-        [HttpGet]
-        [Route("contact/{contactUserId}")]
-        public async Task<IActionResult> GetConversationInfo([FromRoute] Guid contactUserId)
+        [HttpPost]
+        [Route("contact")]
+        public async Task<IActionResult> GetConversationInfo([FromBody] PrivateMessagePaginationContract contract)
         {
-            var conversation = await _messageService.GetPrivateConversationInfo(_claimsService.GetUserClaims().Id, contactUserId);
+            var input = new PrivateMessagePaginationContract
+            {
+                Cursor = contract.Cursor,
+                UserId = _claimsService.GetUserClaims().Id,
+                ContactUserId = contract.ContactUserId,
+                ConversationId = contract.ConversationId,
+                PageSize = contract.PageSize
+            };
+            var conversation = await _messageService.GetPrivateConversationInfo(input);
             var response = new ResponseMessage
             {
                 Data = conversation,
