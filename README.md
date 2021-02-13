@@ -10,12 +10,13 @@
   - `dotnet ef database update --context MyKeysContext --project identity-server`
   - `dotnet ef database update --context ConfigurationDbContext --project identity-server`
   - `dotnet ef database update --context ApplicationDbContext --project identity-server`
-- CD to each service then run `dotnet run`
+- Cd to identity-server, chat-services then run `dotnet run`
+
 ## Docker
 
 For testing purpose:
 - Backend: `docker-compose -f docker-compose.dev.yml up`
-- Frontend: `cd web && yarn build && yarn start`
+- Frontend: `cd web && npm install && npm run start`
 - Open brower on `http://localhost:8080`
 ##
 
