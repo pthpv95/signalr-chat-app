@@ -19,7 +19,7 @@ namespace chatservices.Services
             {
                 AbortOnConnectFail = false,
                 Password = _redisSettings.Password,
-                EndPoints = { { _redisSettings.Host, _redisSettings.Port } }
+                EndPoints = { { _redisSettings.Host, 6379 } }
             };
 
             _lazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(configurationOptions));

@@ -36,7 +36,7 @@ namespace IdentityServerWithAspNetIdentity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetSection("IsDevelopment").Get<bool>() ? Configuration.GetConnectionString("DefaultConnection") : Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             //Add a DbContext to store your Database Keys

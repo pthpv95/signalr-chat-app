@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace realtime_app.Migrations
+namespace chatservices.Migrations
 {
-    public partial class Init_Create : Migration
+    public partial class InitCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -126,30 +126,6 @@ namespace realtime_app.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false),
-                    Updated = table.Column<DateTime>(nullable: false),
-                    Text = table.Column<string>(nullable: true),
-                    SenderId = table.Column<Guid>(nullable: false),
-                    ConversationId = table.Column<Guid>(nullable: false),
-                    AttachmentUrl = table.Column<string>(nullable: true),
-                    MessageType = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Notifications",
                 columns: table => new
                 {
@@ -219,10 +195,82 @@ namespace realtime_app.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Members",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(nullable: false),
+                    ConversationId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Members", x => new { x.ConversationId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_Members_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Updated = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: true),
+                    SenderId = table.Column<Guid>(nullable: false),
+                    ConversationId = table.Column<Guid>(nullable: false),
+                    AttachmentUrl = table.Column<string>(nullable: true),
+                    MessageType = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReadReceipts",
+                columns: table => new
+                {
+                    MessageId = table.Column<Guid>(nullable: false),
+                    SeenerId = table.Column<Guid>(nullable: false),
+                    ConversationId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadReceipts", x => new { x.MessageId, x.SeenerId });
+                    table.ForeignKey(
+                        name: "FK_ReadReceipts_Messages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "Messages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Conversations_CreatorId",
                 table: "Conversations",
                 column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ConversationId",
+                table: "Messages",
+                column: "ConversationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
@@ -258,16 +306,13 @@ namespace realtime_app.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Conversations");
-
-            migrationBuilder.DropTable(
                 name: "FileStorages");
 
             migrationBuilder.DropTable(
                 name: "FriendsRequests");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "Members");
 
             migrationBuilder.DropTable(
                 name: "Notifications");
@@ -276,13 +321,22 @@ namespace realtime_app.Migrations
                 name: "Participants");
 
             migrationBuilder.DropTable(
+                name: "ReadReceipts");
+
+            migrationBuilder.DropTable(
                 name: "UserContacts");
 
             migrationBuilder.DropTable(
                 name: "NotificationTypes");
 
             migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Conversations");
 
             migrationBuilder.DropTable(
                 name: "Users");

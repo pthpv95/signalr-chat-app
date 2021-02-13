@@ -34,11 +34,11 @@ namespace realtime_app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ChatDbContext>(
-                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             // Add a DbContext to store your Database Keys
             services.AddDbContext<ChatDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             // using Microsoft.AspNetCore.DataProtection;
             // services.AddDataProtection()

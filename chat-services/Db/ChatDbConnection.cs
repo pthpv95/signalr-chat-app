@@ -1,5 +1,5 @@
 ﻿using System;
-using MySql.Data.MySqlClient;
+using Npgsql;
 
 namespace chatservices.Db
 {
@@ -12,11 +12,11 @@ namespace chatservices.Db
             _connectionString = connectionString;
         }
 
-        public MySqlConnection Connection
+        public NpgsqlConnection Connection
         {
             get
             {
-                return new MySqlConnection(_connectionString);
+                return new NpgsqlConnection(_connectionString);
             }
         }
 
