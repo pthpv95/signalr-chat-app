@@ -137,7 +137,7 @@ namespace IdentityServerWithAspNetIdentity
                 app.UseHsts();
             }
 
-            InitializeDatabase(app);
+            // InitializeDatabase(app);
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
@@ -148,13 +148,6 @@ namespace IdentityServerWithAspNetIdentity
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-            app.Use((context, next) =>
-            {
-                if (Environment.GetEnvironmentVariable("SSL_OFFLOAD") == "true")
-                    context.Request.Scheme = "https";
-
-                return next();
-            });
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>
