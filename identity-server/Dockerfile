@@ -8,7 +8,9 @@ RUN dotnet publish identity-server.sln -c Release -o /app
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "identity-server.dll"]
+
+# Comment it when deploying to heroku
+# ENTRYPOINT ["dotnet", "identity-server.dll"]
 
 # heroku uses the following
-# CMD ASPNETCORE_URLS=http://*:$PORT dotnet IdentityServer.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet identity-server.dll

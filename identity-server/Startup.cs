@@ -37,10 +37,10 @@ namespace IdentityServerWithAspNetIdentity
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             //Add a DbContext to store your Database Keys
-            services.AddDbContext<MyKeysContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<MyKeysContext>(options => options.UseNpgsql(connectionString));
 
             // using Microsoft.AspNetCore.DataProtection;
             services.AddDataProtection()
@@ -79,11 +79,11 @@ namespace IdentityServerWithAspNetIdentity
                 .AddProfileService<IdentityProfileService>()
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                 });
 
@@ -148,13 +148,6 @@ namespace IdentityServerWithAspNetIdentity
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-            app.Use((context, next) =>
-            {
-                if (Environment.GetEnvironmentVariable("SSL_OFFLOAD") == "true")
-                    context.Request.Scheme = "https";
-
-                return next();
-            });
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>
