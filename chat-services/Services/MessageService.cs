@@ -167,7 +167,7 @@ namespace realtime_app.Services
                 if (message != null)
                 {
                     var readReceipts = _context.Set<ReadReceipt>()
-                    .Where(x => x.ConversationId == message.ConversationId);
+                    .Where(x => x.ConversationId == message.ConversationId && x.SeenerId == receiverId);
 
                     _context.Set<ReadReceipt>().RemoveRange(readReceipts);
                     message.Read(receiverId);
@@ -216,28 +216,6 @@ namespace realtime_app.Services
             }
 
             return unreadMessages;
-
-            // using (var conn = _chatDbConnection.Connection)
-            // {
-            //     // MySQL query
-            //     // var lastestMessagesByConversationQuery = $@"
-            //     //     WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY conversationid ORDER BY created DESC) AS rn FROM Messages AS m)
-            //     //     SELECT * FROM ranked_messages WHERE rn = 1 AND ConversationId IN @conversationIds AND SenderId <> @userId";
-
-            //     string conversationId = "\"ConversationId\"";
-            //     string message = "\"Messages\"";
-            //     var lastestMessagesByConversationQuery = $"WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY {conversationId} ORDER BY 'Created' DESC) AS rn FROM {message} AS m) SELECT * FROM ranked_messages WHERE rn = 1 AND 'ConversationId' IN ('{string.Join(", ", conversationIds)}') AND 'SenderId' <> '{userId.ToString()}'";
-
-            //     var lastestMessages = await conn.QueryAsync<Message>(lastestMessagesByConversationQuery);
-
-            //     foreach (var item in lastestMessages)
-            //     {
-            //         if (!readMessagesByConversation.Any(r => r == item.Id))
-            //         {
-            //             unreadMessages++;
-            //         }
-            //     }
-            // }
         }
     }
 }
