@@ -156,7 +156,7 @@ namespace realtime_app.Services
             }
         }
 
-        public async Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid reveiverId)
+        public async Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid receiverId)
         {
             var message = await _context.Set<Message>()
                 .Include(m => m.ReadReceipts)
@@ -170,14 +170,14 @@ namespace realtime_app.Services
                     .Where(x => x.ConversationId == message.ConversationId);
 
                     _context.Set<ReadReceipt>().RemoveRange(readReceipts);
-                    message.Read(reveiverId);
+                    message.Read(receiverId);
 
                     await _context.SaveChangesAsync();
                     return new MessageHasSeenReponseContract
                     {
                         MessageId = message.Id,
                         ConversationId = message.ConversationId,
-                        SeenerId = reveiverId
+                        SeenerId = receiverId
                     };
                 }
                 else
@@ -200,34 +200,44 @@ namespace realtime_app.Services
                 .ToListAsync();
 
             var readMessagesByConversation = await _context.Set<ReadReceipt>()
-                .Where(x => conversationIds.Contains(x.ConversationId))
+                .Where(x => conversationIds.Contains(x.ConversationId) && x.SeenerId == userId)
                 .Select(x => x.MessageId)
                 .ToListAsync();
 
             int unreadMessages = 0;
 
-            using (var conn = _chatDbConnection.Connection)
+            foreach (var id in readMessagesByConversation)
             {
-                var lastestMessagesByConversationQuery = $@"
-                    WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY conversationid ORDER BY created DESC) AS rn FROM Messages AS m)
-                    SELECT * FROM ranked_messages WHERE rn = 1 && ConversationId IN @conversationIds && SenderId <> @userId";
-
-                var lastestMessages = await conn.QueryAsync<Message>(lastestMessagesByConversationQuery, new
-                {
-                    conversationIds,
-                    userId
-                });
-
-                foreach (var message in lastestMessages)
-                {
-                    if (!readMessagesByConversation.Any(r => r == message.Id))
-                    {
-                        unreadMessages++;
-                    }
+                var message = await _context.Set<Message>().FirstAsync(m => m.Id == id);
+                var hasUnReadMessage = await _context.Set<Message>().AnyAsync(m => m.Created > message.Created);
+                if(hasUnReadMessage){
+                    unreadMessages++;
                 }
             }
 
             return unreadMessages;
+
+            // using (var conn = _chatDbConnection.Connection)
+            // {
+            //     // MySQL query
+            //     // var lastestMessagesByConversationQuery = $@"
+            //     //     WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY conversationid ORDER BY created DESC) AS rn FROM Messages AS m)
+            //     //     SELECT * FROM ranked_messages WHERE rn = 1 AND ConversationId IN @conversationIds AND SenderId <> @userId";
+
+            //     string conversationId = "\"ConversationId\"";
+            //     string message = "\"Messages\"";
+            //     var lastestMessagesByConversationQuery = $"WITH ranked_messages AS (SELECT m.*, ROW_NUMBER() OVER (PARTITION BY {conversationId} ORDER BY 'Created' DESC) AS rn FROM {message} AS m) SELECT * FROM ranked_messages WHERE rn = 1 AND 'ConversationId' IN ('{string.Join(", ", conversationIds)}') AND 'SenderId' <> '{userId.ToString()}'";
+
+            //     var lastestMessages = await conn.QueryAsync<Message>(lastestMessagesByConversationQuery);
+
+            //     foreach (var item in lastestMessages)
+            //     {
+            //         if (!readMessagesByConversation.Any(r => r == item.Id))
+            //         {
+            //             unreadMessages++;
+            //         }
+            //     }
+            // }
         }
     }
 }

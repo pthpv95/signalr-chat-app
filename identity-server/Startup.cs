@@ -137,7 +137,7 @@ namespace IdentityServerWithAspNetIdentity
                 app.UseHsts();
             }
 
-            // InitializeDatabase(app);
+            InitializeDatabase(app);
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
