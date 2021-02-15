@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
 WORKDIR /app
 COPY --from=build /app .
 # Comment it when deploying to heroku
-# ENTRYPOINT ["dotnet", "chat-services.dll"]
+ENTRYPOINT ["dotnet", "chat-services.dll"]
 
 # heroku uses the following
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet chat-services.dll
+# CMD ASPNETCORE_URLS=http://*:$PORT dotnet chat-services.dll

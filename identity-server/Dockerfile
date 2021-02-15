@@ -10,7 +10,7 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Comment it when deploying to heroku
-# ENTRYPOINT ["dotnet", "identity-server.dll"]
+ENTRYPOINT ["dotnet", "identity-server.dll"]
 
 # heroku uses the following
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet identity-server.dll
+# CMD ASPNETCORE_URLS=http://*:$PORT dotnet identity-server.dll
