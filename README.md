@@ -1,4 +1,4 @@
-# Simple chat application
+# Simple chat application for self taught .NET tech.
 
 ### Steps to run
 
