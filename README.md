@@ -22,7 +22,7 @@ For testing purpose:
 
 #### Prerequisite
 
-- MySQL
+- Postgres
 - [.NET Core SDK 3.1.302](https://www.microsoft.com/net/download/all)
 
 ## Technologies and frameworks used:
@@ -56,11 +56,6 @@ For testing purpose:
 - Open brower on `http://localhost:8080`
 ##
 
-#### Prerequisite
-
-- MySQL
-- [.NET Core SDK 3.1.302](https://www.microsoft.com/net/download/all)
-
 ## Technologies and frameworks used:
 
 - ASP.NET MVC Core 3.1
@@ -72,7 +67,5 @@ For testing purpose:
 
 ## Deployment:
 - All are deployed on free hosting services.
-- Backend:
-  - Backend services are hosted on [Heroku](https://dashboard.heroku.com/)
-  - Checkout `feature/heroku-deployment` to deploy backend services to heroku with Postgres database
-- Frontend app is is deployed and hosted by [netlify](https://www.netlify.com/)
+- Backend services are hosted on [Heroku](https://dashboard.heroku.com/)
+- Frontend app is deployed and hosted by [netlify](https://www.netlify.com/)
