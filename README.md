@@ -53,7 +53,7 @@ For testing purpose:
 For testing purpose:
 - Backend: `docker-compose -f docker-compose.dev.yml up`
 - Frontend: `cd web && npm install && npm run start`
-- Open brower on `http://localhost:8080`
+- Open browser on `http://localhost:8080`
 ##
 
 ## Technologies and frameworks used:
