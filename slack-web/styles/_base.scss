@@ -1,0 +1,32 @@
+$color-primary: #1a1d21;
+$color-secondary: rgb(53 55 59);
+$font-primary: 'Nunito', sans-serif;
+$bp-largest: 75em; // 1200px/16px
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  font-family: $font-primary;
+  font-weight: 300;
+  color: #fff;
+  @media only screen and (max-width: $bp-largest) {
+    font-size: 50%;
+  }
+}
+
+.container {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  grid-template-columns: 1fr 4fr;
+  grid-template-rows: repeat(2, 1fr) 90%;
+  grid-column-gap: 1px;
+  grid-row-gap: 1px;
+}
