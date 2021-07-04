@@ -136,8 +136,9 @@ namespace IdentityServerWithAspNetIdentity
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
-            InitializeDatabase(app);
+            
+            // Enable it for the first time
+            // InitializeDatabase(app);
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
