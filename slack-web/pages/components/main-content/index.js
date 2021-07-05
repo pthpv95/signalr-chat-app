@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
-import Messages from './Messages';
 import Input from './Input';
+import Messages from './Messages';
 
-const MainContent = () => {
+const MainContent = ({ onOpenThread }) => {
   const [textMessage, setTextMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [threads, setThreads] = useState([]);
 
   const handleMoreAction = (action) => {
+    if (action.type === 'reply') {
+      const message = messages.find((m) => m.id === action.id);
+      onOpenThread({
+        title: message.text,
+        id: message.id,
+        replies: [],
+      });
+      return;
+    }
     const newMessages = messages.map((m) => {
-      if (m.id == action.id && m.key != 'reply') {
+      if (m.id == action.id && m.type != 'reply') {
         const existingReaction = m.reactions.find(
-          (rec) => rec.key === action.key
+          (rec) => rec.type === action.type
         );
         if (existingReaction) {
           existingReaction.times++;
@@ -24,7 +32,7 @@ const MainContent = () => {
     setMessages(newMessages);
   };
   return (
-    <div className="main-content">
+    <div className="main-chat__content">
       <Messages messages={messages} handleMoreAction={handleMoreAction} />
       <form
         onSubmit={(e) => {
@@ -43,9 +51,11 @@ const MainContent = () => {
           setTextMessage('');
         }}
       >
-        <div className="main-content__input-box">
+        <div className="main-chat__input-box">
           <Input
+            id="input-chat"
             value={textMessage}
+            autoComplete="off"
             onChange={(e) => {
               setTextMessage(e.target.value);
             }}

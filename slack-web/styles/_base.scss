@@ -17,7 +17,7 @@ html {
   font-weight: 300;
   color: #fff;
   @media only screen and (max-width: $bp-largest) {
-    font-size: 50%;
+    font-size: 60%;
   }
 }
 
@@ -29,4 +29,7 @@ html {
   grid-template-rows: repeat(2, 1fr) 90%;
   grid-column-gap: 1px;
   grid-row-gap: 1px;
+}
+.container-open-thread {
+  grid-template-columns: 1fr 4fr 2fr;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({ value, onChange }) => {
+const Input = ({ value, onChange, ...props }) => {
   return (
     <input
       className="input-chat"
@@ -8,6 +8,7 @@ const Input = ({ value, onChange }) => {
       type="text"
       placeholder="Jot something down"
       onChange={onChange}
+      {...props}
     />
   );
 };

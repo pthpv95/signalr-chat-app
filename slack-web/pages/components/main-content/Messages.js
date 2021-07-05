@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const MoreAction = ({ message, handleMoreAction }) => {
   const actions = [
     {
-      key: 'like',
+      type: 'like',
       text: '👍',
     },
     {
-      key: 'haha',
+      type: 'haha',
       text: '😂',
     },
     {
-      key: 'reply',
+      type: 'reply',
       text: 'Reply',
     },
   ];
@@ -20,7 +20,7 @@ const MoreAction = ({ message, handleMoreAction }) => {
       {actions.map((action) => {
         return (
           <div
-            key={action.key}
+            key={action.type}
             className="message__more-actions--item"
             onClick={(e) => {
               handleMoreAction({ ...action, id: message.id });
@@ -34,8 +34,9 @@ const MoreAction = ({ message, handleMoreAction }) => {
   );
 };
 
-const MessageItem = ({ message, handleMoreAction }) => {
+const MessageItem = ({ message, isInThread, handleMoreAction }) => {
   const [isHover, setIsHover] = useState(false);
+
   return (
     <div
       className="message"
@@ -53,36 +54,50 @@ const MessageItem = ({ message, handleMoreAction }) => {
       <div className="message__content">
         <p className="message__content--username">
           Lee Pham
-          <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
+          {!isInThread && (
+            <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
+          )}
         </p>
         <p>{message.text}</p>
-        <div className="message__content--reactions">
-          {message.reactions &&
-            message.reactions.map((reaction) => {
-              return (
-                <div key={`reaction_${reaction.key}`}>
-                  {reaction.text} {reaction.times}
-                </div>
-              );
-            })}
-        </div>
+        {!isInThread && (
+          <div className="message__content--reactions">
+            {message.reactions &&
+              message.reactions.map((reaction) => {
+                return (
+                  <div key={`reaction_${reaction.key}`}>
+                    {reaction.text} {reaction.times}
+                  </div>
+                );
+              })}
+          </div>
+        )}
       </div>
-      {isHover && (
+      {isHover && !isInThread && (
         <MoreAction message={message} handleMoreAction={handleMoreAction} />
       )}
     </div>
   );
 };
 
-const Messages = ({ messages, handleMoreAction }) => {
+const Messages = ({ messages, isInThread, handleMoreAction }) => {
+  const messagesRef = useRef();
+  useEffect(() => {
+    if (messagesRef && messagesRef.current) {
+      messagesRef.current.scroll({
+        top: messagesRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }, [messages]);
   return (
-    <div className="message-list">
+    <div className="message-list" ref={messagesRef}>
       {messages.map((item, index) => {
         return (
           <div key={`message_${index}`}>
             <MessageItem
               key={index}
               message={item}
+              isInThread={isInThread}
               handleMoreAction={handleMoreAction}
             />
             {index !== messages.length - 1 && <div className="line-break" />}
