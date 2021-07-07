@@ -1,8 +1,49 @@
 .thread {
-  // border-left: 1px solid $color-secondary;
   grid-column: 3/-1;
   grid-row: 2/-1;
-  background-color: $color-primary;
+  &__heading{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    h4{
+      font-size: 1.7rem;
+    }
+    & > * {
+      align-self: center;
+    }
+  }
+  &__num-replies{
+    display: flex;
+    align-items: center;
+    margin-left: 1.5rem;
+    margin-top: 1.5rem;
+    span {
+      margin-right: 1rem;
+    }
+    &::after{
+      content: '';
+      height: 1.5px;
+      background-color: $color-secondary;
+      width: 85%;
+    }
+  }
+  &__sub-heading{
+    display: flex;
+    margin-left: 1.5rem;
+    img{
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+    }
+    &--text{
+      align-self: center;
+      display: flex;
+      margin-left: 1rem;
+      flex-direction: column;
+      font-size: 1.5rem;
+    }
+  }
+
   &__input-box {
     bottom: 0;
     padding: 1.5rem;

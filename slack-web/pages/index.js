@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className={`container ${thread ? 'container-open-thread' : ''}`}>
       <div className="search">search</div>
-      <div className="heading">heading</div>
+      <div className="header">heading</div>
       <div className="sidebar">side bar</div>
       <div className={`main-chat ${thread ? 'main-open-thread' : ''}`}>
         <MainContent onOpenThread={(thread) => {

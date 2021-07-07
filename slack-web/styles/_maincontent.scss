@@ -1,8 +1,6 @@
 .main-chat {
-  background-color: $color-primary;
   grid-column: 2/-1;
   grid-row: 3/-1;
-  border: 1px;
   position: relative;
   &__input-box {
     position: absolute;
@@ -35,9 +33,7 @@
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         position: relative;
-        &__img {
-          width: 5rem;
-          height: 5rem;
+        img {
           border-radius: 50%;
         }
 

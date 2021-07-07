@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Input from './Input';
-import Messages from './Messages';
+import Input from '../shared/Input';
+import Messages from '../shared/Messages';
 
 const MainContent = ({ onOpenThread }) => {
   const [textMessage, setTextMessage] = useState('');
@@ -12,6 +12,7 @@ const MainContent = ({ onOpenThread }) => {
       onOpenThread({
         title: message.text,
         id: message.id,
+        createdBy: message.createdBy,
         replies: [],
       });
       return;
@@ -43,7 +44,7 @@ const MainContent = ({ onOpenThread }) => {
               id: messages.length + 1,
               text: textMessage,
               timestamp: new Date(),
-              createdBy: '',
+              createdBy: 'LeeP',
               reactions: [],
             },
           ];

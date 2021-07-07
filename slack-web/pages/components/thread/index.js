@@ -1,19 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import Input from '../main-content/Input';
-import Messages from '../main-content/Messages';
+import Avatar from '../shared/Avatar';
+import Input from '../shared/Input';
+import Messages from '../shared/Messages';
 
 const Thread = ({ thread, onSubmit, onMoreAction, onCloseThread }) => {
+  console.log(thread);
   const [reply, setReply] = useState('');
   return (
     <div className="thread">
       <div className="thread__heading">
         <h4>Thread</h4>
-        <button onClick={onCloseThread}>X</button>
+        <button className="btn btn-unstyled" onClick={onCloseThread}>X</button>
       </div>
-      <div className="">
-        <h4>{thread.title}</h4>
-        <h4>{thread.replies.length} replies</h4>
+      <div className="thread__sub-heading">
+        <Avatar />
+        <div className="thread__sub-heading--text">
+          <p className="thread__sub-heading--owner">{thread.createdBy}</p>
+          <p className="thread__sub-heading--">{thread.title}</p>
+        </div>
       </div>
+      {thread.replies.length > 0 &&
+        <div className="thread__num-replies">
+          <span>{thread.replies.length} replies</span>
+        </div>
+      }
       <div className="thread">
         <div className="thread__content">
           <Messages

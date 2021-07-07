@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import Avatar from './Avatar';
 
 const MoreAction = ({ message, handleMoreAction }) => {
   const actions = [
@@ -47,10 +48,7 @@ const MessageItem = ({ message, isInThread, handleMoreAction }) => {
         setIsHover(false);
       }}
     >
-      <img
-        className="message__img"
-        src="https://ca.slack-edge.com/TEGSLQ86L-U01JM86M3HN-1e6b3d3e7eaf-512"
-      />
+      <Avatar />
       <div className="message__content">
         <p className="message__content--username">
           Lee Pham
