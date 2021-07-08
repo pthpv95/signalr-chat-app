@@ -17,6 +17,7 @@
     align-items: center;
     margin-left: 1.5rem;
     margin-top: 1.5rem;
+    margin-bottom: 1rem;
     span {
       margin-right: 1rem;
     }
@@ -33,7 +34,7 @@
     img{
       width: 3.5rem;
       height: 3.5rem;
-      border-radius: 50%;
+      border-radius: 30%;
     }
     &--text{
       align-self: center;
@@ -52,7 +53,7 @@
   &__content {
     .message-list {
       overflow-y: auto;
-      max-height: 78vh;
+      max-height: 70vh;
       &::-webkit-scrollbar {
         display: none;
       }
@@ -60,10 +61,10 @@
         display: flex;
         padding: 1rem;
         position: relative;
-        &__img {
-          width: 3rem;
-          height: 3rem;
-          border-radius: 50%;
+        img {
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 30%;
         }
         &__content {
           font-size: 1.2rem;

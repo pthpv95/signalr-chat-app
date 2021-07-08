@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '../shared/Avatar';
 import Input from '../shared/Input';
 import Messages from '../shared/Messages';
 
 const Thread = ({ thread, onSubmit, onMoreAction, onCloseThread }) => {
-  console.log(thread);
   const [reply, setReply] = useState('');
   return (
     <div className="thread">

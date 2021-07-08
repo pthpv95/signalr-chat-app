@@ -91,7 +91,7 @@ const Messages = ({ messages, isInThread, handleMoreAction }) => {
     <div className="message-list" ref={messagesRef}>
       {messages.map((item, index) => {
         return (
-          <div key={`message_${index}`}>
+          <div key={`message_${item.id}`}>
             <MessageItem
               key={index}
               message={item}
@@ -106,4 +106,4 @@ const Messages = ({ messages, isInThread, handleMoreAction }) => {
   );
 };
 
-export default React.memo(Messages);
+export default React.memo(Messages, (prev, next) => prev.messages === next.messages);

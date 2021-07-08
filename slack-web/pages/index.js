@@ -23,8 +23,9 @@ export default function Home() {
       </div>
       {thread && <Thread thread={thread} onCloseThread={() => setThread(null)} onSubmit={(reply, thread) => {
         const cloneThreads = Object.assign([], threadsData);
-        const existingThread = cloneThreads.find(t => t.id === thread.id)
+        let existingThread = cloneThreads.find(t => t.id === thread.id)
         if (existingThread) {
+          existingThread.replies = [...existingThread.replies];
           existingThread.replies.push({ id: new Date().getTime(), text: reply });
         }
         setThread(Object.assign({}, existingThread));

@@ -41,7 +41,7 @@ const MainContent = ({ onOpenThread }) => {
           const newList = [
             ...messages,
             {
-              id: messages.length + 1,
+              id: new Date().getTime(),
               text: textMessage,
               timestamp: new Date(),
               createdBy: 'LeeP',
