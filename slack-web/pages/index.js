@@ -1,15 +1,24 @@
 import { useState } from 'react';
 import MainContent from './components/main-content';
 import Thread from './components/thread';
+import Search from './components/search';
+import Sidebar from './components/sidebar';
 
 export default function Home() {
   const [thread, setThread] = useState(null)
   const [threadsData, setThreadsData] = useState([]);
   return (
     <div className={`container ${thread ? 'container-open-thread' : ''}`}>
-      <div className="search">search</div>
+      <div className="search">
+        <Search />
+      </div>
       <div className="header">heading</div>
-      <div className="sidebar">side bar</div>
+      <div className="sidebar">
+        <Sidebar />
+      </div>
+      {/* <div className="resize">
+        Resize
+      </div> */}
       <div className={`main-chat ${thread ? 'main-open-thread' : ''}`}>
         <MainContent onOpenThread={(thread) => {
           const existingThread = threadsData.find(t => t.id === thread.id)

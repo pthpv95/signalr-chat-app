@@ -2,7 +2,7 @@ $color-primary: #1a1d21;
 $color-secondary: rgb(53 55 59);
 $font-primary: 'Nunito', sans-serif;
 $bp-largest: 75em; // 1200px/16px
-
+$color-text-primary: rgb(195,195,194);
 *,
 *::before,
 *::after {
@@ -19,6 +19,11 @@ html {
   @media only screen and (max-width: $bp-largest) {
     font-size: 60%;
   }
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: $color-secondary;
 }
 
 .container {
