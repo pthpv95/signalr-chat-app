@@ -2,13 +2,32 @@ import React from 'react';
 import faker from 'faker';
 
 const Channels = () => {
-  const channels = new Array(6).fill(0).map((_, i) => {
-    return {
-      id: faker.random.alphaNumeric(),
-      name: faker.company.companyName()
+  const channels = [
+    {
+      "id": "9",
+      "name": "Boyer, Wisozk and Brakus"
+    },
+    {
+      "id": "x",
+      "name": "Thompson, Hagenes and Jacobson"
+    },
+    {
+      "id": "o",
+      "name": "Ferry, Swaniawski and Conroy"
+    },
+    {
+      "id": "0",
+      "name": "Blick - Wolff"
+    },
+    {
+      "id": "s",
+      "name": "Volkman - Ankunding"
+    },
+    {
+      "id": "m",
+      "name": "Zulauf - Wolf"
     }
-  });
-
+  ]
   return (
     <div className="sidebar-content__channel">
       <p className="sidebar-content__channel--title">Channels</p>

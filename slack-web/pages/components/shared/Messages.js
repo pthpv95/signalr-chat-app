@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Avatar from './Avatar';
+import Avatar from './avatar';
 
 const MoreAction = ({ message, handleMoreAction }) => {
   const actions = [
@@ -89,7 +89,7 @@ const Messages = ({ messages, isInThread, handleMoreAction }) => {
   }, [messages]);
   return (
     <div className="message-list" ref={messagesRef}>
-      {messages.map((item, index) => {
+      {messages && messages.map((item, index) => {
         return (
           <div key={`message_${item.id}`}>
             <MessageItem

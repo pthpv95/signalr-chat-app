@@ -1,5 +1,5 @@
 .main-chat {
-  grid-column: 2/-1;
+  grid-column: 3/-1;
   grid-row: 3/-1;
   position: relative;
   &__input-box {
@@ -35,6 +35,8 @@
         position: relative;
         img {
           border-radius: 30%;
+          // width: 5rem;
+          // height: 5rem;
         }
 
         &__content {
@@ -98,8 +100,6 @@
     }
   }
 }
-
-
 
 .line-break {
   background-color: $color-secondary;

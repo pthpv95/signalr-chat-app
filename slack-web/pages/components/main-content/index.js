@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Input from '../shared/Input';
-import Messages from '../shared/Messages';
+import Input from '../shared/input';
+import Messages from '../shared/messages';
 
 const MainContent = ({ onOpenThread }) => {
   const [textMessage, setTextMessage] = useState('');

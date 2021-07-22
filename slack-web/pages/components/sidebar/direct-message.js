@@ -1,15 +1,16 @@
 import React from 'react';
 import faker from 'faker';
+import Image from 'next/image'
 
 const DirectMessage = () => {
-  const users = new Array(10).fill(0).map((_, i) => {
-    return {
-      name: faker.name.findName(),
-      avatar: faker.image.avatar()
-    }
-  });
+  // const users = new Array(10).fill(0).map((_, i) => {
+  //   return {
+  //     name: faker.name.findName(),
+  //     avatar: faker.image.avatar()
+  //   }
+  // });
 
-  const users1 = [
+  const users = [
     {
       "name": "Julian Schowalter",
       "avatar": "https://cdn.fakercloud.com/avatars/malykhinv_128.jpg"
@@ -36,7 +37,7 @@ const DirectMessage = () => {
       <p className="sidebar-content__direct-message--title">Direct messages</p>
       {users.map(u => {
         return (<div key={u.name} className="sidebar-content__direct-message--user">
-          <img src={u.avatar} />
+          <Image src="/assets/avatar.jpg" alt={u.name} width={30} height={30}/>
           <p>{u.name}</p>
         </div>)
       })}

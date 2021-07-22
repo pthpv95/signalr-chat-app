@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import Avatar from '../shared/Avatar';
-import Input from '../shared/Input';
-import Messages from '../shared/Messages';
+import Avatar from '../shared/avatar';
+import Input from '../shared/input';
+import Messages from '../shared/messages';
 
 const Thread = ({ thread, onSubmit, onMoreAction, onCloseThread }) => {
   const [reply, setReply] = useState('');
+  if(!thread){
+    return <></>
+  }
   return (
     <div className="thread">
       <div className="thread__heading">

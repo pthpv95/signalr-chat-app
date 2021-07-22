@@ -19,6 +19,7 @@ html {
   @media only screen and (max-width: $bp-largest) {
     font-size: 60%;
   }
+  
 }
 
 body {
@@ -30,7 +31,7 @@ body {
   display: grid;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr min-content 5fr;
   grid-template-rows: repeat(2, 1fr) 90%;
   grid-column-gap: 1px;
   grid-row-gap: 1px;
@@ -46,5 +47,21 @@ body {
   }
   & > .main-open-thread{
     border-left: 0;
+  }
+}
+
+.resize {
+  grid-column: 2/2;
+  grid-row: 3/-1;
+  width: 3px;
+  background-color: $color-primary;
+  &:hover {
+    cursor: col-resize;
+    background-color: lightskyblue;
+  }
+
+  &:active{
+    cursor: move;
+    background-color: lightskyblue;
   }
 }

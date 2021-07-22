@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Avatar from '../shared/Avatar';
-import Input from '../shared/Input';
-import Messages from '../shared/Messages';
-import Channels from './Channels';
-import DirectMessage from './DirectMessage';
+import Avatar from '../shared/avatar';
+import Input from '../shared/input';
+import Messages from '../shared/messages';
+import Channels from './channels';
+import DirectMessage from './direct-message';
 
 const Search = ({ thread, onSubmit, onMoreAction, onCloseThread }) => {
   const [reply, setReply] = useState('');
