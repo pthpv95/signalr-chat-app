@@ -23,17 +23,15 @@ html {
 }
 
 body {
-  scrollbar-width: thin;
-  scrollbar-color: $color-secondary;
 }
 
 .container {
   display: grid;
   width: 100vw;
   height: 100vh;
-  grid-template-columns: 1fr min-content 5fr;
+  grid-template-columns: 1fr min-content 5.5fr;
   grid-template-rows: repeat(2, 1fr) 90%;
-  grid-column-gap: 1px;
+  // grid-column-gap: 1px;
   grid-row-gap: 1px;
   background-color: $color-secondary;
   & > .main-chat, .thread, .search, .header, .sidebar{
@@ -41,7 +39,7 @@ body {
   }
 }
 .container-open-thread {
-  grid-template-columns: 1fr 4fr 2fr;
+  grid-template-columns: 1fr min-content 4fr 2fr;
   & > .thread{
     border-left: 1px solid $color-secondary;
   }
@@ -52,9 +50,9 @@ body {
 
 .resize {
   grid-column: 2/2;
-  grid-row: 3/-1;
-  width: 3px;
-  background-color: $color-primary;
+  grid-row: 2/-1;
+  width: 2px;
+  background-color: $color-secondary;
   &:hover {
     cursor: col-resize;
     background-color: lightskyblue;

@@ -1,5 +1,18 @@
 .header {
-  // background-color: $color-primary;
-  grid-column: 1/-1;
+  grid-column: 3/-1;
   grid-row: 2/3;
+  display: flex;
+  padding-left: 1.7rem;
+  &__selected-contact{
+    display: flex;
+    align-items: center;
+    img{
+      border-radius: 30%;
+    }
+    p{
+      margin-left: 1rem;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+  }
 }

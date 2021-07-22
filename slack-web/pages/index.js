@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import NextImage from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 import MainContent from './components/main-content';
 import Search from './components/search';
 import Sidebar from './components/sidebar';
@@ -7,9 +8,8 @@ import Thread from './components/thread';
 export default function Home() {
   const [thread, setThread] = useState(null)
   const [threadsData, setThreadsData] = useState([]);
-  const sbRef = useRef();
-  const resizeRef = useRef();
   const [sidebarWidth, setSidebarWidth] = useState(0);
+  const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
 
   const handleSubmitReply = (reply, thread) => {
     const cloneThreads = Object.assign([], threadsData);
@@ -22,23 +22,39 @@ export default function Home() {
     setThreadsData(cloneThreads)
   }
 
+  const handleDrag = (e) => {
+    e.preventDefault();
+    if (e.pageX === 0 || e.pageX < 300) {
+      e.stopPropagation();
+      e.preventDefault();
+      e.cancelable = true;
+      return;
+    }
+    setSidebarWidth(e.pageX);
+  }
+
+  useEffect(() => { }, [])
+
   return (
     <div className={`container ${thread ? 'container-open-thread' : ''}`}>
       <div className="search">
         <Search />
       </div>
-      <div className="header">heading</div>
-      <div className="sidebar" ref={sbRef} style={{ width: sidebarWidth ? sidebarWidth : 'auto' }}>
-        <Sidebar />
+      <div className="header">
+        {selectedDirectMessage &&
+          <div className="header__selected-contact">
+            <NextImage src={`/assets/${selectedDirectMessage.avatar}.jpeg`} alt={selectedDirectMessage.name} width={30} height={30} />
+            <p>{selectedDirectMessage.name}</p>
+          </div>
+        }
       </div>
-      <div draggable className="resize" ref={resizeRef}
-        onDrag={(e) => {
-          e.preventDefault();
-          if (e.pageX === 0 || e.pageX < 280) {
-            return;
-          }
-          setSidebarWidth(e.pageX);
-        }}
+      <div className="sidebar" style={{ width: sidebarWidth ? sidebarWidth : 'auto' }}>
+        <Sidebar onDirectMessageClick={(data) => {
+          setSelectedDirectMessage(data)
+        }} />
+      </div>
+      <div draggable className="resize"
+        onDrag={handleDrag}
         onDragEnd={(e) => { }}
         onDragStart={(e) => {
           const img = new Image();

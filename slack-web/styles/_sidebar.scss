@@ -1,6 +1,6 @@
 .sidebar {
   grid-column: 1/1;
-  grid-row: 3/-1;
+  grid-row: 2/-1;
 }
 
 .sidebar-content{
@@ -23,19 +23,24 @@
     }
     &--user{
       display: flex;
+      align-items: center;
       padding-left: 2rem;
-      padding-bottom: 1.5rem;
+      margin-bottom: .5rem;
+      height: 3.5rem;
       img {
         width: 2rem;
         height: 2rem;
         border-radius: 30%;
       }
       p{
-        cursor: pointer;
         margin-left: 1rem;
         font-size: 1.4rem;
         color: $color-text-primary;
         align-self: center;
+      }
+      &:hover{
+        background-color: $color-secondary;
+        cursor: pointer;
       }
     }
   }
