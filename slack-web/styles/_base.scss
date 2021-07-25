@@ -15,11 +15,10 @@ html {
   font-size: 62.5%;
   font-family: $font-primary;
   font-weight: 300;
-  color: #fff;
+  color: $color-text-primary;
   @media only screen and (max-width: $bp-largest) {
     font-size: 60%;
   }
-  
 }
 
 body {
@@ -34,7 +33,7 @@ body {
   // grid-column-gap: 1px;
   grid-row-gap: 1px;
   background-color: $color-secondary;
-  & > .main-chat, .thread, .search, .header, .sidebar{
+  & > .main-chat, .thread, .header, .sidebar{
     background-color: $color-primary;
   }
 }
@@ -55,6 +54,7 @@ body {
   background-color: $color-secondary;
   &:hover {
     cursor: col-resize;
+    width: 3px;
     background-color: lightskyblue;
   }
 

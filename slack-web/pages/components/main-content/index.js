@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Input from '../shared/input';
 import Messages from '../shared/messages';
 
-const MainContent = ({ onOpenThread }) => {
+const MainContent = ({ onOpenThread, onSendMessage }) => {
   const [textMessage, setTextMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
@@ -50,6 +50,7 @@ const MainContent = ({ onOpenThread }) => {
           ];
           setMessages(newList);
           setTextMessage('');
+          onSendMessage(textMessage);
         }}
       >
         <div className="main-chat__input-box">
