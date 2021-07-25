@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
-import useUser from '../../hooks/useUser';
+import useUser from '../../../../hooks/auth/useUser';
+
 const Search = ({ thread, onSubmit, onMoreAction, onCloseThread }) => {
   const { isLoading, data, isError } = useUser();
   const router = useRouter()

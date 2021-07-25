@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchWrapper } from "./fetchWrapper";
+import { fetchWrapper } from "../fetchWrapper";
 
 const useUser = () => {
   const fetchUser = () => {

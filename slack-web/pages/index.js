@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { QueryClient } from 'react-query';
-import { fetchWrapper } from './hooks/fetchWrapper';
+import { fetchWrapper } from '../hooks/fetchWrapper';
 
 const queryClient = new QueryClient();
 export default function Layout() {

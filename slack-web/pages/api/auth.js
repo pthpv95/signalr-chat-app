@@ -1,5 +1,3 @@
-import { fetchWrapper } from "../hooks/fetchWrapper";
-
 const login = (username, password) => {
   return fetch(process.env.NEXT_PUBLIC_BE_HOST + '/api/auth/login', {
     method: 'POST',

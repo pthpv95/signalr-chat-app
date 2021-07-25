@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { login } from "../api/auth"
+import { login } from "../../pages/api/auth"
 
 const useLogin = (username, password) => {
   const [isLoading, setIsLoading] = useState(false)

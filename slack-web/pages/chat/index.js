@@ -1,12 +1,10 @@
-import Head from 'next/head';
 import NextImage from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import MainContent from '../components/main-content';
-import Search from '../components/search';
-import Sidebar from '../components/sidebar';
-import Thread from '../components/thread';
-import useUser from '../hooks/useUser';
+import MainContent from './components/main-content';
+import Search from './components/search';
+import Sidebar from './components/sidebar';
+import Thread from './components/thread';
 
 export default function Chat() {
   const [thread, setThread] = useState(null)

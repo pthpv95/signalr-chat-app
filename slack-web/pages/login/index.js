@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { login } from '../api/auth';
-import useLogin from '../hooks/useLogin';
+import useLogin from '../../hooks/useLogin';
 
 const Login = () => {
   const [username, setUsername] = useState('hp@gmail.com')
