@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Models;
+using chat_service.Models;
 
 namespace chat_services.Models.ModelBuilders
 {

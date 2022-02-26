@@ -1,6 +1,6 @@
 ﻿
 
-namespace realtime_app.Constants
+namespace chat_service.Constants
 {
     public static class Roles
     {

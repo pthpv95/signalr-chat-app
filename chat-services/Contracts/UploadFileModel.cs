@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
-namespace realtime_app.Contracts
+namespace chat_service.Contracts
 {
     public class UploadFileModel
     {

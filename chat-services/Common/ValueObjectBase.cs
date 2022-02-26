@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace realtime_app.Common
+namespace chat_service.Common
 {
     public abstract class ValueObjectBase
     {

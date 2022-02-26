@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Db;
-using realtime_app.Models;
+using chat_service.Db;
+using chat_service.Models;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public class NotificationService : INotificationService
     {

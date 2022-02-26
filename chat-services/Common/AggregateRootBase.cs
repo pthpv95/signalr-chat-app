@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace realtime_app.Common
+namespace chat_service.Common
 {
   public class AggregateRootBase
   {

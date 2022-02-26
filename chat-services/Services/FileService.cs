@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using chat_services.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Contracts;
-using realtime_app.Db;
-using realtime_app.Models;
+using chat_service.Contracts;
+using chat_service.Db;
+using chat_service.Models;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public class FileService : IFileService
     {

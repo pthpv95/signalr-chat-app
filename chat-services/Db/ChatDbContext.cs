@@ -1,9 +1,9 @@
 using chat_services.Models.ModelBuilders;
 using chatservices.Models.ModelBuilders;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Models.ModelBuilders;
+using chat_service.Models.ModelBuilders;
 
-namespace realtime_app.Db
+namespace chat_service.Db
 {
     public class ChatDbContext : DbContext
     {

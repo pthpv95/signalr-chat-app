@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace identityserver.Data.Migrations.MyKeys
+namespace identityserver.Data.Migrations.MyKeysDb
 {
-    public partial class InitialApplicationDbMigration : Migration
+    public partial class InitialMyKeys : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace identityserver.Data.Migrations.MyKeys
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     FriendlyName = table.Column<string>(nullable: true),
                     Xml = table.Column<string>(nullable: true)
                 },

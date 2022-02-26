@@ -1,5 +1,6 @@
 ﻿using System;
-using Npgsql;
+using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace chatservices.Db
 {
@@ -12,13 +13,7 @@ namespace chatservices.Db
             _connectionString = connectionString;
         }
 
-        public NpgsqlConnection Connection
-        {
-            get
-            {
-                return new NpgsqlConnection(_connectionString);
-            }
-        }
+        private MySqlConnection Connection => new MySqlConnection(_connectionString);
 
         public void Dispose()
         {

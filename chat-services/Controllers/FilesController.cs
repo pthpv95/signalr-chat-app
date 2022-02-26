@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using System;
 using Microsoft.AspNetCore.Http;
-using realtime_app.Contracts;
-using realtime_app.Db;
-using realtime_app.Services;
-using realtime_app.Common;
+using chat_service.Contracts;
+using chat_service.Db;
+using chat_service.Services;
+using chat_service.Common;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace realtime_app.Controllers
+namespace chat_service.Controllers
 {
     [ApiController]
     [Route("files")]

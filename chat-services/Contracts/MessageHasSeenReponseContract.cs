@@ -1,7 +1,7 @@
 ﻿using System;
 namespace chatservices.Contracts
 {
-    public class MessageHasSeenReponseContract
+    public class MessageHasSeenResponseContract
     {
         public Guid ConversationId { get; set; }
 

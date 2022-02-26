@@ -41,7 +41,7 @@ namespace IdentityServerWithAspNetIdentity
                     RequireConsent = false,
                     AccessTokenLifetime = 3600,
                     RedirectUris = {
-                        "https://hpchatapp.netlify.app/callback"                    
+                        "http://localhost:8080/callback"                    
                     },
                     ClientSecrets =
                     {
@@ -49,10 +49,10 @@ namespace IdentityServerWithAspNetIdentity
                     },
                     PostLogoutRedirectUris = 
                     {
-                        "https://chat-identity-server.herokuapp.com/account/login"
+                        "http://localhost:5001/account/login"
                     },
                     AllowedCorsOrigins = {
-                        "https://hpchatapp.netlify.app"
+                        "http://localhost:8080"
                     },
                     AllowedScopes =
                     {

@@ -1,0 +1,20 @@
+.search {
+  grid-column: 1/-1;
+  grid-row: 1/1;
+  display: flex;
+  justify-content: flex-end;
+  background-color: #4A154B;
+  &__user-info {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    img{
+      border-radius: 30%;
+    }
+    p{
+      margin-left: 1rem;
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+  }
+}

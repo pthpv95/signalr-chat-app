@@ -1,0 +1,112 @@
+.main-chat {
+  grid-column: 3/-1;
+  grid-row: 3/-1;
+  position: relative;
+  &__input-box {
+    position: absolute;
+    bottom: 0;
+    padding: 1.5rem;
+    width: 100%;
+    & > input {
+      width: inherit;
+      padding: 1.5rem;
+      border-radius: 5px;
+      outline: none;
+      background-color: $color-secondary;
+      border-color: whitesmoke;
+      color: #fff;
+    }
+  }
+
+  &__content {
+    .message-list {
+      overflow-y: auto;
+      height: 80vh;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .message {
+        display: flex;
+        margin-top: 1.7rem;
+        margin-bottom: 1.7rem;
+        padding-left: 1.7rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        position: relative;
+        img {
+          border-radius: 30%;
+          // width: 5rem;
+          // height: 5rem;
+        }
+
+        &__content {
+          font-size: 1.5rem;
+          margin-right: auto;
+          z-index: 1;
+          &--username {
+            display: flex;
+            font-weight: 500;
+            & > span {
+              align-self: center;
+              margin-left: 0.5rem;
+              font-size: 1rem;
+              font-weight: 300;
+            }
+          }
+
+          &--reactions {
+            margin-top: 0.5rem;
+            display: flex;
+            & > div {
+              cursor: pointer;
+              letter-spacing: 3px;
+              font-size: 11px;
+              padding: 0.3rem;
+              margin-right: 0.3rem;
+              border-radius: 12px;
+              background-color: #1264a3;
+              border-color: #1264a3;
+            }
+          }
+
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin-left: 1rem;
+        }
+
+        &__more-actions {
+          display: flex;
+          border-radius: 8px;
+          right: 3rem;
+          top: -1rem;
+          height: 2.7rem;
+          background-color: $color-primary;
+          z-index: 10;
+          position: absolute;
+          &--item {
+            align-self: center;
+            padding: 1rem;
+            font-size: 1.3rem;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .message:hover {
+        background-color: #272b2ff0;
+      }
+    }
+  }
+}
+
+.line-break {
+  background-color: $color-secondary;
+  width: 100%;
+  height: 1px;
+}
+
+.main-open-thread{
+  grid-column: 3/4;
+}

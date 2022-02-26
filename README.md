@@ -8,12 +8,7 @@
 #### Steps to run
 - Update the connection string in appsettings.json for each service
 - Run `dotnet build root.sln` to build whole solution.
-- Run database migrations for services:
-  - `dotnet ef database update --project chat-services`
-  - `dotnet ef database update --context PersistedGrantDbContext --project identity-server`
-  - `dotnet ef database update --context MyKeysContext --project identity-server`
-  - `dotnet ef database update --context ConfigurationDbContext --project identity-server`
-  - `dotnet ef database update --context ApplicationDbContext --project identity-server`
+- Run `setup.sql` migration script to init databases.
 - BE: cd to `identity-server` and `chat-services` then run `dotnet run`
 - FE: `cd web && npm install && npm run start`
 
@@ -22,7 +17,7 @@
 For testing purpose:
 - Backend: `docker-compose -f docker-compose.dev.yml up`
 - Frontend: `cd web && npm install && npm run start`
-- Open brower on `http://localhost:8080`
+- Open browser on `http://localhost:8080`
 
 #### Technologies and frameworks used:
 

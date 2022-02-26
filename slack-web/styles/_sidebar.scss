@@ -1,0 +1,69 @@
+.sidebar {
+  grid-column: 1/1;
+  grid-row: 2/-1;
+}
+
+.sidebar-content{
+  display: grid;
+  height: 100%;
+  overflow: auto;
+  overflow-y: hidden;
+  grid-template-rows: 60% 40%;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  &__direct-message{
+    display: flex;
+    flex-direction: column;
+    &--title{
+      color: $color-text-primary;
+      font-size: 1.6rem;
+      margin-left: 2rem;
+      margin-bottom: 2rem;
+    }
+    &--user{
+      display: flex;
+      align-items: center;
+      padding-left: 2rem;
+      margin-bottom: .5rem;
+      height: 3.5rem;
+      img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 30%;
+      }
+      p{
+        margin-left: 1rem;
+        font-size: 1.4rem;
+        color: $color-text-primary;
+        align-self: center;
+      }
+      &:hover{
+        background-color: $color-secondary;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__channel{
+    display: flex;
+    flex-direction: column;
+
+    &--title{
+      color: $color-text-primary;
+      font-size: 1.6rem;
+      padding: 2rem;
+    }
+    &--item{
+      display: flex;
+      padding-left: 1rem;
+      padding-bottom: 1.5rem;
+      p{
+        margin-left: 1rem;
+        font-size: 1.4rem;
+        color: $color-text-primary;
+        align-self: center;
+      }
+    }
+  }
+}

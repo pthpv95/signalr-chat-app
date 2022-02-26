@@ -5,11 +5,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using chatservices.Models;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Contracts;
-using realtime_app.Db;
-using realtime_app.Models;
+using chat_service.Contracts;
+using chat_service.Db;
+using chat_service.Models;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public class ContactService : IContactService
     {

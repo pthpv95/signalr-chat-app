@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using chat_services.Contracts;
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
 namespace chatservices.Contracts
 {
@@ -13,7 +13,7 @@ namespace chatservices.Contracts
 
         public SendMessageRequestContract NewMessage { get; set; }
 
-        public MessageHasSeenReponseContract SeenMessage { get; set; }
+        public MessageHasSeenResponseContract SeenMessage { get; set; }
 
         public TypingOnConversationContract TypingOnConversation { get; set; }
     }

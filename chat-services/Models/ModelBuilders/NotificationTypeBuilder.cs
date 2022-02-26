@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace realtime_app.Models.ModelBuilders
+namespace chat_service.Models.ModelBuilders
 {
     public class NotificationTypeBuilder
     {

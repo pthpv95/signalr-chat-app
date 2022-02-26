@@ -8,12 +8,12 @@ using chatservices.Db;
 using chatservices.Models;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Contracts;
-using realtime_app.Db;
-using realtime_app.Models;
+using chat_service.Contracts;
+using chat_service.Db;
+using chat_service.Models;
 using System.Linq.Expressions;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public class MessageService : IMessageService
     {
@@ -156,7 +156,7 @@ namespace realtime_app.Services
             }
         }
 
-        public async Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid receiverId)
+        public async Task<MessageHasSeenResponseContract> ReadMessage(Guid id, Guid receiverId)
         {
             var message = await _context.Set<Message>()
                 .Include(m => m.ReadReceipts)
@@ -173,7 +173,7 @@ namespace realtime_app.Services
                     message.Read(receiverId);
 
                     await _context.SaveChangesAsync();
-                    return new MessageHasSeenReponseContract
+                    return new MessageHasSeenResponseContract
                     {
                         MessageId = message.Id,
                         ConversationId = message.ConversationId,
@@ -185,7 +185,7 @@ namespace realtime_app.Services
                     throw new Exception("Message not existed.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

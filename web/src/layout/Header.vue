@@ -10,6 +10,14 @@
           <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>-->
+        <b-navbar-nav>
+          <b-nav-item href="#">
+            <h5 class="number-of-noti" v-if="unreadMessages !== 0">{{unreadMessages}}</h5>
+            <router-link to="/chat">
+              <img class="inbox-icon" :src="inboxIcon" />
+            </router-link>
+          </b-nav-item>
+        </b-navbar-nav>
         <b-nav-item-dropdown right no-caret>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
@@ -23,27 +31,6 @@
           </b-dropdown-item>
           <b-dropdown-item @click="onSignOut">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
-        <b-navbar-nav>
-          <b-nav-item href="#">
-            <h5 class="number-of-noti" v-if="unreadMessages !== 0">{{unreadMessages}}</h5>
-            <router-link to="/chat">
-              <img class="inbox-icon" :src="inboxIcon" />
-            </router-link>
-          </b-nav-item>
-        </b-navbar-nav>
-        <b-nav-item-dropdown right no-caret>
-          <template v-slot:button-content>
-            <em>
-              <img class="avatar" :src="notificationIcon" />
-              <h5
-                class="number-of-noti"
-                v-if="numberOfNotifications !== 0"
-              >{{numberOfNotifications}}</h5>
-            </em>
-          </template>
-          <b-dropdown-item href="#">First message</b-dropdown-item>
-          <b-dropdown-item href="#">Second message</b-dropdown-item>
-        </b-nav-item-dropdown>
       </b-nav>
     </b-navbar>
     <hr>
@@ -56,7 +43,7 @@ import inboxIcon from "../assets/images/inbox-icon.png";
 import AuthService from "../services/AuthService";
 import * as signalr from "@microsoft/signalr";
 import { BASE_URL, getAsync } from "../services/HttpClient";
-import { mapGetters, mapState, mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data() {
@@ -102,6 +89,7 @@ export default {
       });
 
       this.connection.on("HasUnreadMessagesAsync", (data) => {
+        console.log('HasUnreadMessagesAsync', data);
         this.unreadMessages = data;
       });
     }

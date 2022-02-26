@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using chat_services.Contracts;
 using chatservices.Contracts;
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public interface IMessageService
     {
@@ -13,7 +13,7 @@ namespace realtime_app.Services
 
         Task<PrivateMessagePaginationResponseContract> GetPrivateConversationInfo(PrivateMessagePaginationContract input);
 
-        Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid reveiverId);
+        Task<MessageHasSeenResponseContract> ReadMessage(Guid id, Guid reveiverId);
 
         Task<int> GetUnreadMessages(Guid userId);
     }

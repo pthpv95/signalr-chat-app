@@ -1,6 +1,6 @@
 using System;
 
-namespace realtime_app.Common
+namespace chat_service.Common
 {
   public class SequentialGuid
   {

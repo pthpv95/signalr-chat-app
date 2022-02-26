@@ -1,0 +1,110 @@
+.thread {
+  grid-column: 4/-1;
+  grid-row: 2/-1;
+  &__heading{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    h4{
+      font-size: 1.7rem;
+    }
+    & > * {
+      align-self: center;
+    }
+  }
+  &__num-replies{
+    display: flex;
+    align-items: center;
+    margin-left: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    span {
+      margin-right: 1rem;
+    }
+    &::after{
+      content: '';
+      height: 1.5px;
+      background-color: $color-secondary;
+      width: 85%;
+    }
+  }
+  &__sub-heading{
+    display: flex;
+    margin-left: 1.5rem;
+    img{
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 30%;
+    }
+    &--text{
+      align-self: center;
+      display: flex;
+      margin-left: 1rem;
+      flex-direction: column;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__input-box {
+    bottom: 0;
+    padding: 1.5rem;
+    width: 100%;
+  }
+  &__content {
+    .message-list {
+      overflow-y: auto;
+      max-height: 70vh;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .message {
+        display: flex;
+        padding: 1rem;
+        position: relative;
+        img {
+          width: 3.5rem;
+          height: 3.5rem;
+          border-radius: 30%;
+        }
+        &__content {
+          font-size: 1.2rem;
+          margin-right: auto;
+          z-index: 1;
+          &--username {
+            display: flex;
+            font-weight: 500;
+            & > span {
+              align-self: center;
+              margin-left: 0.5rem;
+              font-size: 1rem;
+              font-weight: 300;
+            }
+          }
+
+          &--reactions {
+            margin-top: 0.5rem;
+            display: flex;
+            & > div {
+              cursor: pointer;
+              letter-spacing: 3px;
+              font-size: 11px;
+              padding: 0.3rem;
+              margin-right: 0.3rem;
+              border-radius: 12px;
+              background-color: #1264a3;
+              border-color: #1264a3;
+            }
+          }
+
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin-left: 1rem;
+        }
+      }
+      .message:hover {
+        background-color: #272b2ff0;
+      }
+    }
+  }
+}

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using chat_services.Infrastructure.Helpers;
-using chatservices.Constants;
-using chatservices.Contracts;
 using chatservices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using realtime_app.Services;
+using chat_service.Services;
 
-namespace realtime_app.SignalR.Hubs
+namespace chat_service.SignalR.Hubs
 {
     [Authorize]
     public class NotificationHub : Hub<INotify>
@@ -19,11 +17,10 @@ namespace realtime_app.SignalR.Hubs
         private readonly INotificationService _notificationService;
         private readonly IMessageService _messageService;
         private readonly ICacheService _cacheService;
-        private readonly IPubSub _pubSub;
 
         public NotificationHub(
-            IClaimsService claimsService, 
-            INotificationService notificationService, 
+            IClaimsService claimsService,
+            INotificationService notificationService,
             IMessageService messageService,
             ICacheService cacheService,
             IPubSub pubSub)
@@ -32,7 +29,6 @@ namespace realtime_app.SignalR.Hubs
             _notificationService = notificationService;
             _messageService = messageService;
             _cacheService = cacheService;
-            _pubSub = pubSub;
         }
 
         public async Task DispatchNewNotificationAsync(int numberOfNoti)
@@ -56,18 +52,8 @@ namespace realtime_app.SignalR.Hubs
             var numOfNotifications = await _notificationService.GetUserNumberOfNotifications(user.Id);
             var unreadMessages = await _messageService.GetUnreadMessages(user.Id);
 
-            await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
-            {
-                ActionType = NotificationActionType.UnreadMessage,
-                ConnectionIds = userConnections,
-                TotalUnreadMessages = unreadMessages
-            });
-            await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
-            {
-                ActionType = NotificationActionType.NewNoti,
-                ConnectionIds = userConnections,
-                TotalUnreadMessages = numOfNotifications
-            });
+            await Clients.Clients(userConnections).HasUnreadMessagesAsync(unreadMessages);
+            await Clients.Clients(userConnections).HasNewNotificationsAsync(numOfNotifications);
 
             await base.OnConnectedAsync();
         }
@@ -79,7 +65,7 @@ namespace realtime_app.SignalR.Hubs
 
             var ids = connectionIds.Where(x => x != Context.ConnectionId).ToList();
             await _cacheService.Set(CachingHelpers.BuildKey("Notification", user.Id), ids);
-      
+
             await base.OnDisconnectedAsync(exception);
         }
     }
