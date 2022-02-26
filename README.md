@@ -36,4 +36,4 @@ For testing purpose:
 
 #### Deployment:
 - Backend services are hosted on a 5$ [DigitalOcean droplet](https://www.digitalocean.com/)
-- Frontend app is deployed on [AWS S3]
+- Frontend app is deployed on AWS S3
