@@ -15,7 +15,7 @@
 #### Docker
 
 For testing purpose:
-- Backend: `docker-compose -f docker-compose.dev.yml up`
+- Backend: `docker-compose up`
 - Frontend: `cd web && npm install && npm run start`
 - Open browser on `http://localhost:8080`
 
