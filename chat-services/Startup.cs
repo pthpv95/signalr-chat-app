@@ -17,6 +17,7 @@ using chat_services.Infrastructure.Settings;
 using chatservices.Services;
 using chatservices.Infrastructure.Settings;
 using chatservices.Db;
+using StackExchange.Redis;
 
 namespace realtime_app
 {
@@ -39,10 +40,6 @@ namespace realtime_app
 
             // Add a DbContext to store your Database Keys
             services.AddDbContext<ChatDbContext>(options => options.UseMySql(connectionString));
-
-            // using Microsoft.AspNetCore.DataProtection;
-            // services.AddDataProtection()
-            //     .PersistKeysToDbContext<MyKeysContext>();
 
             services.AddAuthentication(options =>
             {
@@ -86,7 +83,7 @@ namespace realtime_app
                 options.AddPolicy("Consumer", policy => policy.RequireClaim("role", "consumer"));
             });
 
-            services.Configure<RedisSettings>(Configuration.GetSection("RedisSettings"));
+            services.Configure<RedisSettings>(Configuration.GetSection(nameof(RedisSettings)));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<RedisStore>();
             services.AddSingleton<ICacheService, CacheService>();
@@ -97,13 +94,10 @@ namespace realtime_app
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddSingleton<IPubSub, PubSub>();
-            services.AddMemoryCache();
             services.AddSingleton(options =>
             {
                 return new ChatDbConnection(Configuration.GetConnectionString("DefaultConnection"));
             });
-
-            services.AddDistributedMemoryCache();
 
             services.AddCors(options =>
             {
@@ -116,9 +110,11 @@ namespace realtime_app
                 });
             });
 
-            services.AddSignalR();
+            var redisSettings = Configuration.GetSection(nameof(RedisSettings));
+            var host = redisSettings.GetValue<string>(nameof(RedisSettings.Host));
+            var password = redisSettings.GetValue<string>(nameof(RedisSettings.Password));
+            services.AddSignalR().AddStackExchangeRedis($"{host}, port:6379, password={password}");
 
-            RegisterRedisBackplaneBackgroundService(services);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chat Service API", Version = "v1" });
@@ -155,11 +151,6 @@ namespace realtime_app
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chat service API V1");
             });
-        }
-
-        public void RegisterRedisBackplaneBackgroundService(IServiceCollection services)
-        {
-            services.AddHostedService<RedisBackplaneBackgroundService>();
         }
     }
 }
