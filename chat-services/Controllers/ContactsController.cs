@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using realtime_app.Common;
-using realtime_app.Contracts;
-using realtime_app.Services;
-using realtime_app.SignalR.Hubs;
+using chat_service.Common;
+using chat_service.Contracts;
+using chat_service.Services;
+using chat_service.SignalR.Hubs;
 
-namespace realtime_app.Controllers
+namespace chat_service.Controllers
 {
   [Authorize]
   [ApiController]

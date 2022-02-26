@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using realtime_app.Db;
-using realtime_app.Services;
-using realtime_app.SignalR.Hubs;
+using chat_service.Db;
+using chat_service.Services;
+using chat_service.SignalR.Hubs;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -19,7 +19,7 @@ using chatservices.Infrastructure.Settings;
 using chatservices.Db;
 using System.Reflection;
 
-namespace realtime_app
+namespace chat_service
 {
     public class Startup
     {

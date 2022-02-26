@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
 namespace chat_services.Contracts
 {

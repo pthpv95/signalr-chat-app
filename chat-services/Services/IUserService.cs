@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public interface IUserService
     {

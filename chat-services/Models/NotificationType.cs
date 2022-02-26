@@ -1,6 +1,6 @@
-﻿using realtime_app.Common;
+﻿using chat_service.Common;
 
-namespace realtime_app.Models
+namespace chat_service.Models
 {
     public class NotificationType : AggregateRootBase
     {

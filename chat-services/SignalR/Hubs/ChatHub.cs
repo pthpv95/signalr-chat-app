@@ -7,10 +7,10 @@ using chat_services.Infrastructure.Helpers;
 using chatservices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using realtime_app.Contracts;
-using realtime_app.Services;
+using chat_service.Contracts;
+using chat_service.Services;
 
-namespace realtime_app.SignalR.Hubs
+namespace chat_service.SignalR.Hubs
 {
     [Authorize]
     public class ChatHub : Hub<INotify>

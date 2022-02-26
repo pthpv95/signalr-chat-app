@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using realtime_app.Common;
-using realtime_app.Models;
+using chat_service.Common;
+using chat_service.Models;
 
 namespace chatservices.Models
 {

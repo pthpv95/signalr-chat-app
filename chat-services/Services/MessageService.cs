@@ -8,12 +8,12 @@ using chatservices.Db;
 using chatservices.Models;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
-using realtime_app.Contracts;
-using realtime_app.Db;
-using realtime_app.Models;
+using chat_service.Contracts;
+using chat_service.Db;
+using chat_service.Models;
 using System.Linq.Expressions;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public class MessageService : IMessageService
     {
@@ -185,7 +185,7 @@ namespace realtime_app.Services
                     throw new Exception("Message not existed.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

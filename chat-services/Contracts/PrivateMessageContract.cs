@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using chat_services.Contracts;
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
 namespace chatservices.Contracts
 {

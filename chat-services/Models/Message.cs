@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using chatservices.Models;
 using Microsoft.EntityFrameworkCore.Internal;
-using realtime_app.Common;
+using chat_service.Common;
 
-namespace realtime_app.Models
+namespace chat_service.Models
 {
     public class Message : AggregateRootBase
     {

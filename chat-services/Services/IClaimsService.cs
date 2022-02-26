@@ -1,6 +1,6 @@
-using realtime_app.Contracts;
+using chat_service.Contracts;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public interface IClaimsService
     {

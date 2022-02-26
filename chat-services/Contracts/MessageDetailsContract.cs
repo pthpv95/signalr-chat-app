@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace realtime_app.Contracts
+namespace chat_service.Contracts
 {
     public class MessageDetailsContract
     {

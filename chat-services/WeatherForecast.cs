@@ -1,6 +1,6 @@
 using System;
 
-namespace realtime_app
+namespace chat_service
 {
     public class WeatherForecast
     {

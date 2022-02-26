@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using realtime_app.Common;
-using realtime_app.Contracts;
-using realtime_app.Services;
+using chat_service.Common;
+using chat_service.Contracts;
+using chat_service.Services;
 
-namespace realtime_app.Controllers
+namespace chat_service.Controllers
 {
   [Authorize]
   [ApiController]

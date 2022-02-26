@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace realtime_app.Services
+namespace chat_service.Services
 {
     public interface INotificationService
     {
