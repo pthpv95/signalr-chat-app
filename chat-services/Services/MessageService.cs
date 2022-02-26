@@ -40,6 +40,10 @@ namespace chat_service.Services
                   request.AttachmentUrl
                 );
 
+                var readReceipts = _context.Set<ReadReceipt>().Where(x => x.ConversationId == conversation.Id);
+                 _context.Set<ReadReceipt>().RemoveRange(readReceipts);
+            
+                message.AddReadReceipt(request.ContactUserId, request.ConversationId);
                 await _context.AddAsync(message);
                 await _context.SaveChangesAsync();
                 return message.Id;
@@ -80,6 +84,10 @@ namespace chat_service.Services
                     predicate = m => m.ConversationId == conversation.Id && m.Created < input.Cursor.Value;
                 }
 
+                var readReceipts = await _context.Set<ReadReceipt>()
+                                      .Where(x => x.ConversationId == conversation.Id)
+                                      .ToArrayAsync();
+
                 var messages = await _context.Set<Message>()
                   .Where(predicate)
                   .OrderByDescending(m => m.Created)
@@ -97,17 +105,12 @@ namespace chat_service.Services
                   .Take(input.PageSize)
                   .ToListAsync();
 
-                var readReceipt = await _context.Set<ReadReceipt>()
-                                      .FirstOrDefaultAsync(x => x.ConversationId == conversation.Id);
-
-                if (readReceipt != null)
+                
+                if (readReceipts.Any())
                 {
                     messages.ForEach(message =>
                     {
-                        if (message.Id == readReceipt.MessageId)
-                        {
-                            message.Seen = true;
-                        }
+                        message.Seen = readReceipts.Any(r => r.MessageId != message.Id);
                     });
                 }
 
@@ -141,7 +144,7 @@ namespace chat_service.Services
 
                 await _context.AddAsync(newConversation);
                 await _context.SaveChangesAsync();
-                var conversationReponse = new ConversationContract
+                var conversationResponse = new ConversationContract
                 {
                     Id = newConversation.Id,
                     Title = title,
@@ -151,7 +154,7 @@ namespace chat_service.Services
                 return new PrivateMessagePaginationResponseContract
                 {
                     NextCursor = null,
-                    Conversation = conversationReponse
+                    Conversation = conversationResponse
                 };
             }
         }
@@ -170,7 +173,6 @@ namespace chat_service.Services
                     .Where(x => x.ConversationId == message.ConversationId && x.SeenerId == receiverId);
 
                     _context.Set<ReadReceipt>().RemoveRange(readReceipts);
-                    message.Read(receiverId);
 
                     await _context.SaveChangesAsync();
                     return new MessageHasSeenResponseContract
@@ -209,7 +211,7 @@ namespace chat_service.Services
             foreach (var id in readMessagesByConversation)
             {
                 var message = await _context.Set<Message>().FirstAsync(m => m.Id == id);
-                var hasUnReadMessage = await _context.Set<Message>().AnyAsync(m => m.Created > message.Created);
+                var hasUnReadMessage = await _context.Set<Message>().AnyAsync(m => m.Created >= message.Created);
                 if(hasUnReadMessage){
                     unreadMessages++;
                 }

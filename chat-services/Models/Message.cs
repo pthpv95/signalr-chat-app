@@ -22,7 +22,13 @@ namespace chat_service.Models
             SenderId = senderId;
             MessageType = messageType;
             ConversationId = conversationId;
+
             Created = DateTime.Now;
+        }
+
+        public void AddReadReceipt(Guid receiverId, Guid conversationId)
+        {
+            ReadReceipts = new List<ReadReceipt> { new ReadReceipt(Id, receiverId, conversationId) };
         }
 
         public string Text { get; set; }
@@ -40,12 +46,6 @@ namespace chat_service.Models
         public virtual User Sender { get; set; }
 
         public ICollection<ReadReceipt> ReadReceipts { get; set; }
-
-        public void Read(Guid receiverId)
-        {
-            ReadReceipts.Clear();
-            ReadReceipts = new List<ReadReceipt> { new ReadReceipt(Id, receiverId, ConversationId) };
-        }
     }
 
     public enum MessageType
