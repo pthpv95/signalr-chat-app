@@ -4,7 +4,7 @@
 - Accounts: james.bond@gmail.com / john.wick@gmail.com
 - Password: 123456
 
-![Alt Text](https://media.giphy.com/media/Iw2NotaxdgtOolwL7z/giphy.gif) 
+![Alt Text](https://media.giphy.com/media/Iw2NotaxdgtOolwL7z/giphy.mp4) 
 
 #### Prerequisite
 
