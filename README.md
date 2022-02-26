@@ -8,7 +8,7 @@
 
 #### Prerequisite
 
-- Postgres
+- MySQL
 - [.NET Core SDK 3.1.302](https://www.microsoft.com/net/download/all)
 
 #### Steps to run
@@ -35,6 +35,5 @@ For testing purpose:
 - Vue 3
 
 #### Deployment:
-- All are deployed on free hosting services.
-- Backend services are hosted on [Heroku](https://dashboard.heroku.com/)
-- Frontend app is deployed and hosted by [netlify](https://www.netlify.com/)
+- Backend services are hosted on [DigitalOcean](https://www.digitalocean.com/)
+- Frontend app is deployed on [AWS S3]
