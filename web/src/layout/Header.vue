@@ -89,6 +89,7 @@ export default {
       });
 
       this.connection.on("HasUnreadMessagesAsync", (data) => {
+        console.log('HasUnreadMessagesAsync', data);
         this.unreadMessages = data;
       });
     }

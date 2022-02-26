@@ -13,7 +13,7 @@ namespace chatservices.Contracts
 
         public SendMessageRequestContract NewMessage { get; set; }
 
-        public MessageHasSeenReponseContract SeenMessage { get; set; }
+        public MessageHasSeenResponseContract SeenMessage { get; set; }
 
         public TypingOnConversationContract TypingOnConversation { get; set; }
     }

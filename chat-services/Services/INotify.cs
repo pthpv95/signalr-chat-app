@@ -12,7 +12,7 @@ namespace realtime_app.Services
 
         Task HasNewPrivateMessageAsync(SendMessageRequestContract message);
 
-        Task ReceiveReadMessageAsync(MessageHasSeenReponseContract message);
+        Task ReceiveReadMessageAsync(MessageHasSeenResponseContract message);
 
         Task HasUnreadMessagesAsync(int unreadMessages);
 

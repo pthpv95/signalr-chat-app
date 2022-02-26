@@ -4,13 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using chat_services.Contracts;
 using chat_services.Infrastructure.Helpers;
-using chatservices.Constants;
-using chatservices.Contracts;
 using chatservices.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using realtime_app.Contracts;
-using realtime_app.Models;
 using realtime_app.Services;
 
 namespace realtime_app.SignalR.Hubs
@@ -21,16 +18,23 @@ namespace realtime_app.SignalR.Hubs
         private readonly IMessageService _messageService;
         private readonly ICacheService _cacheService;
         private readonly IClaimsService _claimsService;
-        private readonly IPubSub _pubSub;
         private readonly INotificationService _notificationService;
+        private readonly IHubContext<NotificationHub, INotify> _notificationHubContext;
 
-        public ChatHub(IMessageService messageService, IClaimsService claimsService, ICacheService cacheService, IPubSub pubSub, INotificationService notificationService)
+
+        public ChatHub(
+            IMessageService messageService,
+            IClaimsService claimsService,
+            ICacheService cacheService,
+            IPubSub pubSub,
+            INotificationService notificationService,
+            IHubContext<NotificationHub, INotify> notificationHubContext)
         {
             _messageService = messageService;
             _claimsService = claimsService;
             _cacheService = cacheService;
-            _pubSub = pubSub;
             _notificationService = notificationService;
+            _notificationHubContext = notificationHubContext;
         }
 
         public override async Task OnConnectedAsync()
@@ -73,21 +77,10 @@ namespace realtime_app.SignalR.Hubs
             var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
             var connectionIds = userConnectionIds.Union(contactConnectionIds).ToList();
 
-            await _pubSub.Publish(Channels.PrivateMessageChannel,
-                new
-                PrivateMessageContract
-                {
-                    ConnectionIds = connectionIds,
-                    NewMessage = payload
-                });
+            await Clients.Clients(connectionIds).HasNewPrivateMessageAsync(payload);
 
             var unreadMessages = await _messageService.GetUnreadMessages(contactUserId);
-            await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
-            {
-                ActionType = NotificationActionType.UnreadMessage,
-                ConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", contactUserId)) ?? new List<string>(),
-                TotalUnreadMessages = unreadMessages
-            });
+            await _notificationHubContext.Clients.Clients(await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", contactUserId)) ?? new List<string>()).HasUnreadMessagesAsync(unreadMessages);
         }
 
         public async Task ReadMessage(Guid messageId, Guid contactUserId)
@@ -98,35 +91,18 @@ namespace realtime_app.SignalR.Hubs
             var messageRes = await _messageService.ReadMessage(messageId, identity.Id);
             var unreadMessages = await _messageService.GetUnreadMessages(identity.Id);
 
-            await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
-            {
-                ActionType = PrivateMessageActionType.SeenMessage,
-                ConnectionIds = contactConnectionIds,
-                SeenMessage = messageRes
-            });
-
-            await _pubSub.Publish(Channels.NotififcationMessageChannel, new NewNotificationMessageContract
-            {
-                ActionType = NotificationActionType.UnreadMessage,
-                ConnectionIds = userConnectionIds,
-                TotalUnreadMessages = unreadMessages
-            });
+            await Clients.Clients(contactConnectionIds).ReceiveReadMessageAsync(messageRes);
+            await _notificationHubContext.Clients.Clients(userConnectionIds).HasUnreadMessagesAsync(unreadMessages);
         }
 
         public async Task MessageTyping(Guid conversationId, Guid contactUserId)
         {
             var identity = _claimsService.GetUserClaims();
             var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
-
-            await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
+            await Clients.Clients(contactConnectionIds).Typing(new TypingOnConversationContract
             {
-                ActionType = PrivateMessageActionType.Typing,
-                ConnectionIds = contactConnectionIds,
-                TypingOnConversation = new TypingOnConversationContract
-                {
-                    ConversationId = conversationId,
-                    ContactUserId = identity.Id
-                }
+                ConversationId = conversationId,
+                ContactUserId = identity.Id
             });
         }
 
@@ -135,15 +111,10 @@ namespace realtime_app.SignalR.Hubs
             var identity = _claimsService.GetUserClaims();
             var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
 
-            await _pubSub.Publish(Channels.PrivateMessageChannel, new PrivateMessageContract
+            await Clients.Clients(contactConnectionIds).StopTyping(new TypingOnConversationContract
             {
-                ActionType = PrivateMessageActionType.StopTyping,
-                ConnectionIds = contactConnectionIds,
-                TypingOnConversation = new TypingOnConversationContract
-                {
-                    ConversationId = conversationId,
-                    ContactUserId = identity.Id
-                }
+                ConversationId = conversationId,
+                ContactUserId = identity.Id
             });
         }
     }

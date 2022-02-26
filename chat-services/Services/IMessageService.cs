@@ -13,7 +13,7 @@ namespace realtime_app.Services
 
         Task<PrivateMessagePaginationResponseContract> GetPrivateConversationInfo(PrivateMessagePaginationContract input);
 
-        Task<MessageHasSeenReponseContract> ReadMessage(Guid id, Guid reveiverId);
+        Task<MessageHasSeenResponseContract> ReadMessage(Guid id, Guid reveiverId);
 
         Task<int> GetUnreadMessages(Guid userId);
     }

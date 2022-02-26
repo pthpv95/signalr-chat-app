@@ -17,7 +17,7 @@ using chat_services.Infrastructure.Settings;
 using chatservices.Services;
 using chatservices.Infrastructure.Settings;
 using chatservices.Db;
-using StackExchange.Redis;
+using System.Reflection;
 
 namespace realtime_app
 {
