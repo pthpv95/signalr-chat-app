@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "postinstall": "if test \"$NODE_ENV\" = \"production\" ; then npm run build ; fi ",
-    "deploy": "aws s3 sync ./dist s3://awesome-chat-images"
+    "deploy": "yarn build && aws s3 sync ./dist s3://awesome-chat-images"
   },
   "dependencies": {
     "@microsoft/signalr": "^3.1.7",
