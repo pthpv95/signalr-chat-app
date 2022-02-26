@@ -1,4 +1,10 @@
 # Simple chat application for self taught .NET tech.
+### Demo
+- Site: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
+- Accounts: james.bond@gmail.com / john.wick@gmail.com
+- Password: 123456
+
+![Alt Text](https://media.giphy.com/media/Iw2NotaxdgtOolwL7z/giphy.gif) 
 
 #### Prerequisite
 
@@ -15,7 +21,7 @@
 #### Docker
 
 For testing purpose:
-- Backend: `docker-compose up`
+- Backend: `docker-compose up -d`
 - Frontend: `cd web && npm install && npm run start`
 - Open browser on `http://localhost:8080`
 
