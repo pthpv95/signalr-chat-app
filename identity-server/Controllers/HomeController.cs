@@ -27,8 +27,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
 
         public IActionResult Index()
         {
-            ViewData["ApplicationUrl"] = _clientConfigs.BaseAddress;
-            return View();
+            return Redirect("/Account/Login");
         }
 
         public IActionResult About()

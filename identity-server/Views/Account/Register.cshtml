@@ -35,6 +35,9 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Register</button>
+            <div style="margin-top: 20px;">
+                <a asp-action="Login" asp-route-returnurl="/Account/Login">Login ?</a>
+            </div>
         </form>
     </div>
 </div>

@@ -3,7 +3,6 @@
     <img :src="loadingIcon" class="loading" v-if="loadingState" />
     <Header></Header>
     <div class="main-page">
-      <div id="messagesList"></div>
       <router-view></router-view>
     </div>
   </div>

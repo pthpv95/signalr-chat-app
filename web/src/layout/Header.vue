@@ -11,7 +11,7 @@
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form>-->
         <b-navbar-nav>
-          <b-nav-item href="#">
+          <b-nav-item href="#" class='nav-item-wrapper'>
             <h5 class="number-of-noti" v-if="unreadMessages !== 0">{{unreadMessages}}</h5>
             <router-link to="/chat">
               <img class="inbox-icon" :src="inboxIcon" />
@@ -26,9 +26,6 @@
             </div>
             <p>{{user.firstName}}</p>
           </template>
-          <b-dropdown-item href="#">
-            <router-link to="/profile">Profile</router-link>
-          </b-dropdown-item>
           <b-dropdown-item @click="onSignOut">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-nav>
@@ -134,10 +131,13 @@ export default {
   vertical-align: middle;
   background-color: white;
 }
+.nav-item-wrapper{
+  position: relative;
+}
 .number-of-noti {
   position: absolute;
-  right: 90px;
-  top: 9px;
+  right: 0px;
+  top: 3px;
   background: rgb(204, 0, 0);
   border-radius: 50%;
   color: #ffffff;

@@ -2,24 +2,19 @@
   <div>
     <b-container>
       <b-row>
-        <b-col>
+        <b-col cols="2">
           <div>
-            <p>Your suggested friends</p>
             <div v-for="contact in suggestedContacts" :key="contact.id">
+            <p>suggested friends</p>
               <div>
                 <h3>{{contact.firstName + ' ' + contact.lastName}}</h3>
                 <button class="primary" @click="() => onFriendRequestedToAdd(contact.id)">Add friend</button>
               </div>
             </div>
           </div>
-        </b-col>
-        <b-col cols="8">
-          <div>Main content</div>
-        </b-col>
-        <b-col>
           <div>
-            <p>Your friends requests</p>
             <div v-for="contact in contactsRequests" :key="contact.id">
+            <p>friends requests</p>
               <h3>{{contact.firstName + ' ' + contact.lastName}}</h3>
               <a
                 href="#"
@@ -28,6 +23,9 @@
               >Approve</a>
             </div>
           </div>
+        </b-col>
+        <b-col cols="10">
+          <div></div>
         </b-col>
       </b-row>
     </b-container>

@@ -517,7 +517,7 @@ namespace IdentityServerWithAspNetIdentity.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return Redirect(_clientConfigs.BaseAddress);
             }
         }
 
