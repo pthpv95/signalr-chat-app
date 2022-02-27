@@ -21,7 +21,7 @@
 #### Docker
 
 For testing purpose:
-- Backend: `docker-compose up -d`
+- Backend: Rename file `.env.sample` to `.env` then run `docker-compose up -d`
 - Frontend: `cd web && npm install && npm run start`
 - Open browser on `http://localhost:8080`
 
