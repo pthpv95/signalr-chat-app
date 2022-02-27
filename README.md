@@ -35,5 +35,5 @@ For testing purpose:
 - Vue 3
 
 #### Deployment:
-- Backend services are hosted on [DigitalOcean](https://www.digitalocean.com/)
-- Frontend app is deployed on [AWS S3]
+- Backend services are hosted on a 5$ [DigitalOcean droplet](https://www.digitalocean.com/)
+- Frontend app is deployed on AWS S3
