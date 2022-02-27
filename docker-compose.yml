@@ -9,7 +9,7 @@ services:
       - db_data:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
   
   chat-service:
     image: hienpham95/chat-web-api
@@ -19,10 +19,10 @@ services:
       context: ./chat-services
       dockerfile: Dockerfile
     environment:
-      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=password;Database=chat-app"
-      IdentityServerOptions__Authority: http://identity-service
+      ConnectionStrings__DefaultConnection: ${CHAT_SERVICE_DB_CONNECTION}
+      IdentityServerOptions__Authority: ${IDENTITY_SERVER_AUTHORITY}
       RedisSettings__Host: redis
-      RedisSettings__Password: password
+      RedisSettings__Password: ${REDIS_PASSWORD}
     depends_on:
       - db
       - redis
@@ -35,9 +35,9 @@ services:
       context: ./identity-server
       dockerfile: Dockerfile
     environment:
-      NamedHttpClientFactories__0__BaseAddress: http://chat-service
-      ConnectionStrings__DefaultConnection: "Server=db; UserId=root;Password=password;Database=chat-identity"
-      ClientConfigs__BaseAddress: http://localhost:8080
+      NamedHttpClientFactories__0__BaseAddress: ${CHAT_SERVICE_HOST}
+      ConnectionStrings__DefaultConnection: ${IDENTITY_SERVICE_DB_CONNECTION}
+      ClientConfigs__BaseAddress: ${CLIENT_HOST}
       ExternalAuthenticationSettings__GoogleClientId: ""
       ExternalAuthenticationSettings__GoogleClientSecret: ""
       ExternalAuthenticationSettings__FbClientId: ""
@@ -51,7 +51,7 @@ services:
     image: redis
     ports:
       - "6379:6379"
-    command: redis-server --requirepass password
+    command: ${REDIS_SERVER_COMMAND}
     hostname: redis
     volumes:
       - redis_data:/data

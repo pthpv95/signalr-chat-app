@@ -4,6 +4,11 @@ const BASE_URL = process.env.VUE_APP_BASE_API_URL;
 
 const authService = new AuthService();
 
+const handleTokenExpire = () => {
+  localStorage.clear();
+  window.location.href = '/'
+}
+
 const getAsync = async (url) => {
   const token = await authService.getToken();
   const response = await fetch(url, {
@@ -12,7 +17,10 @@ const getAsync = async (url) => {
       'Authorization': `Bearer ${token}`
     }
   });
-  return response.json();
+  if (response.ok) {
+    return response.json();
+  }
+  handleTokenExpire();
 }
 
 const postAsync = async (url, payload) => {
@@ -27,7 +35,10 @@ const postAsync = async (url, payload) => {
     body: JSON.stringify(payload)
   })
 
-  return response.json();
+  if (response.ok) {
+    return response.json();
+  }
+  handleTokenExpire();
 }
 
 const uploadFile = async (file) => {
