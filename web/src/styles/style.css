@@ -2,7 +2,7 @@
   margin-top: auto;
   margin-bottom: auto;
 }
-.chat .back_botton{
+.chat .back_botton {
   margin-top: 3px;
   font-size: 25px;
 }
@@ -89,7 +89,7 @@
   width: 70px;
   border: 1.5px solid #f5f6fa;
 }
-.user_img_default{
+.user_img_default {
   height: 70px;
   width: 70px;
   display: table-cell;
@@ -111,6 +111,11 @@
 .img_cont_msg {
   height: 40px;
   width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
 }
 .online_icon {
   position: absolute;
@@ -148,7 +153,7 @@
   cursor: pointer;
   margin-right: 20px;
 }
-.msg_cotainer {
+.msg_container {
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 10px;
@@ -158,7 +163,7 @@
   position: relative;
   min-width: 50px;
 }
-.msg_cotainer_send {
+.msg_container_send {
   margin-top: auto;
   margin-bottom: auto;
   margin-right: 10px;
@@ -230,6 +235,6 @@
   }
 }
 
-.contact{
+.contact {
   cursor: pointer;
 }

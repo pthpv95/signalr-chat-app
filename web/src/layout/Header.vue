@@ -26,6 +26,7 @@
             </div>
             <p>{{user.firstName}}</p>
           </template>
+          <b-dropdown-item @click="onProfileClick">Profile</b-dropdown-item>
           <b-dropdown-item @click="onSignOut">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
       </b-nav>
@@ -100,6 +101,9 @@ export default {
       localStorage.clear();
       this.authService.signOut();
     },
+    onProfileClick(){
+      
+    }
   },
   computed: {
     ...mapGetters('ui', ['headerState'])
