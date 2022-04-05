@@ -119,10 +119,10 @@ namespace chat_service.Services
                     });
                 }
 
-                // if all messages have been read, set seen of last item to be true by default
+                // if all messages have been read, set seen of first item to be true by default
                 if (!hasAnySeenMessage)
                 {
-                    messages.Last().Seen = true;
+                    messages.First().Seen = true;
                 }
 
                 var conversationResponse = new ConversationContract()
