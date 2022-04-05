@@ -106,23 +106,23 @@ namespace chat_service.Services
                   .ToListAsync();
 
 
+                var hasAnySeenMessage = false;
                 if (readReceipts.Any())
                 {
-                    var hasMessageSeen = false;
                     messages.ForEach(message =>
                     {
                         message.Seen = readReceipts.Any(r => r.MessageId == message.Id && r.SeenerId != input.UserId);
                         if (message.Seen)
                         {
-                            hasMessageSeen = true;
+                            hasAnySeenMessage = true;
                         }
                     });
+                }
 
-                    // if all messages have been read, set seen of last item to be true by default
-                    if (!hasMessageSeen)
-                    {
-                        messages.Last().Seen = true;
-                    }
+                // if all messages have been read, set seen of last item to be true by default
+                if (!hasAnySeenMessage)
+                {
+                    messages.Last().Seen = true;
                 }
 
                 var conversationResponse = new ConversationContract()
