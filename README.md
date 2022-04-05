@@ -31,7 +31,7 @@ For testing purpose:
 - Entity Framework Core 3.1
 - ASP.NET Identity Core 3.1
 - IdentityServer4
-- Redis for notification
+- SignalR for notification
 - Vue 3
 
 #### Deployment:
