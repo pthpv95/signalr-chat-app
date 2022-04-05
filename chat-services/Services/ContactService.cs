@@ -56,15 +56,21 @@ namespace chat_service.Services
             var userReceivedFriendRequests = _context.Set<FriendsRequest>()
                 .Any(fr => fr.ReceiverId == id);
 
-            var friendRequestIds = _context.Set<FriendsRequest>()
+            var incomingFriendRequestIds = _context.Set<FriendsRequest>()
                     .Where(x => x.Status == FriendsRequestEnum.PENDING && x.ReceiverId == id);
                     .Select(x => x.RequesterId)
+                    .ToList();
+
+            var myFriendRequestIds = _context.Set<FriendsRequest>()
+                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.RequesterId == id);
+                    .Select(x => x.ReceiverId)
                     .ToList();
 
             var suggestedContacts = _context.Set<User>()
                     .Where(u => u.Id != id
                         && !currentUserContactIds.Contains(u.Id)
-                        && !friendRequestIds.Contains(u.Id))
+                        && !incomingFriendRequestIds.Contains(u.Id)
+                        && !myFriendRequestIds.Contain(u.Id))
                     .Select(x => new UserContactContract
                     {
                         Id = x.Id,

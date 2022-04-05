@@ -110,7 +110,7 @@ namespace chat_service.Services
                 {
                     messages.ForEach(message =>
                     {
-                        message.Seen = readReceipts.Any(r => r.MessageId == message.Id);
+                        message.Seen = readReceipts.Any(r => r.MessageId == message.Id && r.SeenerId != input.UserId);
                     });
                 }
 
