@@ -41,8 +41,8 @@ namespace chat_service.Services
                 );
 
                 var readReceipts = _context.Set<ReadReceipt>().Where(x => x.ConversationId == conversation.Id);
-                 _context.Set<ReadReceipt>().RemoveRange(readReceipts);
-            
+                _context.Set<ReadReceipt>().RemoveRange(readReceipts);
+
                 message.AddReadReceipt(request.ContactUserId, request.ConversationId);
                 await _context.AddAsync(message);
                 await _context.SaveChangesAsync();
@@ -79,7 +79,7 @@ namespace chat_service.Services
 
                 Expression<Func<Message, bool>> predicate = m => m.ConversationId == conversation.Id;
 
-                if(input.Cursor.HasValue)
+                if (input.Cursor.HasValue)
                 {
                     predicate = m => m.ConversationId == conversation.Id && m.Created < input.Cursor.Value;
                 }
@@ -105,13 +105,24 @@ namespace chat_service.Services
                   .Take(input.PageSize)
                   .ToListAsync();
 
-                
+
+                var hasAnySeenMessage = false;
                 if (readReceipts.Any())
                 {
                     messages.ForEach(message =>
                     {
-                        message.Seen = readReceipts.Any(r => r.MessageId != message.Id);
+                        message.Seen = readReceipts.Any(r => r.MessageId == message.Id && r.SeenerId != input.UserId);
+                        if (message.Seen)
+                        {
+                            hasAnySeenMessage = true;
+                        }
                     });
+                }
+
+                // if all messages have been read, set seen of first item to be true by default
+                if (!hasAnySeenMessage)
+                {
+                    messages.First().Seen = true;
                 }
 
                 var conversationResponse = new ConversationContract()
@@ -122,7 +133,7 @@ namespace chat_service.Services
                 };
 
                 DateTime? nextCursor = null;
-                if(messages.Count >= input.PageSize)
+                if (messages.Count >= input.PageSize)
                 {
                     nextCursor = messages.Last().SentAt;
                 }
@@ -212,7 +223,8 @@ namespace chat_service.Services
             {
                 var message = await _context.Set<Message>().FirstAsync(m => m.Id == id);
                 var hasUnReadMessage = await _context.Set<Message>().AnyAsync(m => m.Created >= message.Created);
-                if(hasUnReadMessage){
+                if (hasUnReadMessage)
+                {
                     unreadMessages++;
                 }
             }

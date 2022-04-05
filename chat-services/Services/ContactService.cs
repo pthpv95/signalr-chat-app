@@ -53,33 +53,24 @@ namespace chat_service.Services
                   .Select(x => x.Contact.UserId)
                   .ToList();
 
-            var friendRequestIds = new List<Guid>();
-
             var userReceivedFriendRequests = _context.Set<FriendsRequest>()
                 .Any(fr => fr.ReceiverId == id);
 
-            var pendingFriendRequestQuery = _context.Set<FriendsRequest>()
-                    .Where(x => x.Status == FriendsRequestEnum.PENDING);
-
-            if (userReceivedFriendRequests)
-            {
-                friendRequestIds = pendingFriendRequestQuery
-                    .Where(x => x.ReceiverId == id)
+            var incomingFriendRequestIds = _context.Set<FriendsRequest>()
+                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.ReceiverId == id)
                     .Select(x => x.RequesterId)
                     .ToList();
-            }
-            else
-            {
-                friendRequestIds = pendingFriendRequestQuery
-                    .Where(x => x.RequesterId == id)
+
+            var myFriendRequestIds = _context.Set<FriendsRequest>()
+                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.RequesterId == id)
                     .Select(x => x.ReceiverId)
                     .ToList();
-            }
 
             var suggestedContacts = _context.Set<User>()
                     .Where(u => u.Id != id
                         && !currentUserContactIds.Contains(u.Id)
-                        && !friendRequestIds.Contains(u.Id))
+                        && !incomingFriendRequestIds.Contains(u.Id)
+                        && !myFriendRequestIds.Contains(u.Id))
                     .Select(x => new UserContactContract
                     {
                         Id = x.Id,
@@ -123,14 +114,14 @@ namespace chat_service.Services
             }).ToList();
         }
 
-        public async Task<string> RequestAddContact(RequestAddFriendContract contract)
+        public async Task<bool> RequestAddContact(RequestAddFriendContract contract)
         {
             var friendRequest = new FriendsRequest(contract.ReceiverId, contract.RequesterId);
 
             await _context.Set<FriendsRequest>().AddAsync(friendRequest);
             await _context.SaveChangesAsync();
 
-            return "Successful";
+            return true;
         }
     }
 }
