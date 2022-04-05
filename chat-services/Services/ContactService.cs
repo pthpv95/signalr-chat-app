@@ -57,12 +57,12 @@ namespace chat_service.Services
                 .Any(fr => fr.ReceiverId == id);
 
             var incomingFriendRequestIds = _context.Set<FriendsRequest>()
-                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.ReceiverId == id);
+                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.ReceiverId == id)
                     .Select(x => x.RequesterId)
                     .ToList();
 
             var myFriendRequestIds = _context.Set<FriendsRequest>()
-                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.RequesterId == id);
+                    .Where(x => x.Status == FriendsRequestEnum.PENDING && x.RequesterId == id)
                     .Select(x => x.ReceiverId)
                     .ToList();
 
@@ -70,7 +70,7 @@ namespace chat_service.Services
                     .Where(u => u.Id != id
                         && !currentUserContactIds.Contains(u.Id)
                         && !incomingFriendRequestIds.Contains(u.Id)
-                        && !myFriendRequestIds.Contain(u.Id))
+                        && !myFriendRequestIds.Contains(u.Id))
                     .Select(x => new UserContactContract
                     {
                         Id = x.Id,

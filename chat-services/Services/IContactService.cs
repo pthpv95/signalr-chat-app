@@ -9,7 +9,7 @@ namespace chat_service.Services
     {
          IList<UserContactContract> GetContactSuggestions (Guid id);
 
-         Task<string> RequestAddContact(RequestAddFriendContract contract);
+         Task<bool> RequestAddContact(RequestAddFriendContract contract);
 
          Task AcceptFriendRequest(Guid userId, Guid requestId);
 
