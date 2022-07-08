@@ -17,7 +17,7 @@
     "express": "^4.17.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "node-sass": "^4.13.0",
     "oidc-client": "^1.9.1",
     "sass-loader": "^8.0.0",
