@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using identityserver.Infrastructure.Settings;
 using IdentityServer.Data;
 using IdentityServer.Infrastructure.Settings;
 using IdentityServer.Services;
@@ -18,8 +19,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Authentication;
-using identityserver.Infrastructure.Settings;
 
 namespace IdentityServerWithAspNetIdentity
 {
@@ -37,10 +36,10 @@ namespace IdentityServerWithAspNetIdentity
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             //Add a DbContext to store your Database Keys
-            services.AddDbContext<MyKeysContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<MyKeysContext>(options => options.UseNpgsql(connectionString));
 
             // using Microsoft.AspNetCore.DataProtection;
             services.AddDataProtection()
@@ -79,11 +78,11 @@ namespace IdentityServerWithAspNetIdentity
                 .AddProfileService<IdentityProfileService>()
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 })
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = b => b.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.ConfigureDbContext = b => b.UseNpgsql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                     options.EnableTokenCleanup = true;
                 });
 

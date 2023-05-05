@@ -1,23 +1,21 @@
-using System;
+using System.Threading.Tasks;
+using chat_service.Db;
+using chat_service.Services;
+using chat_service.SignalR.Hubs;
+using chat_services.Infrastructure.Settings;
+using chatservices.Db;
+using chatservices.Infrastructure.Settings;
+using chatservices.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using chat_service.Db;
-using chat_service.Services;
-using chat_service.SignalR.Hubs;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
-using chat_services.Infrastructure.Settings;
-using chatservices.Services;
-using chatservices.Infrastructure.Settings;
-using chatservices.Db;
-using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 namespace chat_service
 {
@@ -36,10 +34,10 @@ namespace chat_service
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ChatDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ChatDbContext>(options => options.UseNpgsql(connectionString));
 
             // Add a DbContext to store your Database Keys
-            services.AddDbContext<ChatDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ChatDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddAuthentication(options =>
             {
