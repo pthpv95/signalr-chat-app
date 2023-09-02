@@ -38,10 +38,8 @@ For testing purpose:
 - SignalR for notification
 - Vue 3
 
-#### Deployment:
-
-- All services are freely hosted.
+#### Deployment: All services are deployed on free hosting services
 
 - Backend services are hosted on [Fly.io](https://fly.io/)
-- [Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- Vercel Postgres [Postgres](https://vercel.com/docs/storage/vercel-postgres)
 - Frontend app is hosted on [Netlify](https://www.netlify.com/)
