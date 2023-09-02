@@ -1,6 +1,6 @@
 # Simple chat application for self taught .NET tech.
 ### Demo
-- Site: http://awesome-chat-images.s3-website-ap-southeast-1.amazonaws.com
+- Site: https://hpchatapp.netlify.app
 - Accounts: james.bond@gmail.com / john.wick@gmail.com
 - Password: 123456
 
