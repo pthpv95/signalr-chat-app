@@ -24,7 +24,20 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.1" />
+    <!-- <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" /> -->
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Data\Migrations\MyKeysDb\" />
+    <None Remove="Data\Migrations\IdentityServer\ConfigurationDb\" />
+    <None Remove="Data\Migrations\IdentityServer\PersistedGrantDb\" />
+    <None Remove="Data\Migrations\ApplicationDb\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Migrations\MyKeysDb\" />
+    <Folder Include="Data\Migrations\IdentityServer\ConfigurationDb\" />
+    <Folder Include="Data\Migrations\IdentityServer\PersistedGrantDb\" />
+    <Folder Include="Data\Migrations\ApplicationDb\" />
+  </ItemGroup>
 </Project>

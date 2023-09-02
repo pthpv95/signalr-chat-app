@@ -22,7 +22,7 @@ namespace chatservices.Services
                 EndPoints = { { _redisSettings.Host, _redisSettings.Port } }
             };
 
-            _lazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(configurationOptions));
+            _lazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect("fly-chat-app-redis.upstash.io,ssl=true,password=a9606fece0484005a5f22eb9da62543e"));
         }
 
         public IDatabase RedisCache => Connection.GetDatabase();

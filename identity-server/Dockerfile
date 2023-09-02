@@ -11,6 +11,9 @@ COPY --from=build /app .
 
 # Comment it when deploying to heroku
 ENTRYPOINT ["dotnet", "identity-server.dll"]
+EXPOSE 8080
+RUN chmod +x ./identity-server
+CMD ["./identity-server", "--urls", "http://0.0.0.0:8080"]
 
 # heroku uses the following
 # CMD ASPNETCORE_URLS=http://*:$PORT dotnet identity-server.dll

@@ -1,17 +1,20 @@
 # Simple chat application for self taught .NET tech.
+
 ### Demo
+
 - Site: https://hpchatapp.netlify.app
 - Accounts: james.bond@gmail.com / john.wick@gmail.com
 - Password: 123456
 
-![Alt Text](https://media.giphy.com/media/Iw2NotaxdgtOolwL7z/giphy.gif) 
+![Alt Text](https://media.giphy.com/media/Iw2NotaxdgtOolwL7z/giphy.gif)
 
 #### Prerequisite
 
-- MySQL
+- Postgres
 - [.NET Core SDK 3.1.302](https://www.microsoft.com/net/download/all)
 
 #### Steps to run
+
 - Update the connection string in appsettings.json for each service
 - Run `dotnet build root.sln` to build whole solution.
 - Run `setup.sql` migration script to init databases.
@@ -21,6 +24,7 @@
 #### Docker
 
 For testing purpose:
+
 - Backend: Rename file `.env.sample` to `.env` then run `docker-compose up -d`
 - Frontend: `cd web && npm install && npm run start`
 - Open browser on `http://localhost:8080`
@@ -35,5 +39,9 @@ For testing purpose:
 - Vue 3
 
 #### Deployment:
-- Backend services are hosted on a 5$ [DigitalOcean droplet](https://www.digitalocean.com/)
-- Frontend app is deployed on AWS S3
+
+- All services are freely hosted.
+
+- Backend services are hosted on [Fly.io](https://fly.io/)
+- [Postgres](https://vercel.com/docs/storage/vercel-postgres)
+- Frontend app is hosted on [Netlify](https://www.netlify.com/)

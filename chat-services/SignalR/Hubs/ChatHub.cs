@@ -26,7 +26,6 @@ namespace chat_service.SignalR.Hubs
             IMessageService messageService,
             IClaimsService claimsService,
             ICacheService cacheService,
-            IPubSub pubSub,
             INotificationService notificationService,
             IHubContext<NotificationHub, INotify> notificationHubContext)
         {
@@ -42,19 +41,19 @@ namespace chat_service.SignalR.Hubs
             var user = _claimsService.GetUserClaims();
             var key = CachingHelpers.BuildKey("Chat", user.Id);
 
-            var userConnections = await _cacheService.Get<List<string>>(key) ?? new List<string>();
+            var userConnections = _cacheService.Get<List<string>>(key) ?? new List<string>();
             userConnections.Add(Context.ConnectionId);
-            await _cacheService.Set(key, userConnections);
+            _cacheService.Set(key, userConnections);
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = _claimsService.GetUserClaims();
-            var connectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", user.Id)) ?? new List<string>();
+            var connectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", user.Id)) ?? new List<string>();
 
             var keys = connectionIds.Where(x => x != Context.ConnectionId).ToList();
-            await _cacheService.Set(CachingHelpers.BuildKey("Chat", user.Id), new List<string> { });
+            _cacheService.Set(CachingHelpers.BuildKey("Chat", user.Id), new List<string> { });
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -73,21 +72,21 @@ namespace chat_service.SignalR.Hubs
 
             var messageId = await _messageService.CreateMessageAsync(payload);
             payload.MessageId = messageId;
-            var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", identity.Id)) ?? new List<string>();
-            var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
+            var userConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", identity.Id)) ?? new List<string>();
+            var contactConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
             var connectionIds = userConnectionIds.Union(contactConnectionIds).ToList();
 
             await Clients.Clients(connectionIds).HasNewPrivateMessageAsync(payload);
 
             var unreadMessages = await _messageService.GetUnreadMessages(contactUserId);
-            await _notificationHubContext.Clients.Clients(await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", contactUserId)) ?? new List<string>()).HasUnreadMessagesAsync(unreadMessages);
+            await _notificationHubContext.Clients.Clients(_cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", contactUserId)) ?? new List<string>()).HasUnreadMessagesAsync(unreadMessages);
         }
 
         public async Task ReadMessage(Guid messageId, Guid contactUserId)
         {
             var identity = _claimsService.GetUserClaims();
-            var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
-            var userConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", identity.Id)) ?? new List<string>();
+            var contactConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
+            var userConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", identity.Id)) ?? new List<string>();
             var messageRes = await _messageService.ReadMessage(messageId, identity.Id);
             var unreadMessages = await _messageService.GetUnreadMessages(identity.Id);
 
@@ -98,7 +97,7 @@ namespace chat_service.SignalR.Hubs
         public async Task MessageTyping(Guid conversationId, Guid contactUserId)
         {
             var identity = _claimsService.GetUserClaims();
-            var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
+            var contactConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
             await Clients.Clients(contactConnectionIds).Typing(new TypingOnConversationContract
             {
                 ConversationId = conversationId,
@@ -109,7 +108,7 @@ namespace chat_service.SignalR.Hubs
         public async Task MessageStopTyping(Guid conversationId, Guid contactUserId)
         {
             var identity = _claimsService.GetUserClaims();
-            var contactConnectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
+            var contactConnectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Chat", contactUserId)) ?? new List<string>();
 
             await Clients.Clients(contactConnectionIds).StopTyping(new TypingOnConversationContract
             {

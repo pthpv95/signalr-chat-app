@@ -1,23 +1,24 @@
-using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 using chat_service.Db;
 using chat_service.Services;
 using chat_service.SignalR.Hubs;
-using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
 using chat_services.Infrastructure.Settings;
-using chatservices.Services;
-using chatservices.Infrastructure.Settings;
 using chatservices.Db;
-using System.Reflection;
+using chatservices.Infrastructure.Settings;
+using chatservices.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace chat_service
 {
@@ -36,10 +37,10 @@ namespace chat_service
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ChatDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ChatDbContext>(options => options.UseNpgsql(connectionString));
 
             // Add a DbContext to store your Database Keys
-            services.AddDbContext<ChatDbContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ChatDbContext>(options => options.UseNpgsql(connectionString));
 
             services.AddAuthentication(options =>
             {
@@ -85,7 +86,8 @@ namespace chat_service
 
             services.Configure<RedisSettings>(Configuration.GetSection(nameof(RedisSettings)));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<RedisStore>();
+            services.AddSingleton<IMemoryCache, MemoryCache>();
+            //services.AddSingleton<RedisStore>();
             services.AddSingleton<ICacheService, CacheService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IUserService, UserService>();
@@ -93,7 +95,7 @@ namespace chat_service
             services.AddScoped<IClaimsService, ClaimsService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<INotificationService, NotificationService>();
-            services.AddSingleton<IPubSub, PubSub>();
+            //services.AddSingleton<IPubSub, PubSub>();
             services.AddSingleton(options =>
             {
                 return new ChatDbConnection(Configuration.GetConnectionString("DefaultConnection"));
@@ -113,7 +115,7 @@ namespace chat_service
             var redisSettings = Configuration.GetSection(nameof(RedisSettings));
             var host = redisSettings.GetValue<string>(nameof(RedisSettings.Host));
             var password = redisSettings.GetValue<string>(nameof(RedisSettings.Password));
-            services.AddSignalR().AddStackExchangeRedis($"{host}, port:6379, password={password}");
+            services.AddSignalR();
 
             services.AddSwaggerGen(c =>
             {
@@ -131,7 +133,7 @@ namespace chat_service
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            IdentityModelEventSource.ShowPII = true;
             app.UseCors(AllowAnyOrigin);
             app.UseHttpsRedirection();
             app.UseAuthentication();

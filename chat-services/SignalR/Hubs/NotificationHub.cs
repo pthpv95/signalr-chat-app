@@ -22,8 +22,7 @@ namespace chat_service.SignalR.Hubs
             IClaimsService claimsService,
             INotificationService notificationService,
             IMessageService messageService,
-            ICacheService cacheService,
-            IPubSub pubSub)
+            ICacheService cacheService)
         {
             _claimsService = claimsService;
             _notificationService = notificationService;
@@ -44,10 +43,10 @@ namespace chat_service.SignalR.Hubs
         public override async Task OnConnectedAsync()
         {
             var user = _claimsService.GetUserClaims();
-            var userConnections = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", user.Id)) ?? new List<string>();
+            var userConnections = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", user.Id)) ?? new List<string>();
 
             userConnections.Add(Context.ConnectionId);
-            await _cacheService.Set(CachingHelpers.BuildKey("Notification", user.Id), userConnections);
+            _cacheService.Set(CachingHelpers.BuildKey("Notification", user.Id), userConnections);
 
             var numOfNotifications = await _notificationService.GetUserNumberOfNotifications(user.Id);
             var unreadMessages = await _messageService.GetUnreadMessages(user.Id);
@@ -61,10 +60,10 @@ namespace chat_service.SignalR.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var user = _claimsService.GetUserClaims();
-            var connectionIds = await _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", user.Id)) ?? new List<string>();
+            var connectionIds = _cacheService.Get<List<string>>(CachingHelpers.BuildKey("Notification", user.Id)) ?? new List<string>();
 
             var ids = connectionIds.Where(x => x != Context.ConnectionId).ToList();
-            await _cacheService.Set(CachingHelpers.BuildKey("Notification", user.Id), ids);
+            _cacheService.Set(CachingHelpers.BuildKey("Notification", user.Id), ids);
 
             await base.OnDisconnectedAsync(exception);
         }
