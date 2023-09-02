@@ -40,5 +40,8 @@ For testing purpose:
 
 #### Deployment:
 
+- All services are freely hosted.
+
 - Backend services are hosted on [Fly.io](https://fly.io/)
+- [Postgres](https://vercel.com/docs/storage/vercel-postgres)
 - Frontend app is hosted on [Netlify](https://www.netlify.com/)
