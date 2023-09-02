@@ -148,6 +148,12 @@ namespace IdentityServerWithAspNetIdentity
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
+
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Request.Scheme = "https";
+                await next();
+            });
             app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>

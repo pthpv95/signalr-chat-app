@@ -11,5 +11,9 @@ COPY --from=build /app .
 # Comment it when deploying to heroku
 ENTRYPOINT ["dotnet", "chat-services.dll"]
 
+EXPOSE 8080
+RUN chmod +x ./chat-services
+CMD ["./chat-services", "--urls", "http://0.0.0.0:8080"]
+
 # heroku uses the following
 # CMD ASPNETCORE_URLS=http://*:$PORT dotnet chat-services.dll

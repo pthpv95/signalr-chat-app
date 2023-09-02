@@ -2,41 +2,45 @@
 using System.IO;
 using System.Threading.Tasks;
 using MessagePack;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace chatservices.Services
 {
     public class CacheService : ICacheService
     {
-        private readonly RedisStore _redisStore;
+        private readonly IMemoryCache _memoryCache;
 
-        public CacheService(RedisStore redisStore)
+        public CacheService(IMemoryCache memoryCache)
         {
-            _redisStore = redisStore;
+            _memoryCache = memoryCache;
         }
 
-        public async Task<T> Get<T>(string key)
+        public T Get<T>(string key)
         {
             try
             {
-                var cachedValue = await _redisStore.RedisCache.StringGetAsync(key);
-                if (cachedValue.IsNullOrEmpty) return default;
-
-                byte[] data = Convert.FromBase64String(cachedValue);
-                using var ms = new MemoryStream(data);
-                var deserializedObject = MessagePackSerializer.Typeless.Deserialize(ms);
-                return (T)deserializedObject;
+                T item = (T)_memoryCache.Get(key);
+                return item;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public async Task Set(string key, object value)
+        public void Set<T>(string key, T value)
         {
-            var bytes = MessagePackSerializer.Typeless.Serialize(value);
-            var data = Convert.ToBase64String(bytes);
-            await _redisStore.RedisCache.StringSetAsync(key, data);
+            try
+            {
+                if (!string.IsNullOrEmpty(key))
+                {
+                    _memoryCache.Set(key, value);
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
     }
 }

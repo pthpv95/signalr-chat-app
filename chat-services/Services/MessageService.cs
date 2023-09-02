@@ -120,7 +120,7 @@ namespace chat_service.Services
                 }
 
                 // if all messages have been read, set seen of first item to be true by default
-                if (!hasAnySeenMessage)
+                if (!hasAnySeenMessage && messages.Any())
                 {
                     messages.First().Seen = true;
                 }
