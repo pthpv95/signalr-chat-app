@@ -19,7 +19,7 @@
 - Run `dotnet build root.sln` to build whole solution.
 - Run `setup.sql` migration script to init databases.
 - BE: cd to `identity-server` and `chat-services` then run `dotnet run`
-- FE: `cd web && npm install && npm run start`
+- FE: `cd web && npm install (node 12) && npm run start`
 
 #### Docker
 
@@ -36,7 +36,7 @@ For testing purpose:
 - ASP.NET Identity Core 3.1
 - IdentityServer4
 - SignalR for notification
-- Vue 3
+- Vue 2
 
 #### Deployment: All services are deployed on free hosting services
 
